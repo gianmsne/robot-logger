@@ -20,8 +20,7 @@ int getIntInput(int min, int max) {
 
 void printStartText() {
     std::cout << std::endl;
-    std::cout << "Please scan your ID" << std::endl;
-    std::cout << "--------------------------------" << std::endl;
+    std::cout << " >> Tap Your User ID Card (or enter manually): ";
 }
 
 void printMainMenu(const std::string& id) {
