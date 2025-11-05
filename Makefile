@@ -1,15 +1,15 @@
-# Makefile for robot-logger project
+# Makefile for robotLogger project
 
 # Compiler
 CXX = g++
 CXXFLAGS = -Iinclude -std=c++17 -Wall -Wextra -O2
 
 # Source files
-SRCS = src/robot-logger.cpp src/User.cpp
-HEADERS = include/User.h include/menuUtils.h
+SRCS = src/robotLogger.cpp src/menuUtils.cpp src/User.cpp src/addRobot.cpp
+HEADERS = include/User.h include/menuUtils.h include/addRobot.h
 
 # Output executable
-TARGET = robot-logger
+TARGET = robotLogger
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)

@@ -22,6 +22,9 @@ CMakeCache.txt
 *.ui
 *.rcc
 
+# Student Database
+database/students.db
+
 # Other IDEs
 .vscode/
 .idea/
