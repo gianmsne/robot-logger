@@ -1,0 +1,31 @@
+# macOS system files
+.DS_Store
+
+# Build files
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dSYM/
+build/
+bin/
+CMakeFiles/
+CMakeCache.txt
+
+# Qt Creator / Qt files
+*.user
+*.pro.user*
+*.qmake.stash
+*.moc
+*.qrc
+*.ui
+*.rcc
+
+# Other IDEs
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
