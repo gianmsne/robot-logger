@@ -20,7 +20,7 @@ int getIntInput(int min, int max) {
 
 void printStartText() {
     std::cout << std::endl;
-    std::cout << "Please scan your student ID" << std::endl;
+    std::cout << "Please scan your ID" << std::endl;
     std::cout << "--------------------------------" << std::endl;
 }
 
@@ -30,7 +30,8 @@ void printMainMenu(const std::string& id) {
     std::cout << "1) Check In" << std::endl;
     std::cout << "2) Check Out" << std::endl;
     std::cout << "3) Add Robot" << std::endl;
-    std::cout << "4) Exit" << std::endl;
+    std::cout << "4) Add User" << std::endl;
+    std::cout << "5) Exit" << std::endl;
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: ";
 }

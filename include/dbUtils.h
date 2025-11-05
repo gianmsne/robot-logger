@@ -10,3 +10,12 @@ bool insertRobot(
     const std::string& robotType,
     const std::string& robotCondition
 );
+
+bool insertUser(
+    sqlite3* db,
+    const std::string& userID,
+    const std::string& userGivenName,
+    const std::string& userFamilyName,
+    int isAdmin,
+    int inducted
+);

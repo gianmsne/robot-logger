@@ -1,6 +1,7 @@
 #include "menuUtils.h"
 #include "User.h"
 #include "addRobot.h"
+#include "addUser.h"
 
 #include <iostream>
 #include <optional>
@@ -14,6 +15,7 @@ enum States{
     ST_CheckIn,
     ST_CheckOut,
     ST_AddRobot,
+    ST_AddUser,
     ST_Exit
 };
 
@@ -52,7 +54,7 @@ int main() {
             case ST_Main: {
                 printMainMenu(loggedInUser->getFullname());
 
-                int menuItem = getIntInput(1, 3);
+                int menuItem = getIntInput(1, 5);
                 switch (menuItem) {
                     case 1: 
                         currState = ST_CheckOut; 
@@ -64,6 +66,9 @@ int main() {
                         currState = ST_AddRobot;
                         break;
                     case 4:
+                        currState = ST_AddUser;
+                        break;
+                    case 5:
                         currState = ST_Exit; 
                         break;
                 }
@@ -100,6 +105,10 @@ int main() {
             case ST_AddRobot: {
                 menuSequence();
                 currState = ST_Main;
+            }
+
+            case ST_AddUser: {
+                addUser();
             }
 
             default:
