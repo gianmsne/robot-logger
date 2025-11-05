@@ -23,7 +23,7 @@ CMakeCache.txt
 *.rcc
 
 # Student Database
-database/students.db
+database/robot_logger.db
 
 # Other IDEs
 .vscode/

@@ -5,8 +5,10 @@ CXX = g++
 CXXFLAGS = -Iinclude -std=c++17 -Wall -Wextra -O2
 
 # Source files
-SRCS = src/robotLogger.cpp src/menuUtils.cpp src/User.cpp src/addRobot.cpp
-HEADERS = include/User.h include/menuUtils.h include/addRobot.h
+SRCS = src/robotLogger.cpp src/menuUtils.cpp src/User.cpp src/addRobot.cpp src/dbUtils.cpp
+
+# Headers (for dependency tracking)
+HEADERS = include/User.h include/menuUtils.h include/addRobot.h include/dbUtils.h
 
 # Output executable
 TARGET = robotLogger
@@ -19,7 +21,7 @@ all: $(TARGET)
 
 # Link objects into executable
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) -lsqlite3
 
 # Compile each .cpp into .o
 %.o: %.cpp $(HEADERS)

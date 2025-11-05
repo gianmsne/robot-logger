@@ -99,6 +99,7 @@ int main() {
 
             case ST_AddRobot: {
                 menuSequence();
+                currState = ST_Main;
             }
 
             default:
@@ -107,7 +108,6 @@ int main() {
         }
     }
 
-    printExitMessage();
     loggedInUser.reset();
     return 0;
 }

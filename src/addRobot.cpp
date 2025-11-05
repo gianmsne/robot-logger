@@ -1,5 +1,8 @@
 #include "addRobot.h"
 #include "menuUtils.h"
+#include "dbUtils.h"
+
+#include <sqlite3.h>
 
 void menuSequence() {
 
@@ -15,17 +18,39 @@ void menuSequence() {
     std::cout << std::endl;
     std::cout << "------------- ADD ROBOT -------------" << std::endl;
 
+    /*
+    Get Robot Name
+    */ 
     std::cout << " >> Enter Robot Name: ";
     std::cin >> robotName;
+    // Clear leftover newline AFTER cin >>
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    std::cout << " >> Enter Robot RMIT ID ( [Enter] for none ): ";
-    std::cin >> robotID;
-
-    std::cout << " >> Enter Location: ";
-    std::cin >> location;
     
+    /*
+        Get Robot ID
+    */ 
+    std::cout << " >> Enter Robot RMIT ID (Optional): ";
+    std::getline(std::cin, robotID);
+
+    if (robotID.empty()) {
+        robotID = "None";
+    }
+
+    /*
+        Get Robot location
+    */ 
+    std::cout << " >> Enter Location ( [Enter] for \"RACE Hub\" ): ";
+    std::getline(std::cin, location);
+
+    if (location.empty()) {
+        location = "Race Hub";
+    }
+    
+    /*
+        Get Robot Type (Nao/Booster)
+    */ 
     printRobotType();
-    
     input = getIntInput(1, 2);
     switch(input){
         case 1:
@@ -39,7 +64,9 @@ void menuSequence() {
             break;
     }
 
-
+    /*
+        Get Robot Condition
+    */ 
     printRobotCondition();
     input = getIntInput(1, 5);
 
@@ -63,35 +90,28 @@ void menuSequence() {
             robotCondition = "Unknown"; // fallback value
             break;
     }
-    
-
-
     std::cout << std::endl;
 
+
     try {
-        printf(
-        "Robot Info:\n"
-        "Name: %s\n"
-        "ID: %s\n"
-        "Location: %s\n"
-        "Type: %s\n"
-        "Condition: %s\n",
-        // "Status: %s\n"
-        // "Last Used Person: %s\n"
-        // "Last Used Time: %s\n"
-        // "Notes: %s\n"
-        // "Available: %s\n",
-        robotName.c_str(),
-        robotID.c_str(),
-        location.c_str(),
-        robotType.c_str(),
-        robotCondition.c_str(),
-        robotStatus.c_str()
-        );
+
+        sqlite3* db;
+        if(sqlite3_open("database/robot_logger.db", &db)) {
+            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+            throw(0);
+        }
+
+        if(insertRobot(db, robotName, robotType, robotCondition, robotID, location)) {
+            std::cout << "Robot added successfully!" << std::endl;
+        } else {
+            throw(0);
+        }
+
+        sqlite3_close(db);
+
 
     } catch (...) {
         std::cout << "There was an error while attempting to add the robot." << std::endl;
-        std::cout << "Please try again" << std::endl;
     }
 
 

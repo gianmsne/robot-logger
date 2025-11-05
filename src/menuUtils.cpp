@@ -65,23 +65,19 @@ void printCheckInMenu() {
     std::cout << "Pick robot number: ";
 }
 
-void printExitMessage() {
-    std::cout << "Goodbye" << std::endl;
-}
-
 void printRobotType() {
     std::cout << " >> Select Robot Type: " << std::endl;
-    std::cout << "1) Booster" << std::endl;
-    std::cout << "2) Nao" << std::endl;
-    std::cout << "Select: ";
+    std::cout << " >>   1) Booster" << std::endl;
+    std::cout << " >>   2) Nao" << std::endl;
+    std::cout << " >> Select: ";
 }
 
 void printRobotCondition() {
     std::cout << " >> Select Robot Condition: " << std::endl;
-    std::cout << "1) Perfect" << std::endl;
-    std::cout << "2) Slightly Damaged" << std::endl;
-    std::cout << "3) Partially Functional" << std::endl;
-    std::cout << "4) Needs Repair" << std::endl;
-    std::cout << "5) Retired" << std::endl;
-    std::cout << "Select: ";
+    std::cout << " >>   1) Perfect" << std::endl;
+    std::cout << " >>   2) Slightly Damaged" << std::endl;
+    std::cout << " >>   3) Partially Functional" << std::endl;
+    std::cout << " >>   4) Needs Repair" << std::endl;
+    std::cout << " >>   5) Retired" << std::endl;
+    std::cout << " >> Select: ";
 }
