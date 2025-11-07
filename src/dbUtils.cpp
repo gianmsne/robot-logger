@@ -1,32 +1,5 @@
 #include "dbUtils.h"
 
-bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, std::string value){
-    std::string query = "SELECT COUNT(*) FROM " + tableName +
-                        " WHERE " + columnName + " = '" + value + "'";
-
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK){
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        return false;
-    }
-
-    rc = sqlite3_step(stmt);
-    if(rc != SQLITE_ROW) {
-        std::cerr << "Existence Check Failed: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-
-    int count = sqlite3_column_int(stmt, 0);
-
-    sqlite3_finalize(stmt);
-
-    // If count > 0, value exists
-    return count > 0;
-}
-
-
 bool insertRobot(
     sqlite3* db,
     const std::string& robotName,
@@ -108,9 +81,38 @@ bool insertUser(
 };
 
 
+
 /*
-    Return the user's name from the entered ID
+    Check for existing item in a table.
+        Parameters include the table, column and value to search for existing
 */
+bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, std::string value){
+    std::string query = "SELECT COUNT(*) FROM " + tableName +
+                        " WHERE " + columnName + " = '" + value + "'";
+
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK){
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return false;
+    }
+
+    rc = sqlite3_step(stmt);
+    if(rc != SQLITE_ROW) {
+        std::cerr << "Existence Check Failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    int count = sqlite3_column_int(stmt, 0);
+
+    sqlite3_finalize(stmt);
+
+    // If count > 0, value exists
+    return count > 0;
+}
+
+
 std::string getUserFromID(sqlite3* db, const std::string& id) {
     std::string query =
         "SELECT Given_Name, Family_Name FROM users WHERE User_ID = '" + id + "';";
@@ -141,4 +143,44 @@ std::string getUserFromID(sqlite3* db, const std::string& id) {
 
     // Return concatenated full name
     return givenName + " " + familyName;
+}
+
+
+std::vector<std::string> getRobots(){
+    std::vector<std::string> robotList;
+    
+    sqlite3* db;
+    try {
+
+        if(sqlite3_open("database/robot_logger.db", &db)) {
+            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+            throw(0);
+        }
+    
+    } catch (...) {
+        std::cout << "There was an error while attempting to add the robot." << std::endl;
+    }
+
+    
+    std::string query = "SELECT Robot_Name FROM robots;";
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return robotList; // return empty vector on error
+    }
+
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        const unsigned char* text = sqlite3_column_text(stmt, 0);
+        if (text) {
+            robotList.push_back(reinterpret_cast<const char*>(text));
+        }
+    }
+
+    if (rc != SQLITE_DONE) {
+        std::cerr << "Error reading robots: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    return robotList;
 }

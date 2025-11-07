@@ -20,26 +20,11 @@ enum States{
     ST_Exit
 };
 
-std::vector<std::string> getRobots(){
-    std::vector<std::string> robotList;
-    std::string robot;
-    
-    std::ifstream robots("robots.txt");
-
-    while(std::getline (robots, robot) ) {
-        robotList.push_back(robot);
-    }
-
-    robots.close();
-
-    return robotList;
-}
 
 int main() {
     States currState = ST_Main;
+
     std::vector<std::string> robots = getRobots();
-
-
     std::optional<User> loggedInUser;
     std::string studentId;
 
@@ -92,6 +77,7 @@ int main() {
                 std::cout << "PICKED ROBOT: " << pickedRobot << std::endl;
 
                 currState = ST_Main;
+                break;
             }
 
             

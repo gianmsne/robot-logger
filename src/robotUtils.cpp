@@ -19,7 +19,6 @@ void addRobot() {
     std::string tableName = "robots";
     std::string columnName = "Robot_Name";
 
-
     try {
 
         if(sqlite3_open("database/robot_logger.db", &db)) {
@@ -31,48 +30,29 @@ void addRobot() {
         std::cout << "There was an error while attempting to add the robot." << std::endl;
     }
     
-    std::cout << std::endl;
-    std::cout << "------------- ADD ROBOT -------------" << std::endl;
+    std::cout << "\n------------- ADD ROBOT -------------" << std::endl;
 
-
-    /*
-    Get Robot Name
-    */ 
+    // Get Robot Name
     std::cout << " >> Enter Robot Name: ";
     std::cin >> robotName;
-    // Clear leftover newline AFTER cin >>
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    // Check if robot already exists
     if(existenceCheck(db, tableName, columnName, robotName)) {
         std::cout << " >> Robot " + robotName + " already exists!" << std::endl;
         return;
     }
-
     
-    /*
-        Get Robot ID
-    */ 
+    // Get Robot ID
     std::cout << " >> Enter Robot RMIT ID (Optional): ";
     std::getline(std::cin, robotID);
+    if (robotID.empty()) { robotID = "None"; }
 
-    if (robotID.empty()) {
-        robotID = "None";
-    }
-
-    /*
-        Get Robot location
-    */ 
+    // Get robot location
     std::cout << " >> Enter Location ( [Enter] for \"RACE Hub\" ): ";
     std::getline(std::cin, location);
-
-    if (location.empty()) {
-        location = "Race Hub";
-    }
+    if (location.empty()) { location = "Race Hub"; }
     
-    /*
-        Get Robot Type (Nao/Booster)
-    */ 
+    // Get Robot Type (Nao/Booster)
     printRobotType();
     input = getIntInput(1, 2);
     switch(input){
@@ -87,9 +67,7 @@ void addRobot() {
             break;
     }
 
-    /*
-        Get Robot Condition
-    */ 
+    // Get Robot Condition
     printRobotCondition();
     input = getIntInput(1, 5);
 
