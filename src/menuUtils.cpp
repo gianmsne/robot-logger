@@ -26,8 +26,8 @@ void printStartText() {
 void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << std::endl;
     std::cout << "------------- User: " << id << " -------------" << std::endl;
-    std::cout << "1) Check In" << std::endl;
-    std::cout << "2) Check Out" << std::endl;
+    std::cout << "1) Check Out" << std::endl;
+    std::cout << "2) Check In" << std::endl;
     if(isAdmin){
         std::cout << "3) Add Robot" << std::endl;
         std::cout << "4) Add User" << std::endl;
@@ -41,7 +41,7 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 
 void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
     std::cout << std::endl;
-    std::cout << "------------- CHECK-IN -------------" << std::endl;
+    std::cout << "------------- CHECK-OUT -------------" << std::endl;
 
     for (unsigned int i = 0; i < robots.size(); i++) {
         std::cout << i + 1 << ") " << robots[i] << std::endl;
@@ -61,7 +61,7 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
 
 void printCheckInMenu() {
     std::cout << std::endl;
-    std::cout << "------------- PICK ROBOT -------------" << std::endl;
+    std::cout << "------------- CHECK-IN -------------" << std::endl;
     std::cout << "1) kessel" << std::endl;
     std::cout << "2) jupiter" << std::endl;
     std::cout << "3) Back" << std::endl;

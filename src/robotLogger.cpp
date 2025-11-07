@@ -3,6 +3,7 @@
 #include "User.h"
 #include "robotUtils.h"
 #include "userUtils.h"
+#include "checkOut.h"
 
 #include <iostream>
 #include <optional>
@@ -13,8 +14,8 @@
 
 enum States{
     ST_Main,
-    ST_CheckIn,
     ST_CheckOut,
+    ST_CheckIn,
     ST_AddRobot,
     ST_AddUser,
     ST_Exit
@@ -75,7 +76,8 @@ int main() {
                 std::string pickedRobot;
                 printCheckOutMenu(robots, pickedRobot);
                 
-                std::cout << "PICKED ROBOT: " << pickedRobot << std::endl;
+                addCheckOutRecord(loggedInUser->getID(), pickedRobot);
+                // std::cout << "PICKED ROBOT: " << pickedRobot << std::endl;
 
                 currState = ST_Main;
                 break;
