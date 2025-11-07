@@ -25,3 +25,5 @@ bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, 
 std::string getUserFromID(sqlite3* db, const std::string &id);
 
 std::vector<std::string> getRobots();
+
+bool getAdminStatus(const std::string &id);

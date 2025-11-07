@@ -9,7 +9,7 @@ bool insertRobot(
     const std::string& location
 ) {
     const char* query = 
-        "INSERT INTO robots (Robot_Name, Robot_Type, Robot_Condition, RMIT_ID, Location, Last_Used_Person, Last_Used_Time, Notes, Is_Available) "
+        "INSERT INTO robots (robotName, robotType, robotCondition, rmitID, location, lastUsedPerson, lastUsedTime, notes, isAvailable) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     sqlite3_stmt* stmt;
@@ -51,7 +51,7 @@ bool insertUser(
     int inducted
 ) {
     const char* query = 
-        "INSERT INTO users (User_ID, Given_Name, Family_Name, Is_Admin, Inducted) "
+        "INSERT INTO users (userID, givenName, familyName, isAdmin, isInducted) "
         "VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt* stmt;
@@ -115,7 +115,7 @@ bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, 
 
 std::string getUserFromID(sqlite3* db, const std::string& id) {
     std::string query =
-        "SELECT Given_Name, Family_Name FROM users WHERE User_ID = '" + id + "';";
+        "SELECT givenName, familyName FROM users WHERE userID = '" + id + "';";
 
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
@@ -148,7 +148,7 @@ std::string getUserFromID(sqlite3* db, const std::string& id) {
 
 std::vector<std::string> getRobots(){
     std::vector<std::string> robotList;
-    
+
     sqlite3* db;
     try {
 
@@ -162,7 +162,7 @@ std::vector<std::string> getRobots(){
     }
 
     
-    std::string query = "SELECT Robot_Name FROM robots;";
+    std::string query = "SELECT robotName FROM robots;";
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
@@ -183,4 +183,40 @@ std::vector<std::string> getRobots(){
 
     sqlite3_finalize(stmt);
     return robotList;
+}
+
+bool getAdminStatus(const std::string &id) {
+    sqlite3* db = nullptr;
+
+    if (sqlite3_open("database/robot_logger.db", &db) != SQLITE_OK) {
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+        return false;
+    }
+
+    // SQL query to get Is_Admin (0 or 1)
+    std::string query = "SELECT isAdmin FROM users WHERE userID = '" + id + "';";
+
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_close(db);
+        return false;
+    }
+
+    rc = sqlite3_step(stmt);
+    bool isAdmin = false;
+
+    if (rc == SQLITE_ROW) {
+        // Read the first column as int
+        int val = sqlite3_column_int(stmt, 0);
+        isAdmin = (val != 0);  // 1 = true, 0 = false
+    } else {
+        std::cerr << "No user found for ID: " << id << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return isAdmin;
 }

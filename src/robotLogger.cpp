@@ -47,26 +47,27 @@ int main() {
         switch (currState) {
 
             case ST_Main: {
-                printMainMenu(loggedInUser->getFullname());
+                int menuItem = 0;
+                printMainMenu(loggedInUser->getFullname(), loggedInUser->isAdmin());
 
-                int menuItem = getIntInput(1, 5);
-                switch (menuItem) {
-                    case 1: 
-                        currState = ST_CheckOut; 
-                        break;
-                    case 2: 
-                        currState = ST_CheckIn; 
-                        break;
-                    case 3: 
-                        currState = ST_AddRobot;
-                        break;
-                    case 4:
-                        currState = ST_AddUser;
-                        break;
-                    case 5:
-                        currState = ST_Exit; 
-                        break;
+                if (loggedInUser->isAdmin()) {
+                    menuItem = getIntInput(1, 5);
+                    switch (menuItem) {
+                        case 1: currState = ST_CheckOut; break;
+                        case 2: currState = ST_CheckIn;  break;
+                        case 3: currState = ST_AddRobot; break;
+                        case 4: currState = ST_AddUser;  break;
+                        case 5: currState = ST_Exit;     break;
+                    }
+                } else {
+                    menuItem = getIntInput(1, 3);
+                    switch (menuItem) {
+                        case 1: currState = ST_CheckOut; break;
+                        case 2: currState = ST_CheckIn;  break;
+                        case 3: currState = ST_Exit;     break;
+                    }
                 }
+            
                 break;
             }
 

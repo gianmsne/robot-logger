@@ -5,6 +5,5 @@
 #include <vector>
 
 void addRobot();
-//bool addRobot();
 
 #endif // ADDROBOT_H

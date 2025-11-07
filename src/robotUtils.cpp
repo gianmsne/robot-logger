@@ -17,7 +17,7 @@ void addRobot() {
     
     sqlite3* db;
     std::string tableName = "robots";
-    std::string columnName = "Robot_Name";
+    std::string columnName = "robotName";
 
     try {
 

@@ -72,10 +72,11 @@ std::optional<User> logIn(const std::string& id) {
     }
 
     std::string username = getUserFromID(db, id);
+    bool adminStatus = getAdminStatus(id);
     sqlite3_close(db);
 
     if (username.empty()) return std::nullopt;
 
-    return User{id, username};
+    return User{id, username, adminStatus};
 }
 

@@ -10,7 +10,7 @@ int getIntInput(int min, int max) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Please enter a number between " << min << " and " << max << ": ";
-        } else {
+        } else { 
             valid = true;
         }
     }
@@ -23,14 +23,18 @@ void printStartText() {
     std::cout << " >> Tap Your User ID Card (or enter manually): s";
 }
 
-void printMainMenu(const std::string& id) {
+void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << std::endl;
     std::cout << "------------- User: " << id << " -------------" << std::endl;
     std::cout << "1) Check In" << std::endl;
     std::cout << "2) Check Out" << std::endl;
-    std::cout << "3) Add Robot" << std::endl;
-    std::cout << "4) Add User" << std::endl;
-    std::cout << "5) Exit" << std::endl;
+    if(isAdmin){
+        std::cout << "3) Add Robot" << std::endl;
+        std::cout << "4) Add User" << std::endl;
+        std::cout << "5) Exit" << std::endl;
+    } else {
+        std::cout << "3) Exit" << std::endl;
+    }
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: ";
 }
