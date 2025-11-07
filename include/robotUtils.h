@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-void menuSequence();
+void addRobot();
 //bool addRobot();
 
 #endif // ADDROBOT_H

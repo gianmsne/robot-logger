@@ -1,4 +1,4 @@
-#include "addUser.h"
+#include "userUtils.h"
 #include "menuUtils.h"
 #include "dbUtils.h"
 
@@ -58,3 +58,24 @@ void addUser() {
         std::cout << "Please try again" << std::endl;
     }
 }
+
+
+/*
+    Check if userID exists in the database, and return associated name
+*/
+std::optional<User> logIn(const std::string& id) {
+    sqlite3* db = nullptr;
+
+    if (sqlite3_open("database/robot_logger.db", &db) != SQLITE_OK) {
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+        return std::nullopt;
+    }
+
+    std::string username = getUserFromID(db, id);
+    sqlite3_close(db);
+
+    if (username.empty()) return std::nullopt;
+
+    return User{id, username};
+}
+

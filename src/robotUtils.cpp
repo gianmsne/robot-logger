@@ -1,10 +1,12 @@
-#include "addRobot.h"
+#include "robotUtils.h"
 #include "menuUtils.h"
 #include "dbUtils.h"
 
 #include <sqlite3.h>
 
-void menuSequence() {
+void addRobot() {
+
+    int input;
 
     std::string robotName;
     std::string robotID;
@@ -12,11 +14,26 @@ void menuSequence() {
     std::string robotType;
     std::string robotCondition;
     std::string robotStatus;
+    
+    sqlite3* db;
+    std::string tableName = "robots";
+    std::string columnName = "Robot_Name";
 
-    int input;
 
+    try {
+
+        if(sqlite3_open("database/robot_logger.db", &db)) {
+            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+            throw(0);
+        }
+    
+    } catch (...) {
+        std::cout << "There was an error while attempting to add the robot." << std::endl;
+    }
+    
     std::cout << std::endl;
     std::cout << "------------- ADD ROBOT -------------" << std::endl;
+
 
     /*
     Get Robot Name
@@ -25,6 +42,12 @@ void menuSequence() {
     std::cin >> robotName;
     // Clear leftover newline AFTER cin >>
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Check if robot already exists
+    if(existenceCheck(db, tableName, columnName, robotName)) {
+        std::cout << " >> Robot " + robotName + " already exists!" << std::endl;
+        return;
+    }
 
     
     /*
@@ -92,27 +115,12 @@ void menuSequence() {
     }
     std::cout << std::endl;
 
-
-    try {
-
-        sqlite3* db;
-        if(sqlite3_open("database/robot_logger.db", &db)) {
-            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-            throw(0);
-        }
-
-        if(insertRobot(db, robotName, robotType, robotCondition, robotID, location)) {
-            std::cout << "Robot added successfully!" << std::endl;
-        } else {
-            throw(0);
-        }
-
-        sqlite3_close(db);
-
-
-    } catch (...) {
-        std::cout << "There was an error while attempting to add the robot." << std::endl;
+    if(insertRobot(db, robotName, robotType, robotCondition, robotID, location)) {
+        std::cout << "Robot added successfully!" << std::endl;
+    } else {
+        std::cout << "Error! Could not add robot." << std::endl;
     }
 
+    sqlite3_close(db);
 
 }

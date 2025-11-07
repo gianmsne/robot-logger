@@ -19,3 +19,7 @@ bool insertUser(
     int isAdmin,
     int inducted
 );
+
+bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, std::string value);
+
+std::string getUserFromID(sqlite3* db, const std::string &id);

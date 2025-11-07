@@ -20,7 +20,7 @@ int getIntInput(int min, int max) {
 
 void printStartText() {
     std::cout << std::endl;
-    std::cout << " >> Tap Your User ID Card (or enter manually): ";
+    std::cout << " >> Tap Your User ID Card (or enter manually): s";
 }
 
 void printMainMenu(const std::string& id) {
@@ -66,18 +66,18 @@ void printCheckInMenu() {
 }
 
 void printRobotType() {
-    std::cout << " >> Select Robot Type: " << std::endl;
-    std::cout << " >>   1) Booster" << std::endl;
-    std::cout << " >>   2) Nao" << std::endl;
-    std::cout << " >> Select: ";
+    std::cout << ">> Choose Robot Type: " << std::endl;
+    std::cout << "     1) Booster" << std::endl;
+    std::cout << "     2) Nao" << std::endl;
+    std::cout << ">> Select: ";
 }
 
 void printRobotCondition() {
-    std::cout << " >> Select Robot Condition: " << std::endl;
-    std::cout << " >>   1) Perfect" << std::endl;
-    std::cout << " >>   2) Slightly Damaged" << std::endl;
-    std::cout << " >>   3) Partially Functional" << std::endl;
-    std::cout << " >>   4) Needs Repair" << std::endl;
-    std::cout << " >>   5) Retired" << std::endl;
-    std::cout << " >> Select: ";
+    std::cout << ">> Choose Robot Condition: " << std::endl;
+    std::cout << "     1) Perfect" << std::endl;
+    std::cout << "     2) Slightly Damaged" << std::endl;
+    std::cout << "     3) Partially Functional" << std::endl;
+    std::cout << "     4) Needs Repair" << std::endl;
+    std::cout << "     5) Retired" << std::endl;
+    std::cout << ">> Select: ";
 }

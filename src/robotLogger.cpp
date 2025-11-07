@@ -1,7 +1,8 @@
 #include "menuUtils.h"
+#include "dbUtils.h"
 #include "User.h"
-#include "addRobot.h"
-#include "addUser.h"
+#include "robotUtils.h"
+#include "userUtils.h"
 
 #include <iostream>
 #include <optional>
@@ -34,17 +35,26 @@ std::vector<std::string> getRobots(){
     return robotList;
 }
 
-
 int main() {
     States currState = ST_Main;
     std::vector<std::string> robots = getRobots();
-    std::optional<User> loggedInUser;
 
-    printStartText();
-    
+
+    std::optional<User> loggedInUser;
     std::string studentId;
-    std::cin >> studentId;
-    loggedInUser = User{studentId, "Gianluca"};
+
+    while (true) {
+        printStartText();
+        std::cin >> studentId;
+
+        loggedInUser = logIn(studentId);
+
+        if (loggedInUser.has_value())
+            break;
+
+        std::cout << "Invalid ID or User does not exist. Try again.\n";
+    }
+
 
     // Menu Handler
     while (currState != ST_Exit) {
@@ -103,12 +113,14 @@ int main() {
             }
 
             case ST_AddRobot: {
-                menuSequence();
+                addRobot();
                 currState = ST_Main;
+                break;
             }
 
             case ST_AddUser: {
                 addUser();
+                break;
             }
 
             default:
