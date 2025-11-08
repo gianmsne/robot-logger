@@ -50,7 +50,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
 
         // Insert check out record into database
         const char* query1 = 
-            "INSERT INTO logs (userID, robotName, checkOut) "
+            "INSERT INTO logs (checkOutUserID, robotName, checkOut) "
             "VALUES (?, ?, ?);";
 
         sqlite3_stmt* stmt1;

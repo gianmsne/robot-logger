@@ -64,7 +64,7 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     std::cout << "------------- CHECK-IN -------------" << std::endl;
 
     if(robots.empty()) {
-        std::cout << " >> You have no robots to check in." <<  std::endl;
+        std::cout << " >> There are no available robots to check in." <<  std::endl;
         pickedRobot = "";
         return;
     } else {
@@ -100,10 +100,10 @@ void printRobotType() {
 
 void printRobotCondition() {
     std::cout << ">> Choose Robot Condition: " << std::endl;
-    std::cout << "     1) Perfect" << std::endl;
-    std::cout << "     2) Slightly Damaged" << std::endl;
-    std::cout << "     3) Partially Functional" << std::endl;
-    std::cout << "     4) Needs Repair" << std::endl;
+    std::cout << "     1) Functional" << std::endl;
+    std::cout << "     2) Minor Issue" << std::endl;
+    std::cout << "     3) Needs Checking" << std::endl;
+    std::cout << "     4) Non-functional" << std::endl;
     std::cout << "     5) Retired" << std::endl;
     std::cout << ">> Select: ";
 }

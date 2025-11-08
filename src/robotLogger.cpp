@@ -95,7 +95,7 @@ int main() {
             case ST_CheckIn: {
                 std::string pickedRobot;
                 std::string notes;
-                std::vector<std::string> checkedOutRobots = getRobotsCheckedOutByUser(loggedInUser->getID());
+                std::vector<std::string> checkedOutRobots = getRobotsCurrentlyCheckedOut();
                 printCheckInMenu(checkedOutRobots, pickedRobot, notes);
                 
                 if(pickedRobot == "") {

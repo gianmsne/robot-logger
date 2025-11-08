@@ -11,6 +11,6 @@
 
 
 void addCheckInRecord(std::string userID, std::string robotName, std::string notes);
-std::vector<std::string> getRobotsCheckedOutByUser(const std::string& userID);
+std::vector<std::string> getRobotsCurrentlyCheckedOut();
 
 #endif // CHECKOUT_H

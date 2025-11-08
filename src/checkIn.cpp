@@ -47,7 +47,7 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
 
         // Update logs table
         const char* logsQuery =
-            "UPDATE logs SET checkIn = ? WHERE userID = ? AND robotName = ? AND checkIn IS NULL;";
+            "UPDATE logs SET checkIn = ?, checkInUserID = ? WHERE robotName = ? AND checkIn IS NULL;";
         sqlite3_stmt* logsStmt;
         rc = sqlite3_prepare_v2(db, logsQuery, -1, &logsStmt, nullptr);
         if(rc != SQLITE_OK) throw(0);
@@ -111,7 +111,7 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
 }
 
 
-std::vector<std::string> getRobotsCheckedOutByUser(const std::string& userID) {
+std::vector<std::string> getRobotsCurrentlyCheckedOut() {
     std::vector<std::string> robots;
 
     try {
@@ -127,7 +127,7 @@ std::vector<std::string> getRobotsCheckedOutByUser(const std::string& userID) {
         const char* query =
             "SELECT robotName "
             "FROM logs "
-            "WHERE userID = ? AND checkIn IS NULL;";
+            "WHERE checkIn IS NULL;";
 
         sqlite3_stmt* stmt;
         int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -136,9 +136,6 @@ std::vector<std::string> getRobotsCheckedOutByUser(const std::string& userID) {
             std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
             throw(0);
         }
-
-        // --- BIND ---
-        sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
 
         // --- EXECUTE ---
         while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
@@ -150,7 +147,7 @@ std::vector<std::string> getRobotsCheckedOutByUser(const std::string& userID) {
         sqlite3_close(db);
 
     } catch (...) {
-        std::cerr << "Error while retrieving robots checked out by user." << std::endl;
+        std::cerr << "Error while retrieving currently checked-out robots." << std::endl;
     }
 
     return robots;
