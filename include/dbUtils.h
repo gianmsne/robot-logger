@@ -22,7 +22,7 @@ bool insertUser(
 
 bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, std::string value);
 
-std::string getUserFromID(sqlite3* db, const std::string &id);
+std::string getUserFromID(sqlite3* db, const std::string &id, std::string &givenName);
 
 std::vector<std::string> getRobots();
 

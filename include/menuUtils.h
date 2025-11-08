@@ -11,8 +11,7 @@ int getIntInput(int min, int max);
 void printStartText();
 void printMainMenu(const std::string& id, bool isAdmin);
 void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot);
-void printCheckInMenu();
-void printExitMessage();
+void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes);
 void printRobotType();
 void printRobotCondition();
 

@@ -5,10 +5,10 @@ CXX = g++
 CXXFLAGS = -Iinclude -std=c++17 -Wall -Wextra -O2
 
 # Source files
-SRCS = src/robotLogger.cpp src/menuUtils.cpp src/User.cpp src/robotUtils.cpp src/userUtils.cpp src/dbUtils.cpp src/checkOut.cpp
+SRCS = src/robotLogger.cpp src/menuUtils.cpp src/User.cpp src/robotUtils.cpp src/userUtils.cpp src/dbUtils.cpp src/checkOut.cpp src/checkIn.cpp
 
 # Headers (for dependency tracking)
-HEADERS = include/User.h include/menuUtils.h include/robotUtils.h include/userUtils.h include/dbUtils.h include/checkOut.h
+HEADERS = include/User.h include/menuUtils.h include/robotUtils.h include/userUtils.h include/dbUtils.h include/checkOut.h include/checkIn.h
 
 # Output executable
 TARGET = robotLogger

@@ -65,18 +65,19 @@ void addUser() {
 */
 std::optional<User> logIn(const std::string& id) {
     sqlite3* db = nullptr;
+    std::string givenName = "";
 
     if (sqlite3_open("database/robot_logger.db", &db) != SQLITE_OK) {
         std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
         return std::nullopt;
     }
 
-    std::string username = getUserFromID(db, id);
+    std::string username = getUserFromID(db, id, givenName);
     bool adminStatus = getAdminStatus(id);
     sqlite3_close(db);
 
     if (username.empty()) return std::nullopt;
 
-    return User{id, username, adminStatus};
+    return User{id, givenName, username, adminStatus};
 }
 

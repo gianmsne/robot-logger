@@ -4,6 +4,7 @@
 #include "robotUtils.h"
 #include "userUtils.h"
 #include "checkOut.h"
+#include "checkIn.h"
 
 #include <iostream>
 #include <optional>
@@ -20,6 +21,12 @@ enum States{
     ST_AddUser,
     ST_Exit
 };
+
+void pressEnterToContinue() {
+    std::cout << "\nPress ENTER to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+}
 
 
 int main() {
@@ -75,29 +82,28 @@ int main() {
             case ST_CheckOut: {
                 std::string pickedRobot;
                 printCheckOutMenu(robots, pickedRobot);
-                
-                addCheckOutRecord(loggedInUser->getID(), pickedRobot);
-                // std::cout << "PICKED ROBOT: " << pickedRobot << std::endl;
+                addCheckOutRecord(loggedInUser->getID(), loggedInUser->getGivenName(), pickedRobot);
 
+                pressEnterToContinue();
                 currState = ST_Main;
                 break;
             }
 
             
             case ST_CheckIn: {
-                printCheckInMenu();
-                int menuItem = getIntInput(1, 3);
-                switch (menuItem) {
-                    case 1: 
-                        // Handle checkout option 1
-                        break;
-                    case 2: 
-                        // Handle checkout option 2
-                        break;
-                    case 3: 
-                        currState = ST_Main; 
-                        break;
+                std::string pickedRobot;
+                std::string notes;
+                std::vector<std::string> checkedOutRobots = getRobotsCheckedOutByUser(loggedInUser->getID());
+                printCheckInMenu(checkedOutRobots, pickedRobot, notes);
+                
+                if(pickedRobot == "") {
+                    pressEnterToContinue();
+                    currState = ST_Main;
+                    break;
                 }
+                addCheckInRecord(loggedInUser->getID(), pickedRobot, notes);
+                
+                currState = ST_Main;
                 break;
             }
 

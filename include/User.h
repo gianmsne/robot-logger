@@ -8,13 +8,15 @@ class User {
 
     private:
         std::string ID;
+        std::string givenName;
         std::string fullname;
         bool adminStatus;
 
     public:
-        User(std::string ID, std::string fullname, bool adminStatus);
+        User(std::string ID, std::string givenName, std::string fullname, bool adminStatus);
         std::string getID();
         std::string getFullname();
+        std::string getGivenName();
         bool isAdmin();
 };
 

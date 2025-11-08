@@ -113,7 +113,7 @@ bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, 
 }
 
 
-std::string getUserFromID(sqlite3* db, const std::string& id) {
+std::string getUserFromID(sqlite3* db, const std::string& id, std::string& givenName) {
     std::string query =
         "SELECT givenName, familyName FROM users WHERE userID = '" + id + "';";
 
@@ -133,7 +133,7 @@ std::string getUserFromID(sqlite3* db, const std::string& id) {
 
     // Read first column: Given_Name
     const unsigned char* givenNameText = sqlite3_column_text(stmt, 0);
-    std::string givenName = givenNameText ? reinterpret_cast<const char*>(givenNameText) : "";
+    givenName = givenNameText ? reinterpret_cast<const char*>(givenNameText) : "";
 
     // Read second column: Family_Name
     const unsigned char* familyNameText = sqlite3_column_text(stmt, 1);

@@ -59,14 +59,38 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     }
 }
 
-void printCheckInMenu() {
+void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes) {
     std::cout << std::endl;
     std::cout << "------------- CHECK-IN -------------" << std::endl;
-    std::cout << "1) kessel" << std::endl;
-    std::cout << "2) jupiter" << std::endl;
-    std::cout << "3) Back" << std::endl;
+
+    if(robots.empty()) {
+        std::cout << " >> You have no robots to check in." <<  std::endl;
+        pickedRobot = "";
+        return;
+    } else {
+        for (unsigned int i = 0; i < robots.size(); i++) {
+            std::cout << i + 1 << ") " << robots[i] << std::endl;
+        }
+    }
+
     std::cout << std::endl;
-    std::cout << "Pick robot number: ";
+    std::cout << "Enter robot item to continue: ";
+    int num;
+    std::cin >> num;
+    
+    if(num >= 1 && num <= (int)robots.size()) {
+        pickedRobot = robots[num - 1];
+    } else {
+        pickedRobot = "";
+    }
+
+    std::cout << std::endl;
+    std::cout << "Enter any notes about the robot's condition: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+    std::getline(std::cin, notes);
+    if(notes.empty()) {
+        notes = "No notes provided.";
+    }
 }
 
 void printRobotType() {
