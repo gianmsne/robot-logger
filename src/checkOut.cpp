@@ -50,8 +50,8 @@ void addCheckOutRecord(std::string userID, std::string givenName, std::string ro
 
         // Insert check out record into database
         const char* query1 = 
-            "INSERT INTO logs (userID, givenName, robotName, checkOut) "
-            "VALUES (?, ?, ?, ?);";
+            "INSERT INTO logs (userID, robotName, checkOut) "
+            "VALUES (?, ?, ?);";
 
         sqlite3_stmt* stmt1;
         rc = sqlite3_prepare_v2(db, query1, -1, &stmt1, nullptr);
@@ -62,9 +62,8 @@ void addCheckOutRecord(std::string userID, std::string givenName, std::string ro
 
         // Bind values
         sqlite3_bind_text(stmt1, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt1, 2, givenName.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt1, 3, robotName.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int64(stmt1, 4, static_cast<sqlite3_int64>(now));
+        sqlite3_bind_text(stmt1, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int64(stmt1, 3, static_cast<sqlite3_int64>(now));
 
         // Execute
         rc = sqlite3_step(stmt1);
