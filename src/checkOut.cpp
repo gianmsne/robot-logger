@@ -3,7 +3,7 @@
 #include <sqlite3.h>
 
 
-void addCheckOutRecord(std::string userID, std::string givenName, std::string robotName) {
+void addCheckOutRecord(std::string userID, std::string robotName) {
 
     time_t now = time(0);
 

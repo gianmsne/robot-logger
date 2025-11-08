@@ -83,14 +83,12 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     } else {
         pickedRobot = "";
     }
-
+    
     std::cout << std::endl;
     std::cout << "Enter any notes about the robot's condition: ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     std::getline(std::cin, notes);
-    if(notes.empty()) {
-        notes = "No notes provided.";
-    }
+    std::cin.clear();
 }
 
 void printRobotType() {

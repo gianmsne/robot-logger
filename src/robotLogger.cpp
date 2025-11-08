@@ -24,8 +24,10 @@ enum States{
 
 void pressEnterToContinue() {
     std::cout << "\nPress ENTER to continue...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.get();
+    if (std::cin.peek() == '\n') { // if leftover newline
+        std::cin.get();           // consume it
+    }
+    std::cin.get();               // wait for Enter
 }
 
 
@@ -101,7 +103,9 @@ int main() {
                     currState = ST_Main;
                     break;
                 }
+
                 addCheckInRecord(loggedInUser->getID(), pickedRobot, notes);
+                pressEnterToContinue();
                 
                 currState = ST_Main;
                 break;
