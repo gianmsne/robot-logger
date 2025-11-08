@@ -81,7 +81,6 @@ bool insertUser(
 };
 
 
-
 /*
     Check for existing item in a table.
         Parameters include the table, column and value to search for existing

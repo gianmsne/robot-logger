@@ -24,27 +24,10 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
             throw(0);
         }
 
-        // Get user's givenName
-        std::string givenName;
-        const char* userQuery = "SELECT givenName FROM users WHERE userID = ?;";
-        sqlite3_stmt* userStmt;
-        int rc = sqlite3_prepare_v2(db, userQuery, -1, &userStmt, nullptr);
-        if(rc != SQLITE_OK) throw(0);
-        sqlite3_bind_text(userStmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
-        rc = sqlite3_step(userStmt);
-        if(rc == SQLITE_ROW) {
-            givenName = reinterpret_cast<const char*>(sqlite3_column_text(userStmt, 0));
-        } else {
-            std::cerr << "User not found" << std::endl;
-            sqlite3_finalize(userStmt);
-            throw(0);
-        }
-        sqlite3_finalize(userStmt);
-
         // Check robot availability
         const char* availabilityQuery = "SELECT isAvailable FROM robots WHERE robotName = ?;";
         sqlite3_stmt* availabilityStmt;
-        rc = sqlite3_prepare_v2(db, availabilityQuery, -1, &availabilityStmt, nullptr);
+        int rc = sqlite3_prepare_v2(db, availabilityQuery, -1, &availabilityStmt, nullptr);
         if(rc != SQLITE_OK) throw(0);
         sqlite3_bind_text(availabilityStmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
         rc = sqlite3_step(availabilityStmt);
@@ -88,7 +71,7 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
             if(rc != SQLITE_OK) throw(0);
             sqlite3_bind_text(notesStmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
             sqlite3_bind_text(notesStmt, 2, notes.c_str(), -1, SQLITE_TRANSIENT);
-            sqlite3_bind_text(notesStmt, 3, givenName.c_str(), -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(notesStmt, 3, userID.c_str(), -1, SQLITE_TRANSIENT); // use userID
             sqlite3_bind_int64(notesStmt, 4, static_cast<sqlite3_int64>(now));
             rc = sqlite3_step(notesStmt);
             if(rc != SQLITE_DONE) {
@@ -121,7 +104,6 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
         }
 
         sqlite3_close(db);
-        // std::cout << "[DEBUG]: Check in record added successfully!" << std::endl;
 
     } catch (...) {
         std::cout << "There was an error while attempting to add the check in record." << std::endl;
