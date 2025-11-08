@@ -84,7 +84,7 @@ int main() {
             case ST_CheckOut: {
                 std::string pickedRobot;
                 printCheckOutMenu(robots, pickedRobot);
-                addCheckOutRecord(loggedInUser->getID(), loggedInUser->getGivenName(), pickedRobot);
+                addCheckOutRecord(loggedInUser->getID(), pickedRobot);
 
                 pressEnterToContinue();
                 currState = ST_Main;
