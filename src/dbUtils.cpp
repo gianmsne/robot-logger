@@ -9,8 +9,8 @@ bool insertRobot(
     const std::string& location
 ) {
     const char* query = 
-        "INSERT INTO robots (robotName, robotType, robotCondition, rmitID, location, lastUsedPerson, lastUsedTime, notes, isAvailable) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        "INSERT INTO robots (robotName, robotType, robotCondition, rmitID, location, isAvailable) "
+        "VALUES (?, ?, ?, ?, ?, ?);";
 
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -25,10 +25,7 @@ bool insertRobot(
     sqlite3_bind_text(stmt, 3, robotCondition.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 4, robotID.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 5, location.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 6, "None", -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 7, "None", -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 8, "None", -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 9, 1); // is_Available is set to 1 (True) by default
+    sqlite3_bind_int(stmt, 6, 1); // is_Available is set to 1 (True) by default
 
     // Execute
     rc = sqlite3_step(stmt);
