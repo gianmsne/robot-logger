@@ -2,6 +2,10 @@
 
 This is a C++ command-line application that allows users to check out and check in robots, track usage, and leave notes about robot conditions. It uses an SQLite database to store user, robot, log, and note information.
 
+<p align="center">
+  <img src="nao-icon.png" width="160">
+</p>
+
 ---
 
 ## Features
