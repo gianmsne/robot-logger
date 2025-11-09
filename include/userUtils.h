@@ -5,7 +5,7 @@
 #include "User.h"
 
 void addUser();
-void modifyUser();
+void modifyUser(const std::string loggedInUserID);
 std::optional<User> logIn(const std::string& id);
 
 #endif // ADDUSER_H

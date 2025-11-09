@@ -59,7 +59,7 @@ void addUser() {
     }
 }
 
-void modifyUser() {
+void modifyUser(const std::string loggedInUserID) {
 
     std::string userID;
     std::string userGivenName;
@@ -81,11 +81,11 @@ void modifyUser() {
     };
 
     int choice = -1;
-    while(choice != 5){
+    while(choice != 6){
         std::cout << "\nUser Settings for: s" + userID + ", " + getUserFromID(userID, userGivenName) << std::endl;
         printModifyUserMenu();
 
-        choice = getIntInput(1,5);
+        choice = getIntInput(1,6);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
         switch(choice){
             case 1:
@@ -111,7 +111,21 @@ void modifyUser() {
                 updateInductionStatus(userID, inducted);
                 break;
             case 5:
-                return;
+                if(loggedInUserID == userID){
+                    std::cout << "You cannot delete the user you are currently logged in as." << std::endl;
+                    break;
+                }
+                std::cout << "Are you sure you want to delete " + userID + "?" << std::endl;
+                input = getResponse();
+                if (input == 'y' || input == 'Y') { 
+                    removeUser(userID);
+                    choice = 6; // Exit after deletion
+                } else {
+                   return;
+                } 
+                break;
+            case 6:
+                break;
         }
     }
 }

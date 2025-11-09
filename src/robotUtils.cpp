@@ -111,11 +111,11 @@ void modifyRobot() {
     };
 
     int choice = -1;
-    while(choice != 6){
+    while(choice != 7){
         std::cout << "\nRobot details for: " + robotName << std::endl;
         printModifyRobotMenu();
 
-        choice = getIntInput(1,6);
+        choice = getIntInput(1,7);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
         switch(choice){
             case 1:
@@ -162,7 +162,17 @@ void modifyRobot() {
                 updateAvailability(robotName, isAvailable);
                 break;
             case 6:
-                return;
+                std::cout << "Are you sure you want to delete " + robotName + "?" << std::endl;
+                input = getResponse();
+                if (input == 'y' || input == 'Y') { 
+                    removeRobot(robotName);
+                    choice = 7; // Exit after deletion
+                } else {
+                   return;
+                } 
+                break;
+            case 7:
+                break;
         }   
     }
 }

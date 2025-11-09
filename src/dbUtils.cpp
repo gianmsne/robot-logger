@@ -552,3 +552,68 @@ void updateAvailability(const std::string& robotName, const int& isAvailable){
     sqlite3_finalize(stmt);
     return;
 };
+
+
+void removeRobot(const std::string& robotName){
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "DELETE FROM robots WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Delete failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    std::cout << "Robot " + robotName + " has been removed from the database." << std::endl;
+    return;
+};
+
+void removeUser(const std::string& id){
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "DELETE FROM users WHERE userID = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Delete failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+        std::cout << "User " + id + " has been removed from the database." << std::endl;
+    return;
+};

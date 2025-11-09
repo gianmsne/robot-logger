@@ -166,7 +166,8 @@ void printModifyUserMenu() {
     std::cout << "     2) Family Name" << std::endl;
     std::cout << "     3) Admin Status" << std::endl;
     std::cout << "     4) Induction Status" << std::endl;
-    std::cout << "     5) Done" << std::endl;
+    std::cout << "     5) Delete User" << std::endl;
+    std::cout << "     6) Done" << std::endl;
     std::cout << ">> Select: ";
 }
 
@@ -177,6 +178,7 @@ void printModifyRobotMenu() {
     std::cout << "     3) ID" << std::endl;
     std::cout << "     4) Location" << std::endl;
     std::cout << "     5) Availability" << std::endl;
-    std::cout << "     6) Done" << std::endl;
+    std::cout << "     6) Delete Robot" << std::endl;
+    std::cout << "     7) Done" << std::endl;
     std::cout << ">> Select: ";
 }

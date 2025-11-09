@@ -39,3 +39,6 @@ void updateCondition(const std::string& robotName, const std::string& robotCondi
 void updateRobotID(const std::string& robotName, const std::string& robotID);
 void updateLocation(const std::string& robotName, const std::string& location);
 void updateAvailability(const std::string& robotName, const int& isAvailable);
+
+void removeRobot(const std::string& robotName);
+void removeUser(const std::string& userID);

@@ -73,6 +73,7 @@ int main() {
 
             case ST_Main: {
                 int menuItem = 0;
+                loggedInUser = logIn(studentId); // Refresh user info
                 printMainMenu(loggedInUser->getFullname(), loggedInUser->isAdmin());
 
                 if (loggedInUser->isAdmin()) {
@@ -147,7 +148,7 @@ int main() {
             }
 
             case ST_ModifyUser: {
-                modifyUser();
+                modifyUser(loggedInUser->getID());
                 currState = ST_Main;
                 break;
             }
