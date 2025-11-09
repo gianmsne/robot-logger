@@ -5,6 +5,7 @@
 #include "userUtils.h"
 #include "checkOut.h"
 #include "checkIn.h"
+#include "dbUtils.h"
 
 #include <iostream>
 #include <optional>
@@ -18,7 +19,9 @@ enum States{
     ST_CheckOut,
     ST_CheckIn,
     ST_AddRobot,
+    ST_ModifyRobot,
     ST_AddUser,
+    ST_ModifyUser,
     ST_Exit
 };
 
@@ -33,6 +36,10 @@ void pressEnterToContinue() {
 
 int main() {
     States currState = ST_Main;
+
+    if (!openDBConnection()) {
+        return 1;
+    }
 
     std::vector<std::string> robots = getRobots();
     std::optional<User> loggedInUser;
@@ -61,13 +68,15 @@ int main() {
                 printMainMenu(loggedInUser->getFullname(), loggedInUser->isAdmin());
 
                 if (loggedInUser->isAdmin()) {
-                    menuItem = getIntInput(1, 5);
+                    menuItem = getIntInput(1, 7);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
                         case 3: currState = ST_AddRobot; break;
-                        case 4: currState = ST_AddUser;  break;
-                        case 5: currState = ST_Exit;     break;
+                        case 4: currState = ST_ModifyRobot;  break;
+                        case 5: currState = ST_AddUser;  break;
+                        case 6: currState = ST_ModifyUser;  break;
+                        case 7: currState = ST_Exit;     break;
                     }
                 } else {
                     menuItem = getIntInput(1, 3);
@@ -117,8 +126,21 @@ int main() {
                 break;
             }
 
+            case ST_ModifyRobot: {
+                std::cout << "TODO: Modify Robot feature." << std::endl;
+                currState = ST_Main;
+                break;
+            }
+
             case ST_AddUser: {
                 addUser();
+                currState = ST_Main;
+                break;
+            }
+
+            case ST_ModifyUser: {
+                modifyUser();
+                currState = ST_Main;
                 break;
             }
 
@@ -129,5 +151,6 @@ int main() {
     }
 
     loggedInUser.reset();
+    closeDBConnection();
     return 0;
 }

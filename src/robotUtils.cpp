@@ -37,7 +37,7 @@ void addRobot() {
     std::cin >> robotName;
     //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    if(existenceCheck(db, tableName, columnName, robotName)) {
+    if(existenceCheck(tableName, columnName, robotName)) {
         std::cout << " >> Robot " + robotName + " already exists!" << std::endl;
         return;
     }
@@ -93,7 +93,7 @@ void addRobot() {
     }
     std::cout << std::endl;
 
-    if(insertRobot(db, robotName, robotType, robotCondition, robotID, location)) {
+    if(insertRobot(robotName, robotType, robotCondition, robotID, location)) {
         std::cout << "Robot added successfully!" << std::endl;
     } else {
         std::cout << "Error! Could not add robot." << std::endl;

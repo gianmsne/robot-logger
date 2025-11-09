@@ -30,8 +30,10 @@ void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << "2) Check In" << std::endl;
     if(isAdmin){
         std::cout << "3) Add Robot" << std::endl;
-        std::cout << "4) Add User" << std::endl;
-        std::cout << "5) Exit" << std::endl;
+        std::cout << "4) Modify Robot" << std::endl;
+        std::cout << "5) Add User" << std::endl;
+        std::cout << "6) Modify User" << std::endl;
+        std::cout << "7) Exit" << std::endl;
     } else {
         std::cout << "3) Exit" << std::endl;
     }
@@ -105,5 +107,15 @@ void printRobotCondition() {
     std::cout << "     3) Needs Checking" << std::endl;
     std::cout << "     4) Non-functional" << std::endl;
     std::cout << "     5) Retired" << std::endl;
+    std::cout << ">> Select: ";
+}
+
+void printModifyMenu() {
+    std::cout << ">> Choose user item to modify: " << std::endl;
+    std::cout << "     1) Given Name" << std::endl;
+    std::cout << "     2) Family Name" << std::endl;
+    std::cout << "     3) Admin Status" << std::endl;
+    std::cout << "     4) Induction Status" << std::endl;
+    std::cout << "     5) Cancel" << std::endl;
     std::cout << ">> Select: ";
 }

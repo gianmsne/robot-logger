@@ -4,6 +4,26 @@
 
 #include <sqlite3.h>
 
+char getResponse() {
+    std::string input;
+    char inputChar;
+
+    while (true) {
+        std::cout << " Select (y/n): ";
+        std::getline(std::cin, input); // getting entire line here to avoid repeating error messages
+
+        if (input.empty()) continue;  // user pressed Enter
+
+        inputChar = toupper(input[0]);  // take first character only
+
+        if (inputChar == 'Y' || inputChar == 'N')
+            return inputChar;
+
+        std::cout << "Invalid input. Please enter y or n.\n";
+    }
+}
+
+
 void addUser() {
 
     std::string userID;
@@ -45,7 +65,7 @@ void addUser() {
             throw(0);
         }
 
-        if(insertUser(db, userID, userGivenName, userFamilyName, isAdmin, inducted)) {
+        if(insertUser(userID, userGivenName, userFamilyName, isAdmin, inducted)) {
             std::cout << "User added successfully!" << std::endl;
         } else {
             throw(0);
@@ -56,6 +76,63 @@ void addUser() {
     } catch (...) {
         std::cout << "There was an error while attempting to add the user." << std::endl;
         std::cout << "Please try again" << std::endl;
+    }
+}
+
+void modifyUser() {
+
+    std::string userID;
+    std::string userGivenName;
+    std::string userFamilyName;
+    int isAdmin = 0;
+    int inducted = 0;
+
+    char input;
+
+    std::cout << std::endl;
+    std::cout << "------------- MODIFY USER -------------" << std::endl;
+
+    std::cout << ">> Tap User ID Card (or enter manually) to modify: s";
+    std::cin >> userID;
+
+    while(!existenceCheck("users", "userID", userID)){
+        std::cout << "User ID does not exist. Try Again: s";
+        std::cin >> userID;
+    };
+
+    int choice = -1;
+    while(choice != 5){
+        std::cout << "\nUser Settings for: s" + userID + ", " + getUserFromID(userID, userGivenName) << std::endl;
+        printModifyMenu();
+
+        choice = getIntInput(1,5);
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+        switch(choice){
+            case 1:
+                std::cout << "Enter new Given Name: ";
+                std::cin >> userGivenName;
+                updateGivenName(userID, userGivenName);
+                break;
+            case 2:
+                std::cout << "Enter new Family Name: ";
+                std::cin >> userFamilyName;
+                updateFamilyName(userID, userFamilyName);
+                break;
+            case 3:
+                std::cout << "Admin Status - ";
+                input = getResponse();
+                if (input == 'y' || input == 'Y') { isAdmin = 1; } 
+                updateAdminStatus(userID, isAdmin);
+                break;
+            case 4:
+                std::cout << "Induction Status - ";
+                input = getResponse();
+                if (input == 'y' || input == 'Y') { inducted = 1; } 
+                updateInductionStatus(userID, inducted);
+                break;
+            case 5:
+                return;
+        }
     }
 }
 
@@ -72,7 +149,7 @@ std::optional<User> logIn(const std::string& id) {
         return std::nullopt;
     }
 
-    std::string username = getUserFromID(db, id, givenName);
+    std::string username = getUserFromID(id, givenName);
     bool adminStatus = getAdminStatus(id);
     sqlite3_close(db);
 

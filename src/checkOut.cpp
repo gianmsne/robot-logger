@@ -8,7 +8,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
     time_t now = time(0);
 
     std::cout << "\n------------- CHECK OUT ROBOT -------------" << std::endl;
-    std::cout << " >> User ID: " << userID << std::endl;
+    std::cout << " >> User ID: s" << userID << std::endl;
     std::cout << " >> Robot Name: " << robotName << std::endl;
     std::cout << " >> Check Out Time: " << ctime(&now) << std::endl;
 

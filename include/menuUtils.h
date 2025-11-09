@@ -14,5 +14,6 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
 void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes);
 void printRobotType();
 void printRobotCondition();
+void printModifyMenu();
 
 #endif // MENUUTILS_H

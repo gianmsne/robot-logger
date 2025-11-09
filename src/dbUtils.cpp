@@ -1,20 +1,51 @@
 #include "dbUtils.h"
 
+sqlite3 *globalDB = nullptr;
+
+bool openDBConnection()
+{
+    if (globalDB != nullptr)
+    {
+        return true; // already open
+    }
+
+    if (sqlite3_open("database/robot_logger.db", &globalDB) != SQLITE_OK)
+    {
+        std::cerr << "Can't open database: " << sqlite3_errmsg(globalDB) << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+void closeDBConnection()
+{
+    if (globalDB != nullptr)
+    {
+        sqlite3_close(globalDB);
+        globalDB = nullptr;
+    }
+}
+
 bool insertRobot(
-    sqlite3* db,
-    const std::string& robotName,
-    const std::string& robotType,
-    const std::string& robotCondition,
-    const std::string& robotID,
-    const std::string& location
-) {
-    const char* query = 
+    const std::string &robotName,
+    const std::string &robotType,
+    const std::string &robotCondition,
+    const std::string &robotID,
+    const std::string &location)
+{
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query =
         "INSERT INTO robots (robotName, robotType, robotCondition, rmitID, location, isAvailable) "
         "VALUES (?, ?, ?, ?, ?, ?);";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
-    if(rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
@@ -29,7 +60,8 @@ bool insertRobot(
 
     // Execute
     rc = sqlite3_step(stmt);
-    if(rc != SQLITE_DONE) {
+    if (rc != SQLITE_DONE)
+    {
         std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
         sqlite3_finalize(stmt);
         return false;
@@ -40,20 +72,23 @@ bool insertRobot(
 };
 
 bool insertUser(
-    sqlite3* db,
-    const std::string& userID,
-    const std::string& userGivenName,
-    const std::string& userFamilyName,
+    const std::string &userID,
+    const std::string &userGivenName,
+    const std::string &userFamilyName,
     int isAdmin,
-    int inducted
-) {
-    const char* query = 
+    int inducted)
+{
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query =
         "INSERT INTO users (userID, givenName, familyName, isAdmin, isInducted) "
         "VALUES (?, ?, ?, ?, ?);";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
-    if(rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
@@ -67,7 +102,8 @@ bool insertUser(
 
     // Execute
     rc = sqlite3_step(stmt);
-    if(rc != SQLITE_DONE) {
+    if (rc != SQLITE_DONE)
+    {
         std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
         sqlite3_finalize(stmt);
         return false;
@@ -77,27 +113,34 @@ bool insertUser(
     return true;
 };
 
-
 /*
     Check for existing item in a table.
         Parameters include the table, column and value to search for existing
 */
-bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, std::string value){
+bool existenceCheck(std::string tableName, std::string columnName, std::string value)
+{
+    bool exists = false;
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
     std::string query = "SELECT COUNT(*) FROM " + tableName +
                         " WHERE " + columnName + " = '" + value + "'";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK){
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        return false;
+        exists = false;
     }
 
     rc = sqlite3_step(stmt);
-    if(rc != SQLITE_ROW) {
+    if (rc != SQLITE_ROW)
+    {
         std::cerr << "Existence Check Failed: " << sqlite3_errmsg(db) << std::endl;
         sqlite3_finalize(stmt);
-        return false;
+        exists = false;
     }
 
     int count = sqlite3_column_int(stmt, 0);
@@ -105,35 +148,45 @@ bool existenceCheck(sqlite3* db, std::string tableName, std::string columnName, 
     sqlite3_finalize(stmt);
 
     // If count > 0, value exists
-    return count > 0;
+    if (count > 0)
+    {
+        exists = true;
+    };
+    return exists;
 }
 
+std::string getUserFromID(const std::string &id, std::string &givenName)
+{
 
-std::string getUserFromID(sqlite3* db, const std::string& id, std::string& givenName) {
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
     std::string query =
         "SELECT givenName, familyName FROM users WHERE userID = '" + id + "';";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: "
                   << sqlite3_errmsg(db) << std::endl;
         return "";
     }
 
     rc = sqlite3_step(stmt);
-    if (rc != SQLITE_ROW) {
+    if (rc != SQLITE_ROW)
+    {
         sqlite3_finalize(stmt);
         return "";
     }
 
     // Read first column: Given_Name
-    const unsigned char* givenNameText = sqlite3_column_text(stmt, 0);
-    givenName = givenNameText ? reinterpret_cast<const char*>(givenNameText) : "";
+    const unsigned char *givenNameText = sqlite3_column_text(stmt, 0);
+    givenName = givenNameText ? reinterpret_cast<const char *>(givenNameText) : "";
 
     // Read second column: Family_Name
-    const unsigned char* familyNameText = sqlite3_column_text(stmt, 1);
-    std::string familyName = familyNameText ? reinterpret_cast<const char*>(familyNameText) : "";
+    const unsigned char *familyNameText = sqlite3_column_text(stmt, 1);
+    std::string familyName = familyNameText ? reinterpret_cast<const char *>(familyNameText) : "";
 
     sqlite3_finalize(stmt);
 
@@ -141,39 +194,33 @@ std::string getUserFromID(sqlite3* db, const std::string& id, std::string& given
     return givenName + " " + familyName;
 }
 
-
-std::vector<std::string> getRobots(){
+std::vector<std::string> getRobots()
+{
     std::vector<std::string> robotList;
 
-    sqlite3* db;
-    try {
+    openDBConnection();
+    sqlite3 *db = globalDB;
 
-        if(sqlite3_open("database/robot_logger.db", &db)) {
-            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-            throw(0);
-        }
-    
-    } catch (...) {
-        std::cout << "There was an error while attempting to add the robot." << std::endl;
-    }
-
-    
     std::string query = "SELECT robotName FROM robots;";
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return robotList; // return empty vector on error
     }
 
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-        const unsigned char* text = sqlite3_column_text(stmt, 0);
-        if (text) {
-            robotList.push_back(reinterpret_cast<const char*>(text));
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
+        const unsigned char *text = sqlite3_column_text(stmt, 0);
+        if (text)
+        {
+            robotList.push_back(reinterpret_cast<const char *>(text));
         }
     }
 
-    if (rc != SQLITE_DONE) {
+    if (rc != SQLITE_DONE)
+    {
         std::cerr << "Error reading robots: " << sqlite3_errmsg(db) << std::endl;
     }
 
@@ -181,38 +228,170 @@ std::vector<std::string> getRobots(){
     return robotList;
 }
 
-bool getAdminStatus(const std::string &id) {
-    sqlite3* db = nullptr;
+bool getAdminStatus(const std::string &id)
+{
 
-    if (sqlite3_open("database/robot_logger.db", &db) != SQLITE_OK) {
-        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-        return false;
-    }
+    openDBConnection();
+    sqlite3 *db = globalDB;
 
     // SQL query to get Is_Admin (0 or 1)
     std::string query = "SELECT isAdmin FROM users WHERE userID = '" + id + "';";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_close(db);
         return false;
     }
 
     rc = sqlite3_step(stmt);
     bool isAdmin = false;
 
-    if (rc == SQLITE_ROW) {
+    if (rc == SQLITE_ROW)
+    {
         // Read the first column as int
         int val = sqlite3_column_int(stmt, 0);
-        isAdmin = (val != 0);  // 1 = true, 0 = false
-    } else {
+        isAdmin = (val != 0); // 1 = true, 0 = false
+    }
+    else
+    {
         std::cerr << "No user found for ID: " << id << std::endl;
     }
 
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
 
     return isAdmin;
 }
+
+void updateGivenName(const std::string &id, const std::string &newGivenName)
+{
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE users SET givenName = ? WHERE userID = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, newGivenName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+}
+
+void updateFamilyName(const std::string &id, const std::string &newFamilyName)
+{
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE users SET familyName = ? WHERE userID = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, newFamilyName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateAdminStatus(const std::string &id, int isAdmin)
+{
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE users SET isAdmin = ? WHERE userID = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_int(stmt, 1, isAdmin);
+    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateInductionStatus(const std::string &id, int inducted)
+{
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE users SET isInducted = ? WHERE userID = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_int(stmt, 1, inducted);
+    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
