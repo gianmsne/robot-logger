@@ -127,7 +127,7 @@ int main() {
             }
 
             case ST_ModifyRobot: {
-                std::cout << "TODO: Modify Robot feature." << std::endl;
+                modifyRobot();
                 currState = ST_Main;
                 break;
             }

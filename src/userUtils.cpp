@@ -4,26 +4,6 @@
 
 #include <sqlite3.h>
 
-char getResponse() {
-    std::string input;
-    char inputChar;
-
-    while (true) {
-        std::cout << " Select (y/n): ";
-        std::getline(std::cin, input); // getting entire line here to avoid repeating error messages
-
-        if (input.empty()) continue;  // user pressed Enter
-
-        inputChar = toupper(input[0]);  // take first character only
-
-        if (inputChar == 'Y' || inputChar == 'N')
-            return inputChar;
-
-        std::cout << "Invalid input. Please enter y or n.\n";
-    }
-}
-
-
 void addUser() {
 
     std::string userID;
@@ -103,7 +83,7 @@ void modifyUser() {
     int choice = -1;
     while(choice != 5){
         std::cout << "\nUser Settings for: s" + userID + ", " + getUserFromID(userID, userGivenName) << std::endl;
-        printModifyMenu();
+        printModifyUserMenu();
 
         choice = getIntInput(1,5);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer

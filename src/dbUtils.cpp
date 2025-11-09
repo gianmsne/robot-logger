@@ -330,7 +330,7 @@ void updateFamilyName(const std::string &id, const std::string &newFamilyName)
     return;
 };
 
-void updateAdminStatus(const std::string &id, int isAdmin)
+void updateAdminStatus(const std::string &id, const int& isAdmin)
 {
 
     openDBConnection();
@@ -363,7 +363,7 @@ void updateAdminStatus(const std::string &id, int isAdmin)
     return;
 };
 
-void updateInductionStatus(const std::string &id, int inducted)
+void updateInductionStatus(const std::string &id, const int& inducted)
 {
 
     openDBConnection();
@@ -382,6 +382,163 @@ void updateInductionStatus(const std::string &id, int inducted)
     // Bind values
     sqlite3_bind_int(stmt, 1, inducted);
     sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateType(const std::string& robotName, const std::string& robotType){
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE robots SET robotType = ? WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, robotType.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateCondition(const std::string& robotName, const std::string& robotCondition){
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE robots SET robotCondition = ? WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, robotCondition.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateRobotID(const std::string& robotName, const std::string& robotID){
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE robots SET rmitID = ? WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, robotID.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateLocation(const std::string& robotName, const std::string& location){
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE robots SET location = ? WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_text(stmt, 1, location.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
+
+void updateAvailability(const std::string& robotName, const int& isAvailable){
+
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    const char *query = "UPDATE robots SET isAvailable = ? WHERE robotName = ? ";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    // Bind values
+    sqlite3_bind_int(stmt, 1, isAvailable);
+    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);

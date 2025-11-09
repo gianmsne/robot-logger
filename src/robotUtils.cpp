@@ -15,20 +15,8 @@ void addRobot() {
     std::string robotCondition;
     std::string robotStatus;
     
-    sqlite3* db;
     std::string tableName = "robots";
     std::string columnName = "robotName";
-
-    try {
-
-        if(sqlite3_open("database/robot_logger.db", &db)) {
-            std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
-            throw(0);
-        }
-    
-    } catch (...) {
-        std::cout << "There was an error while attempting to add the robot." << std::endl;
-    }
     
     std::cout << "\n------------- ADD ROBOT -------------" << std::endl;
 
@@ -99,6 +87,82 @@ void addRobot() {
         std::cout << "Error! Could not add robot." << std::endl;
     }
 
-    sqlite3_close(db);
+}
 
+void modifyRobot() {
+    std::string robotName;
+    std::string robotType;
+    std::string robotCondition;
+    std::string robotID;
+    std::string location;
+    int isAvailable;
+
+    char input;
+
+    std::cout << std::endl;
+    std::cout << "------------- MODIFY ROBOT -------------" << std::endl;
+
+    std::cout << ">> Enter robot name to modify: ";
+    std::cin >> robotName;
+
+    while(!existenceCheck("robots", "robotName", robotName)){
+        std::cout << "Robot " + robotName + " does not exist. Try Again: ";
+        std::cin >> robotName;
+    };
+
+    int choice = -1;
+    while(choice != 6){
+        std::cout << "\nRobot details for: " + robotName << std::endl;
+        printModifyRobotMenu();
+
+        choice = getIntInput(1,6);
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+        switch(choice){
+            case 1:
+                printRobotType();
+
+                choice = getIntInput(1,2);
+                robotType = getRobotType(choice);
+
+                updateType(robotName, robotType);
+                break;
+            case 2:
+                printRobotCondition();
+
+                choice = getIntInput(1,5);
+                robotCondition = getRobotCondition(choice);
+
+                if(robotCondition == "Retired" || robotCondition == "Non-functional") {
+                    std::cout << "Setting robot as unavailable due to condition." << std::endl;
+                    updateAvailability(robotName, 0); // Set to unavailable
+                } else {
+                    updateAvailability(robotName, 1); // Set to available
+                }
+
+                updateCondition(robotName, robotCondition);
+                break;
+            case 3:
+                std::cout << "Enter new ID: ";
+                std::cin >> robotID;
+                updateRobotID(robotName, robotID);
+                break;
+            case 4:
+                std::cout << "Enter new location: ";
+                std::getline (std::cin, location);
+                updateLocation(robotName, location);
+                break;
+            case 5:
+                std::cout << "Availability Status - ";
+                input = getResponse();
+                if (input == 'y' || input == 'Y') { 
+                    isAvailable = 1; 
+                } else {
+                    isAvailable = 0;
+                } 
+                updateAvailability(robotName, isAvailable);
+                break;
+            case 6:
+                return;
+        }   
+    }
 }

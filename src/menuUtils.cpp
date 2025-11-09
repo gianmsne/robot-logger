@@ -18,6 +18,25 @@ int getIntInput(int min, int max) {
     return input;
 }
 
+char getResponse() {
+    std::string input;
+    char inputChar;
+
+    while (true) {
+        std::cout << " Select (y/n): ";
+        std::getline(std::cin, input); // getting entire line here to avoid repeating error messages
+
+        if (input.empty()) continue;  // user pressed Enter
+
+        inputChar = toupper(input[0]);  // take first character only
+
+        if (inputChar == 'Y' || inputChar == 'N')
+            return inputChar;
+
+        std::cout << "Invalid input. Please enter y or n.\n";
+    }
+}
+
 void printStartText() {
     std::cout << std::endl;
     std::cout << " >> Tap Your User ID Card (or enter manually): s";
@@ -100,6 +119,17 @@ void printRobotType() {
     std::cout << ">> Select: ";
 }
 
+std::string getRobotType(int typeChoice) {
+    switch(typeChoice){
+        case 1:
+            return "booster";
+        case 2:
+            return "nao";
+        default:
+            return "unknown";
+    }
+}
+
 void printRobotCondition() {
     std::cout << ">> Choose Robot Condition: " << std::endl;
     std::cout << "     1) Functional" << std::endl;
@@ -110,12 +140,40 @@ void printRobotCondition() {
     std::cout << ">> Select: ";
 }
 
-void printModifyMenu() {
-    std::cout << ">> Choose user item to modify: " << std::endl;
+std::string getRobotCondition(int conditionChoice) {
+    switch(conditionChoice){
+        case 1:
+            return "Functional";
+        case 2:
+            return "Minor Issue";
+        case 3:
+            return "Needs Checking";
+        case 4:
+            return "Non-functional";
+        case 5:
+            return "Retired";
+        default:
+            return "Unknown";
+    }
+}
+
+void printModifyUserMenu() {
+    std::cout << ">> Choose user detail to modify: " << std::endl;
     std::cout << "     1) Given Name" << std::endl;
     std::cout << "     2) Family Name" << std::endl;
     std::cout << "     3) Admin Status" << std::endl;
     std::cout << "     4) Induction Status" << std::endl;
-    std::cout << "     5) Cancel" << std::endl;
+    std::cout << "     5) Done" << std::endl;
+    std::cout << ">> Select: ";
+}
+
+void printModifyRobotMenu() {
+    std::cout << ">> Choose robot detail to modify: " << std::endl;
+    std::cout << "     1) Type" << std::endl;
+    std::cout << "     2) Condition" << std::endl;
+    std::cout << "     3) ID" << std::endl;
+    std::cout << "     4) Location" << std::endl;
+    std::cout << "     5) Availability" << std::endl;
+    std::cout << "     6) Done" << std::endl;
     std::cout << ">> Select: ";
 }
