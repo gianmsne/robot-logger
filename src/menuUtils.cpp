@@ -39,7 +39,7 @@ char getResponse() {
 
 void printStartText() {
     std::cout << std::endl;
-    std::cout << " >> Tap Your User ID Card (or enter manually): s";
+    std::cout << " >> Scan Your User ID Card (press ESC to enter manually)" << std::endl;
 }
 
 void printMainMenu(const std::string& id, bool isAdmin) {

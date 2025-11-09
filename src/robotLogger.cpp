@@ -6,6 +6,7 @@
 #include "checkOut.h"
 #include "checkIn.h"
 #include "dbUtils.h"
+#include "barcodeUtils/barcodeScanner.h"
 
 #include <iostream>
 #include <optional>
@@ -35,6 +36,7 @@ void pressEnterToContinue() {
 
 
 int main() {
+    
     States currState = ST_Main;
 
     if (!openDBConnection()) {
@@ -44,10 +46,16 @@ int main() {
     std::vector<std::string> robots = getRobots();
     std::optional<User> loggedInUser;
     std::string studentId;
+    
 
     while (true) {
-        printStartText();
-        std::cin >> studentId;
+    
+        studentId = scanRobotBarcode();
+        
+        if (studentId.empty()) {
+            std::cout << "Enter student ID: s";
+            std::cin >> studentId;
+        }
 
         loggedInUser = logIn(studentId);
 
