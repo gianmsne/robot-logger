@@ -48,10 +48,13 @@ void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << "1) Check Out" << std::endl;
     std::cout << "2) Check In" << std::endl;
     if(isAdmin){
+        std::cout << "\n>> Robot Options: " << std::endl;
         std::cout << "3) Add Robot" << std::endl;
         std::cout << "4) Modify Robot" << std::endl;
+        std::cout << "\n>> User Options: "<< std::endl;
         std::cout << "5) Add User" << std::endl;
         std::cout << "6) Modify User" << std::endl;
+        std::cout << std::endl;
         std::cout << "7) Exit" << std::endl;
     } else {
         std::cout << "3) Exit" << std::endl;
