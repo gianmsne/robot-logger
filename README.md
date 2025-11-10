@@ -37,6 +37,22 @@ This is a C++ command-line application that allows users to check out and check 
   - Tables include `users`, `robots`, `logs`, and `notes`.
 
 
+### Command-Line Flags
+
+This application supports optional flags that modify its behavior at runtime. Flags are passed when running the executable:
+
+```
+./robotLogger [flags]
+```
+
+#### Available Flags
+
+| Flag          | Description                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| `-headless`   | Runs the program in headless mode. The barcode scanner will not attempt to display a camera window. Useful for terminals without a GUI. |
+| `-nocam`      | Disables camera input entirely. Forces manual entry of student IDs and robot barcodes. Useful when no camera is connected. |
+
+
 # Installation
 
 Clone the project repository:

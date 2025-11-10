@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
         studentId = scanRobotBarcode(headless, noCam);
 
         if (studentId.empty()) {
-            std::cout << "Enter student ID: s";
+            std::cout << std::endl;
+            std::cout << "Enter your student ID: s";
             std::cin >> studentId;
         }
 
