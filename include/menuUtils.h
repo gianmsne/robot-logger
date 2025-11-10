@@ -20,5 +20,6 @@ void printRobotCondition();
 std::string getRobotCondition(int conditionChoice);
 void printModifyRobotMenu();
 void printModifyUserMenu();
+void printLogin();
 
 #endif // MENUUTILS_H

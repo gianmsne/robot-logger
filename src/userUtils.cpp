@@ -15,7 +15,7 @@ void addUser() {
     char input;
 
     std::cout << std::endl;
-    std::cout << "------------- ADD USER -------------" << std::endl;
+    std::cout << " ------------- ADD USER -------------" << std::endl;
 
     std::cout << " >> Tap Your User ID Card (or enter manually): ";
     std::cin >> userID;
@@ -46,7 +46,7 @@ void addUser() {
         }
 
         if(insertUser(userID, userGivenName, userFamilyName, isAdmin, inducted)) {
-            std::cout << "User added successfully!" << std::endl;
+            std::cout << " User added successfully!" << std::endl;
         } else {
             throw(0);
         }
@@ -54,8 +54,8 @@ void addUser() {
         sqlite3_close(db);
 
     } catch (...) {
-        std::cout << "There was an error while attempting to add the user." << std::endl;
-        std::cout << "Please try again" << std::endl;
+        std::cout << " There was an error while attempting to add the user." << std::endl;
+        std::cout << " Please try again" << std::endl;
     }
 }
 
@@ -70,52 +70,52 @@ void modifyUser(const std::string loggedInUserID) {
     char input;
 
     std::cout << std::endl;
-    std::cout << "------------- MODIFY USER -------------" << std::endl;
+    std::cout << " ------------- MODIFY USER -------------" << std::endl;
 
-    std::cout << ">> Tap User ID Card (or enter manually) to modify: s";
+    std::cout << " >> Tap User ID Card (or enter manually) to modify: s";
     std::cin >> userID;
 
     while(!existenceCheck("users", "userID", userID)){
-        std::cout << "User ID does not exist. Try Again: s";
+        std::cout << " User ID does not exist. Try Again: s";
         std::cin >> userID;
     };
 
     int choice = -1;
     while(choice != 6){
-        std::cout << "\nUser Settings for: s" + userID + ", " + getUserFromID(userID, userGivenName) << std::endl;
+        std::cout << "\n User Settings for: s" + userID + ", " + getUserFromID(userID, userGivenName) << std::endl;
         printModifyUserMenu();
 
         choice = getIntInput(1,6);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
         switch(choice){
             case 1:
-                std::cout << "Enter new Given Name: ";
+                std::cout << " Enter new Given Name: ";
                 std::cin >> userGivenName;
                 updateGivenName(userID, userGivenName);
                 break;
             case 2:
-                std::cout << "Enter new Family Name: ";
+                std::cout << " Enter new Family Name: ";
                 std::cin >> userFamilyName;
                 updateFamilyName(userID, userFamilyName);
                 break;
             case 3:
-                std::cout << "Admin Status - ";
+                std::cout << " Admin Status - ";
                 input = getResponse();
                 if (input == 'y' || input == 'Y') { isAdmin = 1; } 
                 updateAdminStatus(userID, isAdmin);
                 break;
             case 4:
-                std::cout << "Induction Status - ";
+                std::cout << " Induction Status - ";
                 input = getResponse();
                 if (input == 'y' || input == 'Y') { inducted = 1; } 
                 updateInductionStatus(userID, inducted);
                 break;
             case 5:
                 if(loggedInUserID == userID){
-                    std::cout << "You cannot delete the user you are currently logged in as." << std::endl;
+                    std::cout << " You cannot delete the user you are currently logged in as." << std::endl;
                     break;
                 }
-                std::cout << "Are you sure you want to delete " + userID + "?" << std::endl;
+                std::cout << " Are you sure you want to delete " + userID + "?" << std::endl;
                 input = getResponse();
                 if (input == 'y' || input == 'Y') { 
                     removeUser(userID);

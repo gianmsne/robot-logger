@@ -4,6 +4,7 @@
 #include <iostream>
 #include "menuUtils.h"
 
+
 // Max frames to scan in headless mode 
 const int MAX_HEADLESS_FRAMES = 300; // (~10 seconds at 30 FPS)
 

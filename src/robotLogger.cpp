@@ -14,9 +14,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <chrono>
+#include <thread>
 
 
 enum States{
+    ST_Login,
     ST_Main,
     ST_CheckOut,
     ST_CheckIn,
@@ -28,7 +31,7 @@ enum States{
 };
 
 void pressEnterToContinue() {
-    std::cout << "\nPress ENTER to continue...";
+    std::cout << "\n Press ENTER to continue...";
     if (std::cin.peek() == '\n') { // if leftover newline
         std::cin.get();           // consume it
     }
@@ -50,37 +53,40 @@ int main(int argc, char* argv[]) {
         else if (arg == "-nocam") noCam = true;
     }
 
-    States currState = ST_Main;
+    States currState = ST_Login;
 
     if (!openDBConnection()) {
         return 1;
     }
 
+
     std::vector<std::string> robots = getRobots();
     std::optional<User> loggedInUser;
     std::string studentId; 
 
-    while (true) {
 
+    // Menu Handler
+    while (currState != ST_Exit) {
+
+        while (currState == ST_Login) {
+        printLogin();
         studentId = scanRobotBarcode(headless, noCam);
 
         if (studentId.empty()) {
-            std::cout << std::endl;
-            std::cout << "Enter your student ID: s";
+            std::cout << "                             Enter your student ID: s";
             std::cin >> studentId;
         }
 
         loggedInUser = logIn(studentId);
 
-        if (loggedInUser.has_value())
-            break;
+        if (loggedInUser.has_value()) {
+            currState = ST_Main;
+        } else {
+            std::cout << " Invalid ID or User does not exist. Try again.\n";
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
 
-        std::cout << "Invalid ID or User does not exist. Try again.\n";
-    }
-
-
-    // Menu Handler
-    while (currState != ST_Exit) {
+        }
 
         switch (currState) {
 
@@ -98,14 +104,14 @@ int main(int argc, char* argv[]) {
                         case 4: currState = ST_ModifyRobot;  break;
                         case 5: currState = ST_AddUser;  break;
                         case 6: currState = ST_ModifyUser;  break;
-                        case 7: currState = ST_Exit;     break;
+                        case 7: currState = ST_Login;     break;
                     }
                 } else {
                     menuItem = getIntInput(1, 3);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
-                        case 3: currState = ST_Exit;     break;
+                        case 3: currState = ST_Login;     break;
                     }
                 }
             
@@ -166,8 +172,14 @@ int main(int argc, char* argv[]) {
                 break;
             }
 
+            case ST_Login: {
+                loggedInUser.reset();
+                currState = ST_Login;
+                break;
+            }
+
             default:
-                currState = ST_Exit;
+                currState = ST_Login;
                 break;
         }
     }

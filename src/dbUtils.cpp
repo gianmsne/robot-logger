@@ -254,10 +254,10 @@ bool getAdminStatus(const std::string &id)
         int val = sqlite3_column_int(stmt, 0);
         isAdmin = (val != 0); // 1 = true, 0 = false
     }
-    else
-    {
-        std::cerr << "No user found for ID: " << id << std::endl;
-    }
+    // else
+    // {
+    //     //std::cerr << "No user found for ID: " << id << std::endl;
+    // }
 
     sqlite3_finalize(stmt);
 

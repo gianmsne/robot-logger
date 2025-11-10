@@ -8,9 +8,9 @@ CXXFLAGS_BASE = -Iinclude -std=c++17 -Wall -Wextra -O2
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)  # macOS
-    OPENCV_INC = -I/opt/homebrew/include/opencv4
+    OPENCV_INC = $(shell pkg-config --cflags opencv4)
     OPENCV_LIB = -L/opt/homebrew/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs
-    ZBAR_INC = -I/opt/homebrew/include
+    ZBAR_INC = $(shell pkg-config --cflags zbar)
     ZBAR_LIB = -L/opt/homebrew/lib -lzbar
 else                       # Linux
     OPENCV_INC = `pkg-config --cflags opencv4`
