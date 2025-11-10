@@ -22,9 +22,6 @@ CMakeCache.txt
 *.ui
 *.rcc
 
-# Student Database
-database/robot_logger.db
-
 # Other IDEs
 .vscode/
 .idea/
