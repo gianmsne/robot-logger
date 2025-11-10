@@ -35,8 +35,18 @@ void pressEnterToContinue() {
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
     
+    bool headless = false;
+    bool noCam = false;
+
+    // Parse flags
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "-headless") headless = true;
+        else if (arg == "-nocam") noCam = true;
+    }
+
     States currState = ST_Main;
 
     if (!openDBConnection()) {
@@ -45,13 +55,16 @@ int main() {
 
     std::vector<std::string> robots = getRobots();
     std::optional<User> loggedInUser;
-    std::string studentId;
-    
+    std::string studentId; 
 
     while (true) {
-    
-        studentId = scanRobotBarcode();
-        
+
+        if(noCam){
+            std::cout << "-nocam flag detected. Skipping camera scan.\n" << std::endl;
+        } else {
+            studentId = scanRobotBarcode(headless);
+        }
+
         if (studentId.empty()) {
             std::cout << "Enter student ID: s";
             std::cin >> studentId;

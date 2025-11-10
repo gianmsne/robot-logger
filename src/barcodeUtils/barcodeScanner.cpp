@@ -4,8 +4,9 @@
 #include <iostream>
 #include "menuUtils.h"
 
-std::string scanRobotBarcode() {
+std::string scanRobotBarcode(bool headless = false) {
     printStartText();
+
     cv::VideoCapture cap(0);
     if (!cap.isOpened()) {
         std::cerr << "Cannot open webcam.\n";
@@ -18,39 +19,45 @@ std::string scanRobotBarcode() {
     cv::Mat frame, gray;
     std::string barcodeData = "";
 
-    
-    //std::cout << "Scanning barcode... Press ESC to cancel.\n";
+    int frames = 0;
+    const int maxFrames = headless ? 300 : -1; // ~10 seconds in headless mode
 
     while (true) {
         cap >> frame;
         if (frame.empty()) break;
 
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
-
         zbar::Image image(gray.cols, gray.rows, "Y800", gray.data, gray.cols * gray.rows);
         scanner.scan(image);
 
-        for (auto symbol = image.symbol_begin(); symbol != image.symbol_end(); ++symbol) {
+        for (auto symbol = image.symbol_begin(); symbol != image.symbol_end(); ++symbol)
             barcodeData = symbol->get_data();
-        }
 
-        cv::imshow("Scan Barcode", frame);
-        int key = cv::waitKey(1);  // process GUI events
-        if (!barcodeData.empty() || key == 27) {  // ESC or barcode found
+        if (!headless) {
+            cv::imshow("Scan Barcode", frame);
+            int key = cv::waitKey(1);
+            if (!barcodeData.empty() || key == 27) break;
+        } else if (!barcodeData.empty()) {
             break;
         }
+
+        if (headless && frames++ >= maxFrames) break;
     }
 
     cap.release();
-    cv::destroyAllWindows();
-    cv::waitKey(1);  // ensure windows close on some platforms
+    if (!headless) {
+        cv::destroyAllWindows();
+        cv::waitKey(1);
+    }
 
-    // If ESC was pressed, return empty string for manual entry
-    if (barcodeData.empty()) return "";
-
-    // Extract substring positions 6–12 (1-based)
     if (barcodeData.size() >= 12) {
-        barcodeData = barcodeData.substr(5, 7);
+        barcodeData = barcodeData.substr(5, 7); // positions 6–12
+    }
+
+    // If headless and barcode not found, prompt user automatically
+    if (headless && barcodeData.empty()) {
+        std::cout << "Barcode not detected. Enter student ID manually: s";
+        std::cin >> barcodeData;
     }
 
     return barcodeData;

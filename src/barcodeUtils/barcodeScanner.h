@@ -1,4 +1,4 @@
 #pragma once
 #include <string>
 
-std::string scanRobotBarcode();
+std::string scanRobotBarcode(bool headless = false);
