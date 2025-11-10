@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 
     while (true) {
 
-        std::string studentId = scanRobotBarcode(headless, noCam);
+        studentId = scanRobotBarcode(headless, noCam);
 
         if (studentId.empty()) {
             std::cout << "Enter student ID: s";
