@@ -4,7 +4,13 @@
 #include <iostream>
 #include "menuUtils.h"
 
-std::string scanRobotBarcode(bool headless = false) {
+// Max frames to scan in headless mode 
+const int MAX_HEADLESS_FRAMES = 300; // (~10 seconds at 30 FPS)
+
+std::string scanRobotBarcode(bool headless = false, bool noCam = false) {
+    // Skip camera entirely if -nocam
+    if (noCam) return "";
+
     printStartText();
 
     cv::VideoCapture cap(0);
@@ -18,30 +24,33 @@ std::string scanRobotBarcode(bool headless = false) {
 
     cv::Mat frame, gray;
     std::string barcodeData = "";
-
-    int frames = 0;
-    const int maxFrames = headless ? 300 : -1; // ~10 seconds in headless mode
+    int frameCount = 0;
 
     while (true) {
         cap >> frame;
         if (frame.empty()) break;
+        frameCount++;
 
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+
         zbar::Image image(gray.cols, gray.rows, "Y800", gray.data, gray.cols * gray.rows);
         scanner.scan(image);
 
-        for (auto symbol = image.symbol_begin(); symbol != image.symbol_end(); ++symbol)
+        for (auto symbol = image.symbol_begin(); symbol != image.symbol_end(); ++symbol) {
             barcodeData = symbol->get_data();
+        }
 
-        if (!headless) {
+        if (!headless) {  // GUI mode
             cv::imshow("Scan Barcode", frame);
             int key = cv::waitKey(1);
             if (!barcodeData.empty() || key == 27) break;
-        } else if (!barcodeData.empty()) {
-            break;
+        } else {  // headless mode
+            if (!barcodeData.empty() || frameCount >= MAX_HEADLESS_FRAMES){
+                std::cout << "Barcode reader timed out. Please manually enter your ID." << std::endl;
+                break;
+            }
+             
         }
-
-        if (headless && frames++ >= maxFrames) break;
     }
 
     cap.release();
@@ -50,15 +59,7 @@ std::string scanRobotBarcode(bool headless = false) {
         cv::waitKey(1);
     }
 
-    if (barcodeData.size() >= 12) {
-        barcodeData = barcodeData.substr(5, 7); // positions 6–12
-    }
-
-    // If headless and barcode not found, prompt user automatically
-    if (headless && barcodeData.empty()) {
-        std::cout << "Barcode not detected. Enter student ID manually: s";
-        std::cin >> barcodeData;
-    }
+    if (barcodeData.size() >= 12) barcodeData = barcodeData.substr(5, 7);
 
     return barcodeData;
 }

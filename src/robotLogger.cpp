@@ -59,11 +59,7 @@ int main(int argc, char* argv[]) {
 
     while (true) {
 
-        if(noCam){
-            std::cout << "-nocam flag detected. Skipping camera scan.\n" << std::endl;
-        } else {
-            studentId = scanRobotBarcode(headless);
-        }
+        std::string studentId = scanRobotBarcode(headless, noCam);
 
         if (studentId.empty()) {
             std::cout << "Enter student ID: s";
