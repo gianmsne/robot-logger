@@ -1,8 +1,9 @@
 #ifndef ADDUSER_H
 #define ADDUSER_H
 
-#include <iostream>
 #include "User.h"
+#include <iostream>
+#include <optional>
 
 void addUser();
 void modifyUser(const std::string loggedInUserID);
