@@ -8,6 +8,7 @@
 #include "dbUtils.h"
 #include "barcodeUtils/barcodeScanner.h"
 
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -36,6 +37,8 @@ void pressEnterToContinue() {
 
 
 int main(int argc, char* argv[]) {
+
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR); //suppress opencv warnings
     
     bool headless = false;
     bool noCam = false;
