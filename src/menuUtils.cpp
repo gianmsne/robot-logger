@@ -184,6 +184,11 @@ void printModifyRobotMenu() {
 }
 
 void printLogin(){
+
+    for(int i = 0; i < 30; i++) {
+        std::cout << std::endl;
+    }
+
     std::cout << R"(
                                                                                                     
                                                                                                     
@@ -233,5 +238,5 @@ void printLogin(){
 )" << std::endl;
 
     // Print heading
-    std::cout << "                         ------------- Robot Logger -------------\n" << std::endl;
+    std::cout << "                             ------------- Robot Logger -------------\n" << std::endl;
 }
