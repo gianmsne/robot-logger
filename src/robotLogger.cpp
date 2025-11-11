@@ -43,14 +43,14 @@ int main(int argc, char* argv[]) {
 
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR); //suppress opencv warnings
     
+    bool camera = false;
     bool headless = false;
-    bool noCam = false;
 
     // Parse flags
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
-        if (arg == "-headless") headless = true;
-        else if (arg == "-nocam") noCam = true;
+        if (arg == "-camera") camera = true;
+        else if (arg == "-headless") headless = true;
     }
 
     States currState = ST_Login;
@@ -70,10 +70,17 @@ int main(int argc, char* argv[]) {
 
         while (currState == ST_Login) {
         printLogin();
-        studentId = scanRobotBarcode(headless, noCam);
+        
+        if(camera || headless){
+             studentId = scanRobotBarcode(camera, headless);
+        } else {
+            printStartText();
+            std::cin >> studentId;
+        }
+        
 
         if (studentId.empty()) {
-            std::cout << "                                 Enter your student ID: s";
+            printStartText();
             std::cin >> studentId;
         }
 
@@ -122,7 +129,7 @@ int main(int argc, char* argv[]) {
                 robots = getRobots(); // Refresh robot list
                 std::string pickedRobot;
                 printCheckOutMenu(robots, pickedRobot);
-                
+
                 if(pickedRobot == "") {
                     pressEnterToContinue();
                     currState = ST_Main;

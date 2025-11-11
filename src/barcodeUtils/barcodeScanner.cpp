@@ -8,11 +8,8 @@
 // Max frames to scan in headless mode 
 const int MAX_HEADLESS_FRAMES = 300; // (~10 seconds at 30 FPS)
 
-std::string scanRobotBarcode(bool headless = false, bool noCam = false) {
-    // Skip camera entirely if -nocam
-    if (noCam) return "";
-
-    printStartText();
+std::string scanRobotBarcode(bool camera = false, bool headless = false) {
+    printStartTextScan();
 
     cv::VideoCapture cap(0);
     if (!cap.isOpened()) {
@@ -41,21 +38,21 @@ std::string scanRobotBarcode(bool headless = false, bool noCam = false) {
             barcodeData = symbol->get_data();
         }
 
-        if (!headless) {  // GUI mode
+        if (camera) {  // GUI mode
             cv::imshow("Scan Barcode", frame);
             int key = cv::waitKey(1);
             if (!barcodeData.empty() || key == 27) break;
-        } else {  // headless mode
-            if (!barcodeData.empty() || frameCount >= MAX_HEADLESS_FRAMES){
-                std::cout << "Barcode reader timed out. Please manually enter your ID." << std::endl;
+        } else if (headless) {  // headless mode
+            if (!barcodeData.empty() || frameCount >= MAX_HEADLESS_FRAMES) {
+                if (barcodeData.empty())
+                    std::cout << "\n                        Barcode reader timed out. Please manually enter your ID." << std::endl;
                 break;
             }
-             
         }
     }
 
     cap.release();
-    if (!headless) {
+    if (camera) {  // only destroy windows if GUI was used
         cv::destroyAllWindows();
         cv::waitKey(1);
     }

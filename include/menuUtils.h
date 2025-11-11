@@ -6,20 +6,21 @@
 #include <vector>
 #include <limits>
 
-// Function declarations
 int getIntInput(int min, int max);
 char getResponse();
-
 void printStartText();
+void printStartTextScan();
+void printLogin();
 void printMainMenu(const std::string& id, bool isAdmin);
 void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot);
 void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes);
 void printRobotType();
-std::string getRobotType(int typeChoice);
 void printRobotCondition();
-std::string getRobotCondition(int conditionChoice);
 void printModifyRobotMenu();
 void printModifyUserMenu();
-void printLogin();
+std::string getRobotType(int typeChoice);
+std::string getRobotCondition(int conditionChoice);
+
+
 
 #endif // MENUUTILS_H
