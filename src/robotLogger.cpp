@@ -119,8 +119,16 @@ int main(int argc, char* argv[]) {
             }
 
             case ST_CheckOut: {
+                robots = getRobots(); // Refresh robot list
                 std::string pickedRobot;
                 printCheckOutMenu(robots, pickedRobot);
+                
+                if(pickedRobot == "") {
+                    pressEnterToContinue();
+                    currState = ST_Main;
+                    break;
+                }
+
                 addCheckOutRecord(loggedInUser->getID(), pickedRobot);
 
                 pressEnterToContinue();

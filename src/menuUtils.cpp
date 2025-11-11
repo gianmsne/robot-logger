@@ -9,7 +9,7 @@ int getIntInput(int min, int max) {
         if(std::cin.fail() || input < min || input > max){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << " Please enter a number between " << min << " and " << max << ": ";
+            std::cout << "\n Please enter a number between " << min << " and " << max << ": ";
         } else { 
             valid = true;
         }
@@ -66,29 +66,11 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
-
-    for (unsigned int i = 0; i < robots.size(); i++) {
-        std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
-    }
-
-    std::cout << std::endl;
-    std::cout << " Enter robot item to continue: ";
-    int num;
-    std::cin >> num;
-    
-    if(num >= 1 && num <= (int)robots.size()) {
-        pickedRobot = robots[num - 1];
-    } else {
-        pickedRobot = "";
-    }
-}
-
-void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes) {
-    std::cout << std::endl;
-    std::cout << " ------------- CHECK-IN -------------" << std::endl;
+    std::cout << "          enter '0' to cancel        \n" << std::endl;
+     
 
     if(robots.empty()) {
-        std::cout << "  >> There are no available robots to check in." <<  std::endl;
+        std::cout << "  >> There are no available robots to check out." <<  std::endl;
         pickedRobot = "";
         return;
     } else {
@@ -100,12 +82,44 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     std::cout << std::endl;
     std::cout << " Enter robot item to continue: ";
     int num;
-    std::cin >> num;
+    num = getIntInput(0, (int)robots.size());
+    
+
+    if(num >= 1 && num <= (int)robots.size()) {
+        pickedRobot = robots[num - 1];
+    } else {
+        std::cout << " Check-out cancelled." << std::endl;
+        pickedRobot = "";
+        return;
+    }
+}
+
+void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes) {
+    std::cout << std::endl;
+    std::cout << " ------------- CHECK-IN -------------" << std::endl;
+    std::cout << "          enter '0' to cancel        \n" << std::endl;
+
+    if(robots.empty()) {
+        std::cout << "  >> There are no robots to be checked-in." <<  std::endl;
+        pickedRobot = "";
+        return;
+    } else {
+        for (unsigned int i = 0; i < robots.size(); i++) {
+            std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << " Enter robot item to continue: ";
+    int num;
+    num = getIntInput(0, (int)robots.size());
     
     if(num >= 1 && num <= (int)robots.size()) {
         pickedRobot = robots[num - 1];
     } else {
+        std::cout << " Check-in cancelled." << std::endl;
         pickedRobot = "";
+        return;
     }
     
     std::cout << std::endl;

@@ -38,7 +38,7 @@ void addRobot() {
     // Get robot location
     std::cout << " >> Enter Location ( [Enter] for \"RACE Hub\" ): ";
     std::getline(std::cin, location);
-    if (location.empty()) { location = " Race Hub"; }
+    if (location.empty()) { location = "RACE Hub"; }
     
     // Get Robot Type (Nao/Booster)
     printRobotType();

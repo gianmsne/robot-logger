@@ -201,7 +201,7 @@ std::vector<std::string> getRobots()
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    std::string query = "SELECT robotName FROM robots;";
+    std::string query = "SELECT robotName FROM robots WHERE isAvailable = 1;";
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK)
