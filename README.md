@@ -13,20 +13,20 @@ This is a C++ command-line application that allows users to check out and check 
 ## Features
 
 - **User Login**
-  - Users can log in using their ID (simulating a card tap or manual entry).
+  - Users can log in using their ID (Tapping their card on an RFID reader or with manual entry).
   - Admin users have additional privileges.
 
 - **Robot Check-Out**
   - View a list of available robots.
-  - Check out a robot and record the transaction.
+  - Check out a robot and record the action as a log.
 
 - **Robot Check-In**
   - View robots currently checked out by the logged-in user.
   - Check in robots and optionally leave notes about their condition.
 
 - **Admin Features**
-  - Add new robots.
-  - Add new users.
+  - Add/modify robots.
+  - Add/modify users.
 
 - **Notes**
   - Users can leave notes on robot condition when checking in.
