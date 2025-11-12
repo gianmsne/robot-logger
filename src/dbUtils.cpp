@@ -397,6 +397,7 @@ void updateInductionStatus(const std::string &id, const int& inducted)
 };
 
 void updateType(const std::string& robotName, const std::string& robotType){
+    
     openDBConnection();
     sqlite3 *db = globalDB;
 
@@ -428,6 +429,7 @@ void updateType(const std::string& robotName, const std::string& robotType){
 };
 
 void updateCondition(const std::string& robotName, const std::string& robotCondition){
+
     openDBConnection();
     sqlite3 *db = globalDB;
 
@@ -459,6 +461,7 @@ void updateCondition(const std::string& robotName, const std::string& robotCondi
 };
 
 void updateRobotID(const std::string& robotName, const std::string& robotID){
+
     openDBConnection();
     sqlite3 *db = globalDB;
 

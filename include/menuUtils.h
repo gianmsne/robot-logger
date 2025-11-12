@@ -6,8 +6,6 @@
 #include <vector>
 #include <limits>
 
-int getIntInput(int min, int max);
-char getResponse();
 void printStartText();
 void printStartTextScan();
 void printLogin();

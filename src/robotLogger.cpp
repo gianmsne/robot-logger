@@ -7,6 +7,7 @@
 #include "checkIn.h"
 #include "dbUtils.h"
 #include "barcodeUtils/barcodeScanner.h"
+#include "inputValidation.h"
 
 #include <opencv2/opencv.hpp>
 #include <iostream>

@@ -1,6 +1,7 @@
 #include "userUtils.h"
 #include "menuUtils.h"
 #include "dbUtils.h"
+#include "inputValidation.h"
 
 #include <sqlite3.h>
 
@@ -100,13 +101,13 @@ void modifyUser(const std::string loggedInUserID) {
                 break;
             case 3:
                 std::cout << " Admin Status - ";
-                input = getResponse();
+                input = getYesNo();
                 if (input == 'y' || input == 'Y') { isAdmin = 1; } 
                 updateAdminStatus(userID, isAdmin);
                 break;
             case 4:
                 std::cout << " Induction Status - ";
-                input = getResponse();
+                input = getYesNo();
                 if (input == 'y' || input == 'Y') { inducted = 1; } 
                 updateInductionStatus(userID, inducted);
                 break;
@@ -116,7 +117,7 @@ void modifyUser(const std::string loggedInUserID) {
                     break;
                 }
                 std::cout << " Are you sure you want to delete " + userID + "?" << std::endl;
-                input = getResponse();
+                input = getYesNo();
                 if (input == 'y' || input == 'Y') { 
                     removeUser(userID);
                     choice = 6; // Exit after deletion

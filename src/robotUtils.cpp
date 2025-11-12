@@ -1,6 +1,7 @@
 #include "robotUtils.h"
 #include "menuUtils.h"
 #include "dbUtils.h"
+#include "inputValidation.h"
 
 #include <sqlite3.h>
 
@@ -153,7 +154,7 @@ void modifyRobot() {
                 break;
             case 5:
                 std::cout << " Availability Status - ";
-                input = getResponse();
+                input = getYesNo();
                 if (input == 'y' || input == 'Y') { 
                     isAvailable = 1; 
                 } else {
@@ -163,7 +164,7 @@ void modifyRobot() {
                 break;
             case 6:
                 std::cout << " Are you sure you want to delete " + robotName + "?" << std::endl;
-                input = getResponse();
+                input = getYesNo();
                 if (input == 'y' || input == 'Y') { 
                     removeRobot(robotName);
                     choice = 7; // Exit after deletion

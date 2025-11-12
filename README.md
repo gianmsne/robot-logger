@@ -85,10 +85,10 @@ sudo apt upgrade -y
 sudo apt install -y g++ make pkg-config cmake git libsqlite3-dev libopencv-dev libzbar-dev
 ```
 
-#### Option 2 - Run the setup script:
+#### Option 2 - Run the setup scripts:
 ```
-chmod +x setups/setup_linux.sh
-./setups/setup_linux.sh
+chmod +x setups/setup_linux.sh setups/setup_database.sh
+./setups/setup_linux.sh && ./setups/setup_database.sh
 ```
 
 #### Build and Run:
@@ -108,10 +108,10 @@ brew install opencv zbar sqlite3
 ```
 
 
-#### Option 2 - Run the setup script:
+#### Option 2 - Run the setup scripts:
 ```
-chmod +x setups/setup_macos.sh
-./setups/setup_macos.sh
+chmod +x setups/setup_linux.sh setups/setup_database.sh
+./setups/setup_macos.sh && ./setups/setup_database.sh
 ```
 
 
