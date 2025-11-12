@@ -23,7 +23,7 @@ int getIntInput(int min, int max) {
         if(std::cin.fail() || input < min || input > max){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "\n Please enter a number between " << min << " and " << max << ": ";
+            std::cout << "\n Please enter a number " << min << "-" << max << ": ";
         } else { 
             valid = true;
         }
@@ -58,4 +58,3 @@ std::string stringToLower(std::string str) {
     }
     return str;
 }
-

@@ -10,6 +10,5 @@ bool is_number(const std::string& s);
 int getIntInput(int min, int max);
 std::string stringToLower(std::string str);
 char getYesNo();
-std::string getString();
 
 #endif // INPUT_VALIDATION_H

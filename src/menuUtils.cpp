@@ -2,7 +2,7 @@
 #include "inputValidation.h"
 
 void printStartText() {
-    std::cout << "                           >> Scan or enter your student ID: s";
+    std::cout << "                           >> Scan or enter your student ID: ";
    
 }
 
@@ -25,9 +25,9 @@ void printMainMenu(const std::string& id, bool isAdmin) {
         std::cout << " 5) Add User" << std::endl;
         std::cout << " 6) Modify User" << std::endl;
         std::cout << std::endl;
-        std::cout << " 7) Logout" << std::endl;
+        std::cout << " 0) Logout" << std::endl;
     } else {
-        std::cout << " 3) Exit" << std::endl;
+        std::cout << " 0) Logout" << std::endl;
     }
     std::cout << std::endl;
     std::cout << " Enter Menu item to continue: ";
@@ -58,7 +58,7 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     while (true) {
 
         if (input == "0") {
-            std::cout << "Check-out cancelled.\n";
+            std::cout << " >> Check-out cancelled.\n";
             pickedRobot.clear();
             return;
         }
@@ -71,16 +71,16 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
                 return;
             }
 
-            std::cout << "Invalid number. Choose 1-" << robots.size() << "." << std::endl;
+            std::cout << " Invalid number. Choose 0-" << robots.size() << "." << std::endl;
 
         } else if (vector_contains(robots, input)) {
             pickedRobot = input;
             return;
         } else {
-            std::cout << "Invalid input. Try again." << std::endl;
+            std::cout << " Invalid input. Try again." << std::endl;
         }
 
-        std::cout << "Enter robot number or name: ";
+        std::cout << " Enter robot name or number ([0] to cancel): ";
         std::cin >> input;
     }
     
@@ -112,7 +112,7 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
         if (input == "0") {
             std::cout << "Check-in cancelled.\n";
             pickedRobot.clear();
-            return;
+            break;
         }
 
         if (is_number(input)) {
@@ -120,14 +120,14 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
 
             if (index >= 1 && index <= (int)robots.size()) {
                 pickedRobot = robots[index - 1];
-                return;
+                break;
             }
 
-            std::cout << "Invalid number. Choose 1-" << robots.size() << "." << std::endl;
+            std::cout << "Invalid number. Choose 0-" << robots.size() << "." << std::endl;
 
         } else if (vector_contains(robots, input)) {
             pickedRobot = input;
-            return;
+            break;
         } else {
             std::cout << "Invalid input. Try again." << std::endl;
         }
@@ -140,7 +140,6 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     std::cout << " Enter any notes about the robot's condition: ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     std::getline(std::cin, notes);
-    std::cin.clear();
 }
 
 void printRobotType() {

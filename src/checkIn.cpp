@@ -8,6 +8,7 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
     std::cout << " >> Robot Name: " << robotName << std::endl;
     std::cout << " >> Check In Time: " << ctime(&now);
     if(!notes.empty()) { std::cout << " >> Note left: " << notes << std::endl; }
+    else { std::cout << " >> No note left." << std::endl; }
 
     try {
         sqlite3* db;

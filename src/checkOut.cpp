@@ -10,7 +10,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
     std::cout << "\n------------- CHECK OUT ROBOT -------------" << std::endl;
     std::cout << " >> User ID: s" << userID << std::endl;
     std::cout << " >> Robot Name: " << robotName << std::endl;
-    std::cout << " >> Check Out Time: " << ctime(&now) << std::endl;
+    std::cout << " >> Check Out Time: " << ctime(&now);
 
     try {
         sqlite3* db;
@@ -100,7 +100,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
 
         sqlite3_close(db);
 
-        std::cout << "Check out record added successfully!" << std::endl;
+        // std::cout << "Check out record added successfully!" << std::endl;
 
     } catch (...) {
         std::cout << "There was an error while attempting to add the check out record." << std::endl;

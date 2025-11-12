@@ -18,7 +18,6 @@
 #include <chrono>
 #include <thread>
 
-
 enum States{
     ST_Login,
     ST_Main,
@@ -32,11 +31,10 @@ enum States{
 };
 
 void pressEnterToContinue() {
-    std::cout << "\n Press ENTER to continue...";
-    if (std::cin.peek() == '\n') { // if leftover newline
-        std::cin.get();           // consume it
-    }
-    std::cin.get();               // wait for Enter
+
+    std::cout << "\nPress ENTER to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 
@@ -84,6 +82,12 @@ int main(int argc, char* argv[]) {
             printStartText();
             std::cin >> studentId;
         }
+        
+        studentId.erase(
+        std::remove_if(studentId.begin(), studentId.end(),
+                       [](unsigned char c){ return !std::isdigit(c); }),
+        studentId.end()
+        );
 
         loggedInUser = logIn(studentId);
 
@@ -91,7 +95,7 @@ int main(int argc, char* argv[]) {
             currState = ST_Main;
         } else {
             std::cout << " Invalid ID or User does not exist. Try again.\n";
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::this_thread::sleep_for(std::chrono::seconds(2));
         }
 
         }
@@ -104,7 +108,7 @@ int main(int argc, char* argv[]) {
                 printMainMenu(loggedInUser->getFullname(), loggedInUser->isAdmin());
 
                 if (loggedInUser->isAdmin()) {
-                    menuItem = getIntInput(1, 7);
+                    menuItem = getIntInput(0, 6);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
@@ -112,14 +116,14 @@ int main(int argc, char* argv[]) {
                         case 4: currState = ST_ModifyRobot;  break;
                         case 5: currState = ST_AddUser;  break;
                         case 6: currState = ST_ModifyUser;  break;
-                        case 7: currState = ST_Login;     break;
+                        case 0: currState = ST_Login;     break;
                     }
                 } else {
-                    menuItem = getIntInput(1, 3);
+                    menuItem = getIntInput(0, 2);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
-                        case 3: currState = ST_Login;     break;
+                        case 0: currState = ST_Login;     break;
                     }
                 }
             
@@ -138,8 +142,8 @@ int main(int argc, char* argv[]) {
                 }
 
                 addCheckOutRecord(loggedInUser->getID(), pickedRobot);
-
                 pressEnterToContinue();
+                
                 currState = ST_Main;
                 break;
             }
