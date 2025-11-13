@@ -7,11 +7,11 @@ export default function Logs() {
   const columnLabels = {
       robotName: "Robot Name",
       checkOutUserID: "Check Out User ID",
-      checkOut: "Is Checked Out",
+      checkOut: "Check Out Time",
       checkInUserID: "Check In User ID",
-      checkIn: "Is Checked In"
+      checkIn: "Check In Time"
   };
-  const booleanColumns = new Set(["checkOut", "checkIn"]);
+  const timeColumns = new Set(["checkOut", "checkIn"]);
 
   return (
     <div>
@@ -19,7 +19,7 @@ export default function Logs() {
         path="/logs"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
-        booleanColumns={booleanColumns}
+        timeColumns={timeColumns}
       />
     </div>
   );

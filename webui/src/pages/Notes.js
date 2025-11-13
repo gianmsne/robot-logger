@@ -10,6 +10,7 @@ export default function Notes() {
       noteLeftBy: "Note Left By",
       timeOfNote: "Time Of Note",
   };
+  const timeColumns = new Set(["timeOfNote"]);
 
   return (
     <div>
@@ -17,6 +18,7 @@ export default function Notes() {
         path="/notes"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
+        timeColumns={timeColumns}
       />
     </div>
   );
