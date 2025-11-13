@@ -28,6 +28,42 @@ def get_users():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/api/robots")
+def get_robots():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM robots")
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/api/logs")
+def get_logs():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM logs")
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/api/notes")
+def get_notes():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM notes")
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
