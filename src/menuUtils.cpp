@@ -1,5 +1,6 @@
 #include "menuUtils.h"
 #include "inputValidation.h"
+#include "dbUtils.h"
 
 void printStartText() {
     std::cout << "                           >> Scan or enter your student ID: ";
@@ -89,6 +90,7 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
 void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-IN -------------" << std::endl;
+    std::string user;
 
     if(robots.empty()) {
         std::cout << "  >> There are no robots to be checked-in." <<  std::endl;
@@ -96,7 +98,9 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
         return;
     } else {
         for (unsigned int i = 0; i < robots.size(); i++) {
-            std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
+            user = getUserFromID(getCheckOutIdFromRobot(robots[i]), user);
+            std::cout << " " << i + 1 << ") " << robots[i]
+                      <<  " | Checked out by: " << user << std::endl;
         }
     }
 
@@ -110,9 +114,9 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     while (true) {
 
         if (input == "0") {
-            std::cout << "Check-in cancelled.\n";
+            std::cout << " >> Check-in cancelled.\n";
             pickedRobot.clear();
-            break;
+            return;
         }
 
         if (is_number(input)) {
@@ -135,12 +139,13 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
         std::cout << "Enter robot number or name: ";
         std::cin >> input;
     }
-    
+
     std::cout << std::endl;
     std::cout << " Enter any notes about the robot's condition: ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     std::getline(std::cin, notes);
-}
+    
+} 
 
 void printRobotType() {
     std::cout << " >> Choose Robot Type: " << std::endl;

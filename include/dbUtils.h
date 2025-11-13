@@ -25,6 +25,7 @@ void closeDBConnection();
 bool existenceCheck(std::string tableName, std::string columnName, std::string value);
 std::string getUserFromID(const std::string &id, std::string &givenName);
 std::vector<std::string> getRobots();
+std::string getCheckOutIdFromRobot(const std::string &robotName);
 bool getAdminStatus(const std::string &id);
 
 // Update Users

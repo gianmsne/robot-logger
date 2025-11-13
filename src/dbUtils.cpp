@@ -194,6 +194,47 @@ std::string getUserFromID(const std::string &id, std::string &givenName)
     return givenName + " " + familyName;
 }
 
+std::string getCheckOutIdFromRobot(const std::string &robotName)
+{
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    std::string query =
+        "SELECT checkOutUserID FROM logs WHERE robotName = ? ORDER BY checkOut DESC LIMIT 1;";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: "
+                  << sqlite3_errmsg(db) << std::endl;
+        return "";
+    }
+
+    // Use parameter binding to safely insert robotName
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_STATIC);
+
+    std::string checkOutId;
+
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW)
+    {
+        const unsigned char *text = sqlite3_column_text(stmt, 0);
+        if (text)
+            checkOutId = reinterpret_cast<const char *>(text);
+    }
+    else if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Failed to execute query: "
+                  << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    closeDBConnection();
+
+    return checkOutId;
+}
+
 std::vector<std::string> getRobots()
 {
     std::vector<std::string> robotList;
