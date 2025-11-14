@@ -33,7 +33,7 @@ enum States{
 
 void pressEnterToContinue() {
 
-    std::cout << "\nPress ENTER to continue...";
+    std::cout << "\n Press ENTER to continue...";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 }

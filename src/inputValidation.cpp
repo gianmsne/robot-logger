@@ -4,9 +4,9 @@ bool is_number(const std::string& input)
 {
     if (std::all_of(input.begin(), input.end(), ::isdigit)){
         return true;
-    } else {
-        return false;
     }
+
+    return false;
     
 }
 
@@ -35,7 +35,7 @@ int getIntInput(int min, int max) {
 char getYesNo() {
     std::string input;
     char inputChar;
-    
+
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     while (true) {
