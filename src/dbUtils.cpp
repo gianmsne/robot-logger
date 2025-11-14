@@ -269,6 +269,47 @@ std::vector<std::string> getRobots()
     return robotList;
 }
 
+std::string getRobotStatus(const std::string &robotName)
+{
+    openDBConnection();
+    sqlite3 *db = globalDB;
+
+    std::string query =
+        "SELECT permanentStatus FROM robots WHERE robotName = ?";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: "
+                  << sqlite3_errmsg(db) << std::endl;
+        return "";
+    }
+
+    // Use parameter binding to safely insert robotName
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_STATIC);
+
+    std::string status;
+
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW)
+    {
+        const unsigned char *text = sqlite3_column_text(stmt, 0);
+        if (text)
+            status = reinterpret_cast<const char *>(text);
+    }
+    else if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Failed to execute query: "
+                  << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    closeDBConnection();
+
+    return status;
+}
+
 bool getAdminStatus(const std::string &id)
 {
 

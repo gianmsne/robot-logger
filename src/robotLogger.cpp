@@ -152,8 +152,9 @@ int main(int argc, char* argv[]) {
             case ST_CheckIn: {
                 std::string pickedRobot;
                 std::string notes;
+                std::string permStatus;
                 std::vector<std::string> checkedOutRobots = getRobotsCurrentlyCheckedOut();
-                printCheckInMenu(checkedOutRobots, pickedRobot, notes);
+                printCheckInMenu(checkedOutRobots, pickedRobot, notes, permStatus);
                 
                 if(pickedRobot == "") {
                     pressEnterToContinue();
@@ -161,7 +162,7 @@ int main(int argc, char* argv[]) {
                     break;
                 }
 
-                addCheckInRecord(loggedInUser->getID(), pickedRobot, notes);
+                addCheckInRecord(loggedInUser->getID(), pickedRobot, notes, permStatus);
                 pressEnterToContinue();
                 
                 currState = ST_Main;

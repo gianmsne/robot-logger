@@ -1,4 +1,5 @@
 #include "checkOut.h"
+#include "dbUtils.h"
 
 #include <sqlite3.h>
 
@@ -6,9 +7,10 @@
 void addCheckOutRecord(std::string userID, std::string robotName) {
 
     time_t now = time(0);
+    std::string name;
 
     std::cout << "\n------------- CHECK OUT ROBOT -------------" << std::endl;
-    std::cout << " >> User ID: s" << userID << std::endl;
+    std::cout << " >> User: " << userID << ", " << getUserFromID(userID, name) <<  std::endl;
     std::cout << " >> Robot Name: " << robotName << std::endl;
     std::cout << " >> Check Out Time: " << ctime(&now);
 

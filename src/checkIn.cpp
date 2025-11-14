@@ -1,6 +1,6 @@
 #include "checkIn.h"
 
-void addCheckInRecord(std::string userID, std::string robotName, std::string notes) {
+void addCheckInRecord(std::string userID, std::string robotName, std::string notes, std::string permStatus) {
     time_t now = time(0);
 
     std::cout << "\n------------- CHECK IN ROBOT -------------" << std::endl;
@@ -9,6 +9,7 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
     std::cout << " >> Check In Time: " << ctime(&now);
     if(!notes.empty()) { std::cout << " >> Note left: " << notes << std::endl; }
     else { std::cout << " >> No note left." << std::endl; }
+    if(!permStatus.empty()) { std::cout << " >> New Permanent Status: " << permStatus << std::endl; }
 
     try {
         sqlite3* db;
@@ -81,6 +82,25 @@ void addCheckInRecord(std::string userID, std::string robotName, std::string not
                 throw(0);
             }
             sqlite3_finalize(notesStmt);
+        }
+
+        // Update permanent status if any
+        if(!permStatus.empty()) {
+            const char* statusQuery =
+                "UPDATE robots SET permanentStatus = ? WHERE robotName = ?;";
+            sqlite3_stmt* statusStmt;
+            rc = sqlite3_prepare_v2(db, statusQuery, -1, &statusStmt, nullptr);
+            if(rc != SQLITE_OK) throw(0);
+            sqlite3_bind_text(statusStmt, 1, permStatus.c_str(), -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(statusStmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+            rc = sqlite3_step(statusStmt);
+            if(rc != SQLITE_DONE) {
+                std::cerr << "Insert note failed" << std::endl;
+                sqlite3_finalize(statusStmt);
+                throw(0);
+            }
+            sqlite3_finalize(statusStmt);
         }
 
         // Update robot availability

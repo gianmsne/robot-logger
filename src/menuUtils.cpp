@@ -38,6 +38,7 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
+    std::string status;
 
     if(robots.empty()) {
         std::cout << "  >> There are no available robots to check out." <<  std::endl;
@@ -45,7 +46,29 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
         return;
     } else {
         for (unsigned int i = 0; i < robots.size(); i++) {
-            std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
+            std::string status = getRobotStatus(robots[i]);
+            
+            std::cout 
+              << std::right 
+              << std::setw(std::to_string(robots.size()).length()) 
+              << i + 1
+              << ") ";
+
+            std::cout 
+              << std::left 
+              << std::setw(10) 
+              << robots[i];
+
+              std::cout << " |  ";
+
+            if (!status.empty()) {
+                std::cout 
+                << status
+                << std::endl;
+            } else {
+                std::cout << std::endl;
+            }
+
         }
     }
 
@@ -87,7 +110,7 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     
 }
 
-void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes) {
+void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes, std::string &permStatus) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-IN -------------" << std::endl;
     std::string user;
@@ -141,9 +164,15 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
     }
 
     std::cout << std::endl;
-    std::cout << " Enter any notes about the robot's condition: ";
+    std::cout << " Enter any session notes about the robot's condition (ENTER to skip): ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     std::getline(std::cin, notes);
+
+    std::cout << std::endl;
+    std::cout << " >> Current Permanent Status: " << "." << std::endl;
+    std::cout << " Update permanent status? (ENTER to skip): ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+    std::getline(std::cin, permStatus);
     
 } 
 

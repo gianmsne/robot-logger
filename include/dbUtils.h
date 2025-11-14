@@ -27,6 +27,7 @@ std::string getUserFromID(const std::string &id, std::string &givenName);
 std::vector<std::string> getRobots();
 std::string getCheckOutIdFromRobot(const std::string &robotName);
 bool getAdminStatus(const std::string &id);
+std::string getRobotStatus(const std::string &robotName);
 
 // Update Users
 void updateGivenName(const std::string& id, const std::string& newGivenName);
