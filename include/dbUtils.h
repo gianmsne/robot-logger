@@ -44,3 +44,7 @@ void updateAvailability(const std::string& robotName, const int& isAvailable);
 
 void removeRobot(const std::string& robotName);
 void removeUser(const std::string& userID);
+
+void addNote(const std::string &robotName, const std::string &noteText, const std::string &noteLeftBy);
+std::string getMostRecentNote(const std::string &robotName);
+std::vector<std::string> getRobotNotes(const std::string &robotName);

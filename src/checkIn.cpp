@@ -3,7 +3,7 @@
 void addCheckInRecord(std::string userID, std::string robotName, std::string notes, std::string permStatus) {
     time_t now = time(0);
 
-    std::cout << "\n------------- CHECK IN ROBOT -------------" << std::endl;
+    std::cout << "\n------------- CHECK IN CONFIRMED -------------" << std::endl;
     std::cout << " >> User ID: " << userID << std::endl;
     std::cout << " >> Robot Name: " << robotName << std::endl;
     std::cout << " >> Check In Time: " << ctime(&now);

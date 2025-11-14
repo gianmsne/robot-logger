@@ -23,6 +23,7 @@ enum States{
     ST_Main,
     ST_CheckOut,
     ST_CheckIn,
+    ST_Notes,
     ST_AddRobot,
     ST_ModifyRobot,
     ST_AddUser,
@@ -108,21 +109,23 @@ int main(int argc, char* argv[]) {
                 printMainMenu(loggedInUser->getFullname(), loggedInUser->isAdmin());
 
                 if (loggedInUser->isAdmin()) {
-                    menuItem = getIntInput(0, 6);
+                    menuItem = getIntInput(0, 7);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
-                        case 3: currState = ST_AddRobot; break;
-                        case 4: currState = ST_ModifyRobot;  break;
-                        case 5: currState = ST_AddUser;  break;
-                        case 6: currState = ST_ModifyUser;  break;
+                        case 3: currState = ST_Notes; break;
+                        case 4: currState = ST_AddRobot; break;
+                        case 5: currState = ST_ModifyRobot;  break;
+                        case 6: currState = ST_AddUser;  break;
+                        case 7: currState = ST_ModifyUser;  break;
                         case 0: currState = ST_Login;     break;
                     }
                 } else {
-                    menuItem = getIntInput(0, 2);
+                    menuItem = getIntInput(0, 3);
                     switch (menuItem) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
+                        case 3: currState = ST_Notes;  break;
                         case 0: currState = ST_Login;     break;
                     }
                 }
@@ -165,6 +168,22 @@ int main(int argc, char* argv[]) {
                 addCheckInRecord(loggedInUser->getID(), pickedRobot, notes, permStatus);
                 pressEnterToContinue();
                 
+                currState = ST_Main;
+                break;
+            }
+
+            case ST_Notes: {
+                std::string pickedRobot;
+                printNotesMenu(robots, pickedRobot);
+                if(pickedRobot.empty()) {
+                    pressEnterToContinue();
+                    currState = ST_Main;
+                    break;
+                } else {
+                    printNotes(pickedRobot, loggedInUser->getID());
+                    pressEnterToContinue();
+                }
+
                 currState = ST_Main;
                 break;
             }

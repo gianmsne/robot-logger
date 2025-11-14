@@ -19,6 +19,8 @@ void printModifyRobotMenu();
 void printModifyUserMenu();
 std::string getRobotType(int typeChoice);
 std::string getRobotCondition(int conditionChoice);
+void printNotesMenu(const std::vector<std::string>& robots, std::string& pickedRobot);
+void printNotes(const std::string& robotName, const std::string& userID);
 
 
 

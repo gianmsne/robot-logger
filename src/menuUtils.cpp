@@ -18,13 +18,15 @@ void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << " ------------- User: " << id << " -------------" << std::endl;
     std::cout << " 1) Check Out" << std::endl;
     std::cout << " 2) Check In" << std::endl;
+    std::cout << " 3) Add/view notes" << std::endl;
+    std::cout << std::endl;
     if(isAdmin){
-        std::cout << "\n >> Robot Options: " << std::endl;
-        std::cout << " 3) Add Robot" << std::endl;
-        std::cout << " 4) Modify Robot" << std::endl;
+        std::cout << " >> Robot Options: " << std::endl;
+        std::cout << " 4) Add Robot" << std::endl;
+        std::cout << " 5) Modify Robot" << std::endl;
         std::cout << "\n >> User Options: "<< std::endl;
-        std::cout << " 5) Add User" << std::endl;
-        std::cout << " 6) Modify User" << std::endl;
+        std::cout << " 6) Add User" << std::endl;
+        std::cout << " 7) Modify User" << std::endl;
         std::cout << std::endl;
         std::cout << " 0) Logout" << std::endl;
     } else {
@@ -40,6 +42,22 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
     std::string status;
 
+    // Widths for columns
+    int numWidth = std::to_string(robots.size()).length(); // number column
+    int nameWidth = 12;  // robot name column width
+    int statusWidth = 35; // status column width
+    int noteWidth = 40;  // note column width
+
+    // Print header row
+    std::cout 
+        << std::right << std::setw(numWidth) << "#" << " "
+        << std::left  << std::setw(nameWidth) << "Robot"
+        << "  > " << std::setw(statusWidth) << "Status"
+        << " * " << std::setw(noteWidth) << "Most Recent Note"
+        << std::endl;
+
+        std::cout << std::endl;
+
     if(robots.empty()) {
         std::cout << "  >> There are no available robots to check out." <<  std::endl;
         pickedRobot = "";
@@ -47,28 +65,17 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     } else {
         for (unsigned int i = 0; i < robots.size(); i++) {
             std::string status = getRobotStatus(robots[i]);
-            
-            std::cout 
-              << std::right 
-              << std::setw(std::to_string(robots.size()).length()) 
-              << i + 1
-              << ") ";
+            std::string recentNote = getMostRecentNote(robots[i]);
+
+            if (status.empty()) status = " ";
+            if (recentNote.empty()) recentNote = " ";
 
             std::cout 
-              << std::left 
-              << std::setw(10) 
-              << robots[i];
-
-              std::cout << " |  ";
-
-            if (!status.empty()) {
-                std::cout 
-                << status
+                << std::right << std::setw(numWidth) << i + 1 << ") "
+                << std::left  << std::setw(nameWidth) << robots[i] 
+                << " | " << std::setw(statusWidth) << status 
+                << " | " << std::setw(noteWidth) << recentNote
                 << std::endl;
-            } else {
-                std::cout << std::endl;
-            }
-
         }
     }
 
@@ -165,13 +172,15 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
 
     std::cout << std::endl;
     std::cout << " Enter any session notes about the robot's condition (ENTER to skip): ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, notes);
 
     std::cout << std::endl;
-    std::cout << " >> Current Permanent Status: " << "." << std::endl;
+    std::string status = getRobotStatus(pickedRobot);
+    if(status.empty()) { status = "None"; }
+
+    std::cout << " >> Current Permanent Status: " << status << std::endl;
     std::cout << " Update permanent status? (ENTER to skip): ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
     std::getline(std::cin, permStatus);
     
 } 
@@ -300,4 +309,106 @@ void printLogin(){
 
     // Print heading
     std::cout << "                             ------------- Robot Logger -------------\n" << std::endl;
+}
+
+
+void printNotesMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
+    std::cout << std::endl;
+    std::cout << " ------------- ADD/VIEW NOTES -------------" << std::endl;
+    std::string status;
+
+    if(robots.empty()) {
+        std::cout << "  >> There are no robots in the database." <<  std::endl;
+        return;
+    } else {
+        for (unsigned int i = 0; i < robots.size(); i++) {
+            std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << " Enter robot name or number ([0] to cancel): ";
+   
+    std::string input;
+    std::cin >> input;
+    input = stringToLower(input);
+
+    while (true) {
+
+        if (input == "0") {
+            std::cout << " >> Returning to menu.\n";
+            pickedRobot.clear();
+            return;
+        }
+
+        if (is_number(input)) {
+            int index = std::stoi(input);
+
+            if (index >= 1 && index <= (int)robots.size()) {
+                pickedRobot = robots[index - 1];
+                return;
+            }
+
+            std::cout << " Invalid number. Choose 0-" << robots.size() << "." << std::endl;
+
+        } else if (vector_contains(robots, input)) {
+            pickedRobot = input;
+            return;
+        } else {
+            std::cout << " Invalid input. Try again." << std::endl;
+        }
+
+        std::cout << " Enter robot name or number ([0] to cancel): ";
+        std::cin >> input;
+    }
+    
+}
+
+void printNotes(const std::string &pickedRobot, const std::string &currUserID) {
+    std::cout << std::endl;
+    std::cout << " ------------- " << pickedRobot << " NOTES -------------" << std::endl;
+    std::string status;
+    std::vector<std::string> notes = getRobotNotes(pickedRobot);
+
+    if(notes.empty()) {
+        std::cout << "  >> There are no notes for this robot." <<  std::endl;
+    } else {
+        for (unsigned int i = 0; i < notes.size(); i++) {
+        std::cout << " " << i + 1 << ") " << notes[i] << std::endl;
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << " >> Would you like to add a new note?";
+   
+    char input;
+    input = getYesNo();
+
+    while (true) {
+
+        if (input == '\0' || input == 'N') {
+            std::cout << " >> Returning to menu.\n";
+            return;
+        }
+
+        if (input == 'Y') {
+            std::string newNote;
+            
+            // Clear leftover newline from previous input, but only if needed
+            if (std::cin.peek() == '\n') std::cin.get();
+
+            std::cout << " Enter new note: ";
+            std::getline(std::cin, newNote);
+
+            if (!newNote.empty()) {
+                addNote(pickedRobot, newNote, currUserID);
+                std::cout << " >> Note added successfully.\n";
+            } else {
+                std::cout << " >> No note entered.\n";
+            }
+
+            return;
+        }
+
+    }
 }

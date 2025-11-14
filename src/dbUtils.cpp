@@ -702,3 +702,147 @@ void removeUser(const std::string& id){
         std::cout << "User " + id + " has been removed from the database." << std::endl;
     return;
 };
+
+
+void addNote(const std::string &robotName,
+             const std::string &noteText,
+             const std::string &noteLeftBy)
+{
+    if (!openDBConnection()) {
+        std::cerr << "DB connection failed\n";
+        return;
+    }
+
+    time_t now = time(0); // example: "Tue Nov 12 21:21:52 2025\n"
+
+    sqlite3 *db = globalDB;
+
+    const char *notesQuery =
+        "INSERT INTO notes (robotName, note, noteLeftBy, timeOfNote) "
+        "VALUES (?, ?, ?, ?);";
+
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, notesQuery, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Prepare failed: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, noteText.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, noteLeftBy.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int64(stmt, 4, static_cast<sqlite3_int64>(now));
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        std::cerr << "Insert note failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+}
+
+std::vector<std::string> getRobotNotes(const std::string &robotName) {
+    std::vector<std::string> notesList;
+
+    if (!openDBConnection()) {
+        std::cerr << "DB connection failed\n";
+        return notesList;
+    }
+
+    sqlite3* db = globalDB;
+
+    const char* query =
+        "SELECT note, noteLeftBy, timeOfNote FROM notes "
+        "WHERE robotName = ? ORDER BY timeOfNote DESC;";
+
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return notesList;
+    }
+
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        const unsigned char* noteText = sqlite3_column_text(stmt, 0);
+        const unsigned char* noteByID = sqlite3_column_text(stmt, 1);
+        int64_t timeOfNote = sqlite3_column_int64(stmt, 2);
+
+        std::string noteByName;
+        if (noteByID) {
+            std::string dummy;
+            noteByName = getUserFromID(reinterpret_cast<const char*>(noteByID), dummy);
+        }
+
+        std::string formattedNote;
+        if (noteText) formattedNote += reinterpret_cast<const char*>(noteText);
+        formattedNote += " | ";
+        formattedNote += noteByName;
+        formattedNote += " | ";
+        formattedNote += ctime(reinterpret_cast<time_t*>(&timeOfNote));
+
+        if (!formattedNote.empty() && formattedNote.back() == '\n') {
+            formattedNote.pop_back();
+        }
+
+        notesList.push_back(formattedNote);
+    }
+
+    if (rc != SQLITE_DONE) {
+        std::cerr << "Error reading notes: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    return notesList;
+}
+
+std::string getMostRecentNote(const std::string &robotName) {
+    if (!openDBConnection()) {
+        std::cerr << "DB connection failed\n";
+        return "";
+    }
+
+    sqlite3* db = globalDB;
+
+    const char* query =
+        "SELECT note, noteLeftBy FROM notes "
+        "WHERE robotName = ? "
+        "ORDER BY timeOfNote DESC LIMIT 1;";
+
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return "";
+    }
+
+    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+
+    std::string result;
+
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW) {
+        const unsigned char* noteText = sqlite3_column_text(stmt, 0);
+        const unsigned char* noteByID = sqlite3_column_text(stmt, 1);
+
+        std::string noteStr = noteText ? reinterpret_cast<const char*>(noteText) : "";
+        std::string userStr;
+
+        if (noteByID) {
+            std::string dummyGivenName;
+            userStr = getUserFromID(reinterpret_cast<const char*>(noteByID), dummyGivenName);
+        } else {
+            userStr = "Unknown";
+        }
+
+        result = noteStr + " (" + userStr + ")";
+    } else if (rc != SQLITE_DONE) {
+        std::cerr << "Error reading most recent note: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    return result;
+}

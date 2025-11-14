@@ -35,12 +35,16 @@ int getIntInput(int min, int max) {
 char getYesNo() {
     std::string input;
     char inputChar;
+    
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     while (true) {
-        std::cout << " Select (y/n): ";
-        std::getline(std::cin, input); // getting entire line here to avoid repeating error messages
+        std::cout << " Select (y/N) [ENTER for No]: ";
+        std::getline(std::cin, input); // get entire line
 
-        if (input.empty()) continue;  // user pressed Enter
+        if (input.empty()) {
+            return 'N'; // default to N if Enter pressed
+        }
 
         inputChar = toupper(input[0]);  // take first character only
 
