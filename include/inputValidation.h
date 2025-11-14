@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <vector>
 
 bool vector_contains(const std::vector<std::string>& vec, const std::string& value);
 bool is_number(const std::string& s);
