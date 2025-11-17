@@ -11,6 +11,7 @@ export default function DataTable({
   sortOrder = null,
   initialSortBy = null,
   initialSortOrder = null,
+  userMap = {},
 }) {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
@@ -86,39 +87,44 @@ export default function DataTable({
   if (rows.length === 0) return <div>No records to display.</div>;
 
   return (
-    <table className="table-bordered users-table">
-      <thead>
-        <tr>
-          {columnOrder.map(col => (
-            <th key={col} style={{ textAlign: "left", padding: "6px" }}>
-              {columnLabels[col] || col}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedRows.map((row, i) => (
-          <tr key={i}>
-            {columnOrder.map((col, j) => {
-              let val = row[col];
-
-              if (booleanColumns.has(col)) {
-                val = booleanToYesNo(Boolean(val));
-              } else if (timeColumns.has(col)) {
-                val = formatCTime(val);
-              } else if (val === null || val === undefined) {
-                val = "";
-              } else if (typeof val === "object") {
-                val = JSON.stringify(val);
-              } else {
-                val = String(val);
-              }
-
-              return <td key={j} style={{ padding: "6px" }}>{val}</td>;
-            })}
+    <div className="table-wrapper">
+      <table className="table-bordered users-table">
+        <thead>
+          <tr>
+            {columnOrder.map(col => (
+              <th key={col} style={{ textAlign: "left", padding: "6px" }}>
+                {columnLabels[col] || col}
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {sortedRows.map((row, i) => (
+            <tr key={i}>
+              {columnOrder.map((col, j) => {
+                let val = row[col];
+
+                if (booleanColumns.has(col)) {
+                  val = booleanToYesNo(Boolean(val));
+                } else if (timeColumns.has(col)) {
+                  val = formatCTime(val);
+                } else if (val === null || val === undefined) {
+                  val = "";
+                } else if (typeof val === "object") {
+                  val = JSON.stringify(val);
+                } else if (userMap && userMap[val]) {
+                    val = userMap[val];
+                } else {
+                    val = String(val);
+                }
+
+                return <td key={j} style={{ padding: "6px" }}>{val}</td>;
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
   );
 }

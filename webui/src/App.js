@@ -13,11 +13,15 @@ import Robots from './pages/Robots';
 import Logs from './pages/Logs';
 import Notes from './pages/Notes';
 
+import { fetchJson } from "./components/APIFetcher";
+
 function App() {
   const [activeTable, setActiveTable] = useState("Users");
 
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
+
+  const [userMap, setUserMap] = useState({});
   
   const handleActiveTable = (tableName) => {
     setActiveTable(tableName);
@@ -29,6 +33,18 @@ function App() {
     setSortBy(column);
     setSortOrder(dir);
   }
+
+  useEffect(() => {
+    fetchJson("/users")
+    .then(users => {
+      const map = {};
+      users.forEach(u => {
+        map[u.userID] = `${u.givenName} ${u.familyName[0]}`;
+      });
+      setUserMap(map);
+    })
+    .catch(err => console.error("User fetch failed:", err));
+  }, []);
 
   return (
     <Stack style={{ minHeight: "100vh", backgroundColor: "black" }}>
@@ -110,8 +126,8 @@ function App() {
         <Container className="database-container">
           {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} />}
           {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} />}
-          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} />}
-          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} />}
+          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} />}
+          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} />}
         </Container>
         
       </Container>
