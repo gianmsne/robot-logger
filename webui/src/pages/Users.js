@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 
-export default function Users() {
+export default function Users({ sortBy, sortOrder }) {
   const columnOrder = ["userID", "givenName", "familyName", "isInducted", "isAdmin"];
   const columnLabels = {
       userID: "User ID",
@@ -20,6 +20,10 @@ export default function Users() {
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         booleanColumns={booleanColumns}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        initialSortBy={"userID"}
+        initialSortOrder={"asc"}
       />
     </div>
   );

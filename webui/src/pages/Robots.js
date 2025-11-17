@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 
-export default function Robots() {
+export default function Robots({ sortBy, sortOrder }) {
   const columnOrder = ["robotName", "robotType", "robotCondition", "rmitID", "location", "isAvailable"];
   const columnLabels = {
       robotName: "Robot Name",
@@ -21,6 +21,10 @@ export default function Robots() {
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         booleanColumns={booleanColumns}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        initialSortBy={"robotName"}
+        initialSortOrder={"asc"}
       />
     </div>
   );

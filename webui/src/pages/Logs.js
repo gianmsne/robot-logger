@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 
-export default function Logs() {
+export default function Logs({ sortBy, sortOrder }) {
   const columnOrder = ["robotName", "checkOutUserID", "checkOut", "checkInUserID", "checkIn"];
   const columnLabels = {
       robotName: "Robot Name",
@@ -20,6 +20,10 @@ export default function Logs() {
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         timeColumns={timeColumns}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        initialSortBy={"checkOut"}
+        initialSortOrder={"desc"}
       />
     </div>
   );
