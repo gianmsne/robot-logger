@@ -5,7 +5,7 @@ import os
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:3000"])
 
 # Use absolute path based on this file location
 BASE_DIR = os.path.dirname(__file__)
