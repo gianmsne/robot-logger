@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 
-export default function Notes({ sortBy, sortOrder, userMap }) {
+export default function Notes({ sortBy, sortOrder, userMap, filters }) {
   const columnOrder = ["robotName", "noteLeftBy", "timeOfNote", "note"];
   const columnLabels = {
       robotName: "Robot Name",
@@ -24,6 +24,7 @@ export default function Notes({ sortBy, sortOrder, userMap }) {
         initialSortBy={"timeOfNote"}
         initialSortOrder={"desc"}
         userMap={userMap}
+        filters={filters}
       />
     </div>
   );

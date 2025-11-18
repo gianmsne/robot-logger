@@ -1,17 +1,18 @@
 import './App.css';
 import './App.scss';
 import { useEffect, useState } from "react";
-import { Container, Stack } from "react-bootstrap";
+import { Container, Stack, Form } from "react-bootstrap";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa6";
 import { BsArrowUp, BsArrowDown } from "react-icons/bs";
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import Users from './pages/Users';
-import Robots from './pages/Robots';
+import Users, { booleanColumns as userBooleanColumns, columnOrder as userColumnOrder, columnLabels as userColumnLabels } from './pages/Users';
+import Robots, { booleanColumns as robotBooleanColumns, columnOrder as robotColumnOrder, columnLabels as robotColumnLabels, filterColumns as robotFilterColumns } from './pages/Robots';
 import Logs from './pages/Logs';
 import Notes from './pages/Notes';
+import FiltersDropdown from './components/FilterDropdown';
 
 import { fetchJson } from "./components/APIFetcher";
 
@@ -21,12 +22,15 @@ function App() {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
 
+  const [filters, setFilters] = useState({});
+
   const [userMap, setUserMap] = useState({});
   
   const handleActiveTable = (tableName) => {
     setActiveTable(tableName);
     setSortBy(null);
     setSortOrder(null);
+    setFilters({});
   }
 
   const applySort = (column, dir = 'asc') => {
@@ -109,7 +113,7 @@ function App() {
             </Dropdown.Menu>
           </Dropdown>
 
-          <Dropdown className='dropdown-button'>
+          <Dropdown autoClose="outside" className='dropdown-button'>
             <Dropdown.Toggle
               variant="link"
               className="no-caret"
@@ -117,17 +121,47 @@ function App() {
               <FaFilter size={25} />
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-
+            <Dropdown.Menu className='p-0'>
+              {activeTable === "Users" ? (
+                <>
+                  <FiltersDropdown 
+                    filters={filters} 
+                    setFilters={setFilters} 
+                    columnOrder={ userColumnOrder } 
+                    booleanColumns={ userBooleanColumns }
+                    columnLabels={ userColumnLabels }
+                  />
+                </>
+                
+              ) : activeTable === "Robots" ? (
+                <>
+                  <FiltersDropdown 
+                    filters={filters} 
+                    setFilters={setFilters} 
+                    columnOrder={ robotColumnOrder } 
+                    booleanColumns={ robotBooleanColumns }
+                    columnLabels={ robotColumnLabels }
+                    filterColumns={ robotFilterColumns }
+                  />
+                </>
+              ) : activeTable === "Logs" ? (
+                <>
+                
+                </>
+              ) : activeTable === "Notes" ? (
+                <>
+                
+                </>
+              ) : null}
             </Dropdown.Menu>
           </Dropdown>
         </div>
 
         <Container className="database-container">
-          {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} />}
-          {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} />}
-          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} />}
-          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} />}
+          {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
+          {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
+          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} />}
+          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} />}
         </Container>
         
       </Container>

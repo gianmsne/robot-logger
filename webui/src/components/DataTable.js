@@ -12,6 +12,7 @@ export default function DataTable({
   initialSortBy = null,
   initialSortOrder = null,
   userMap = {},
+  filters = {}
 }) {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
@@ -41,9 +42,27 @@ export default function DataTable({
       ? initialSortOrder
       : 'asc';
 
+
+const filteredRows = useMemo(() => {
+  if (!filters || Object.keys(filters).length === 0) return rows;
+  return rows.filter(r => {
+    for (const key of Object.keys(filters)) {
+      const value = filters[key];
+      if (booleanColumns.has(key)) {
+        console.log("HERE")
+        if (!!r[key] !== !!value) return false;
+      }
+    }
+    return true;
+  });
+}, [rows, filters, booleanColumns]);
+
+
   const sortedRows = useMemo(() => {
-    if (!effectiveSortBy) return rows;
-    const arr = [...rows];
+    const source = filteredRows;
+    if (!effectiveSortBy) return source;
+    const arr = [...source];
+
     const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
     arr.sort((a, b) => {
@@ -68,7 +87,7 @@ export default function DataTable({
 
     if (effectiveSortOrder === 'desc') arr.reverse();
     return arr;
-  }, [rows, effectiveSortBy, effectiveSortOrder]);
+  }, [filteredRows, effectiveSortBy, effectiveSortOrder]);
 
   const formatCTime = v => {
     if (typeof v !== "number" || isNaN(v)) return v;
@@ -84,7 +103,7 @@ export default function DataTable({
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div style={{ color: "salmon" }}>Error: {error}</div>;
-  if (rows.length === 0) return <div>No records to display.</div>;
+  if (sortedRows.length === 0) return <div>No records to display.</div>;
 
   return (
     <div className="table-wrapper">
