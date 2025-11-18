@@ -10,8 +10,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 import Users, { booleanColumns as userBooleanColumns, columnOrder as userColumnOrder, columnLabels as userColumnLabels } from './pages/Users';
 import Robots, { booleanColumns as robotBooleanColumns, columnOrder as robotColumnOrder, columnLabels as robotColumnLabels, filterColumns as robotFilterColumns } from './pages/Robots';
-import Logs from './pages/Logs';
-import Notes from './pages/Notes';
+import Logs, { columnOrder as logsColumnOrder, columnLabels as logsColumnLabels, filterColumns as logsFilterColumns } from './pages/Logs';
+import Notes, { columnOrder as notesColumnOrder, columnLabels as notesColumnLabels, filterColumns as notesFilterColumns} from './pages/Notes';
 import FiltersDropdown from './components/FilterDropdown';
 
 import { fetchJson } from "./components/APIFetcher";
@@ -23,6 +23,7 @@ function App() {
   const [sortOrder, setSortOrder] = useState('asc');
 
   const [filters, setFilters] = useState({});
+  const [tableRows, setTableRows] = useState([]);
 
   const [userMap, setUserMap] = useState({});
   
@@ -136,21 +137,36 @@ function App() {
               ) : activeTable === "Robots" ? (
                 <>
                   <FiltersDropdown 
-                    filters={filters} 
-                    setFilters={setFilters} 
+                    filters={ filters } 
+                    setFilters={ setFilters } 
                     columnOrder={ robotColumnOrder } 
                     booleanColumns={ robotBooleanColumns }
                     columnLabels={ robotColumnLabels }
                     filterColumns={ robotFilterColumns }
+                    rows={ tableRows }
                   />
                 </>
               ) : activeTable === "Logs" ? (
                 <>
-                
+                  <FiltersDropdown
+                    filters={ filters }
+                    setFilters={ setFilters }
+                    columnOrder={ logsColumnOrder }
+                    columnLabels={ logsColumnLabels }
+                    filterColumns={ logsFilterColumns }
+                    rows={ tableRows }
+                  />
                 </>
               ) : activeTable === "Notes" ? (
                 <>
-                
+                  <FiltersDropdown
+                    filters={ filters }
+                    setFilters={ setFilters }
+                    columnOrder={ notesColumnOrder }
+                    columnLabels={ notesColumnLabels }
+                    filterColumns={ notesFilterColumns }
+                    rows={ tableRows }
+                  />
                 </>
               ) : null}
             </Dropdown.Menu>
@@ -159,9 +175,9 @@ function App() {
 
         <Container className="database-container">
           {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
-          {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
-          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} />}
-          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} />}
+          {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
+          {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
+          {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
         </Container>
         
       </Container>

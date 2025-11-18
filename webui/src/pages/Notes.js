@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
+export const columnOrder = ["robotName", "noteLeftBy", "timeOfNote", "note"];
+export const columnLabels = {
+    robotName: "Robot Name",
+    note: "Note",
+    noteLeftBy: "Note Left By",
+    timeOfNote: "Time Of Note",
+};
+export const filterColumns = new Set(["robotName"])
 
-export default function Notes({ sortBy, sortOrder, userMap, filters }) {
-  const columnOrder = ["robotName", "noteLeftBy", "timeOfNote", "note"];
-  const columnLabels = {
-      robotName: "Robot Name",
-      note: "Note",
-      noteLeftBy: "Note Left By",
-      timeOfNote: "Time Of Note",
-  };
+export default function Notes({ sortBy, sortOrder, userMap, filters, onRowsLoaded }) {
   const timeColumns = new Set(["timeOfNote"]);
 
   return (
@@ -25,6 +25,7 @@ export default function Notes({ sortBy, sortOrder, userMap, filters }) {
         initialSortOrder={"desc"}
         userMap={userMap}
         filters={filters}
+        onRowsLoaded={onRowsLoaded}
       />
     </div>
   );

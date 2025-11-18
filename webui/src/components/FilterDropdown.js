@@ -6,11 +6,22 @@ export default function FiltersDropdown({
   columnOrder = [], 
   booleanColumns = new Set(),
   columnLabels = {},
+  filterColumns = new Set(),
+  rows = [],
 }) {
   const toggleFilterBoolean = (key, value) => {
     setFilters(prev => {
       const next = { ...prev };
       if (key in next && next[key] === value) delete next[key];
+      else next[key] = value;
+      return next;
+    });
+  };
+
+  const toggleFilterString = (key, value) => {
+    setFilters(prev => {
+      const next = { ...prev };
+      if (value === "") delete next[key];
       else next[key] = value;
       return next;
     });
@@ -33,12 +44,30 @@ export default function FiltersDropdown({
               label="No"
               checked={filters[col] === false}
               onChange={() => toggleFilterBoolean(col, false)}
-              style={{ paddingBottom:"10px" }}
+              style={{ marginBottom:"12px" }}
             />
           </>
         ))}
 
-      
+        {columnOrder.filter(col => filterColumns.has(col)).map(col => {
+          const uniqueValues = [...new Set(rows.map(r => r[col]))].filter(v => v != null);
+          return (
+            <>
+              <Form.Label>{columnLabels[col] || col}</Form.Label>
+              <Form.Control
+                as="select"
+                value={filters[col] || ""}
+                onChange={e => toggleFilterString(col, e.target.value)}
+                style={{ marginBottom:"12px" }}
+              >
+                <option value="">All</option>
+                {uniqueValues.map(val => (
+                  <option key={val} value={val}>{val}</option>
+                ))}
+              </Form.Control>
+            </>
+          );
+        })}
       </Form>
     </Dropdown>
   );

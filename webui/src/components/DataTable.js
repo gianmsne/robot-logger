@@ -6,13 +6,15 @@ export default function DataTable({
   columnOrder = [],
   columnLabels = {},
   booleanColumns = new Set(),
+  filterColumns = new Set(),
   timeColumns = new Set(),
   sortBy = null,
   sortOrder = null,
   initialSortBy = null,
   initialSortOrder = null,
   userMap = {},
-  filters = {}
+  filters = {},
+  onRowsLoaded
 }) {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(null);
@@ -22,7 +24,7 @@ export default function DataTable({
     let mounted = true;
     setLoading(true);
     fetchJson(path)
-      .then(data => { if (mounted) setRows(Array.isArray(data) ? data : []); })
+      .then(data => { if (mounted) setRows(Array.isArray(data) ? data : []); onRowsLoaded?.(data); })
       .catch(err => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
@@ -43,19 +45,26 @@ export default function DataTable({
       : 'asc';
 
 
-const filteredRows = useMemo(() => {
-  if (!filters || Object.keys(filters).length === 0) return rows;
-  return rows.filter(r => {
-    for (const key of Object.keys(filters)) {
-      const value = filters[key];
-      if (booleanColumns.has(key)) {
-        console.log("HERE")
-        if (!!r[key] !== !!value) return false;
-      }
-    }
-    return true;
-  });
-}, [rows, filters, booleanColumns]);
+  const filteredRows = useMemo(() => {
+    if (!filters || Object.keys(filters).length === 0) return rows;
+    return rows.filter(row => {
+      return Object.entries(filters).every(([key, value]) => {
+        const rowVal = row[key];
+        
+        // Boolean column
+        if (booleanColumns.has(key)) {
+          return !!rowVal === !!value;
+        }
+
+        // String filter (exact match)
+        if (filterColumns.has(key)) {
+          return value === "" || rowVal === value;
+        }
+
+        return false;
+      });
+    });
+  }, [rows, filters, booleanColumns, filterColumns]);
 
 
   const sortedRows = useMemo(() => {
