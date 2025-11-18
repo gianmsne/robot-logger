@@ -173,27 +173,26 @@ h4, h5 {
 .table-wrapper {
   width: 100%;
   padding-bottom: 10px;
-  overflow-x: scroll;
+  overflow-x: visible;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
-  scrollbar-width: 10px;
+  scrollbar-width: thin;
   scrollbar-color: #{$gray-5} transparent;
 }
 
-.table-wrapper::-webkit-scrollbar {
-  height: 10px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-  background-color: $gray-5;
-  border-radius: 8px;
-  border: 2px solid transparent; /* gives some padding around the thumb */
-}
-
 .table-wrapper table {
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  table-layout: fixed; 
   border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  padding: 6px;
 }
 
 table {
