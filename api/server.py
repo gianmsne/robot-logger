@@ -5,7 +5,15 @@ import os
 
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": ALLOWED_ORIGINS}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
 # Use absolute path based on this file location
 BASE_DIR = os.path.dirname(__file__)
