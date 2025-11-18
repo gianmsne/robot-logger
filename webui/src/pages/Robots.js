@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
-export const columnOrder = ["robotName", "robotType", "robotCondition", "rmitID", "location", "isAvailable"];
+export const columnOrder = ["robotName", "robotType", "robotCondition", "rmitID", "location", "isAvailable", "permanentStatus"];
 export const columnLabels = {
     robotName: "Robot Name",
     robotType: "Robot Type",
     robotCondition: "Robot Condition",
     rmitID: "RMIT ID",
     location: "Location",
-    isAvailable: "Is Available"
+    isAvailable: "Is Available",
+    permanentStatus: "Permanent Status"
 };
 export const booleanColumns = new Set(["isAvailable"]);
 export const filterColumns = new Set(["robotType", "robotCondition", "location"]);
