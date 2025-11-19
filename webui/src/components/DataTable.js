@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState, useMemo } from "react";
-import { fetchJson } from "../components/APIFetcher";
+import { fetchJson } from "./APIFetcher";
 
 export default function DataTable({ 
   path,

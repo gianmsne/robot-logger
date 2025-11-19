@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 export const columnOrder = ["robotName", "robotType", "robotCondition", "rmitID", "location", "isAvailable", "permanentStatus"];
