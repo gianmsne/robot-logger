@@ -5,7 +5,7 @@ import os
 
 
 app = Flask(__name__)
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:80").split(",")
 
 CORS(
     app,
