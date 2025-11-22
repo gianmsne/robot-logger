@@ -24,5 +24,6 @@ services:
     depends_on:
       - backend
     environment:
+      - NODE_ENV=production
       - REACT_APP_API_BASE=http://10.0.51.101:5001
-      - NODE_ENV="production"
+      - REACT_APP_LAN_IP=10.0.51.101

@@ -1,13 +1,19 @@
-const envBase = process.env.REACT_APP_API_BASE; // set in .env or docker-compose
-const envPort = "5001";
+const envBase = process.env.REACT_APP_API_BASE; // optional override from .env
+const envPort = "5001"; // backend port exposed on host
 
 export const API_BASE = (() => {
   if (envBase) return envBase.replace(/\/$/, "");
-  // In production the frontend should be served from the same host => use relative path
+
   if (process.env.NODE_ENV === "production") return "/backend";
-  // Dev: construct using the page hostname so other devices on the LAN can reach backend
-  const proto = (typeof window !== "undefined" && window.location && window.location.protocol) || "http:";
-  const host = (typeof window !== "undefined" && window.location && window.location.hostname) || "localhost";
+
+  const proto = window.location?.protocol || "http:";
+  let host = window.location?.hostname || "localhost";
+
+  // If localhost, use optional LAN IP
+  if (host === "localhost" || host === "127.0.0.1") {
+    host = process.env.REACT_APP_LAN_IP || host;
+  }
+
   return `${proto}//${host}:${envPort}/backend`;
 })();
 

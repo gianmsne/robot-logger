@@ -6,14 +6,21 @@ import os
 
 app = Flask(__name__)
 
+# Detect environment
+ENV = os.environ.get("FLASK_ENV", "production").lower()
 
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost",
-    "http://127.0.0.1",
-    "10.0.0.*"
-]
+if ENV == "development":
+    # Allow localhost, 127.0.0.1, and any LAN device
+    ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://10.0.0.*"
+    ]
+else:
+    # Production: allow whatever is set in env
+    env_origins = os.environ.get("ALLOWED_ORIGINS", "")
+    if env_origins:
+        ALLOWED_ORIGINS = env_origins.split(",")
 
 CORS(
     app,
