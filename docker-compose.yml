@@ -23,3 +23,5 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
+    environment:
+      - REACT_APP_API_BASE=http://backend:5001
