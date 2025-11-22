@@ -9,6 +9,8 @@ app = Flask(__name__)
 # Detect environment
 ENV = os.environ.get("FLASK_ENV", "production").lower()
 
+ALLOWED_ORIGINS = []
+
 if ENV == "development":
     # Allow localhost, 127.0.0.1, and any LAN device
     ALLOWED_ORIGINS = [

@@ -1,15 +1,18 @@
-const envBase = process.env.REACT_APP_API_BASE; // optional override from .env
-const envPort = "5001"; // backend port exposed on host
+const envBase = process.env.REACT_APP_API_BASE; // optional override
+const envPort = "5001";
 
 export const API_BASE = (() => {
-  if (envBase) return envBase.replace(/\/$/, "");
+  // Use explicit env variable if set
+  if (envBase && !envBase.includes("localhost")) return envBase.replace(/\/$/, "");
 
+  // Production relative path
   if (process.env.NODE_ENV === "production") return "/backend";
 
+  // Dev: use the current page hostname (LAN IP if accessed via LAN)
   const proto = window.location?.protocol || "http:";
   let host = window.location?.hostname || "localhost";
 
-  // If localhost, use optional LAN IP
+  // If localhost, optionally override with LAN IP from env
   if (host === "localhost" || host === "127.0.0.1") {
     host = process.env.REACT_APP_LAN_IP || host;
   }

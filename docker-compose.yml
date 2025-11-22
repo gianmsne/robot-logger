@@ -9,6 +9,7 @@ services:
       - ./database:/data
     environment:
       - FLASK_DEBUG=1
+      - FLASK_ENV=production
       - DB_PATH=/data/robot_logger.db
     # restart: always
 
@@ -25,5 +26,4 @@ services:
       - backend
     environment:
       - NODE_ENV=production
-      - REACT_APP_API_BASE=http://10.0.51.101:5001
       - REACT_APP_LAN_IP=10.0.51.101
