@@ -10,8 +10,6 @@ services:
     environment:
       - FLASK_DEBUG=1
       - DB_PATH=/data/robot_logger.db
-      # For deployment only
-      - ALLOWED_ORIGINS=http://10.0.51.101:3000
     # restart: always
 
   frontend:
@@ -26,4 +24,4 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_BASE=http://backend:5001
+      - REACT_APP_API_BASE=http://10.0.51.101:5001

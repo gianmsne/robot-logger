@@ -5,19 +5,19 @@ import os
 
 
 app = Flask(__name__)
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "").split(",")
 
-if ALLOWED_ORIGINS == [""]:
-    ALLOWED_ORIGINS = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost",
-        "http://127.0.0.1"
-    ]
+
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost",
+    "http://127.0.0.1",
+    "10.0.0.*"
+]
 
 CORS(
     app,
-    resources={r"/backend/*": {"origins": "*"}},
+    resources={r"/backend/*": {"origins": ALLOWED_ORIGINS}},
     supports_credentials=True,
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
