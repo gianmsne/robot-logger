@@ -1,31 +1,29 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory, request, make_response
 from flask_cors import CORS
 import sqlite3
 import os
 
 
 app = Flask(__name__)
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:80").split(",")
 
 CORS(
     app,
-    resources={r"/api/*": {"origins": ALLOWED_ORIGINS}},
+    resources={r"/backend/*": {"origins": "*"}},
     supports_credentials=True,
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
 
-# Use absolute path based on this file location
-BASE_DIR = os.path.dirname(__file__)
-DB_PATH = os.path.join(BASE_DIR, "..", "database", "robot_logger.db")
+DB_PATH = os.environ.get("DB_PATH", "/data/robot_logger.db")
 
 def get_db_connection():
     """Helper function to connect to the SQLite database."""
-    conn = sqlite3.connect(os.path.normpath(DB_PATH))
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row  # so rows can be converted to dicts
     return conn
 
-@app.route("/api/users")
+@app.route("/backend/users")
 def get_users():
     try:
         conn = get_db_connection()
@@ -37,7 +35,7 @@ def get_users():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/api/robots")
+@app.route("/backend/robots")
 def get_robots():
     try:
         conn = get_db_connection()
@@ -49,7 +47,7 @@ def get_robots():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/api/logs")
+@app.route("/backend/logs")
 def get_logs():
     try:
         conn = get_db_connection()
@@ -61,7 +59,7 @@ def get_logs():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/api/notes")
+@app.route("/backend/notes")
 def get_notes():
     try:
         conn = get_db_connection()
@@ -75,4 +73,4 @@ def get_notes():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

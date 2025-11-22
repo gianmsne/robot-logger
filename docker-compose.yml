@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./backend:/app
+      - ./database:/data
+    environment:
+      - FLASK_DEBUG=1
+      - DB_PATH=/data/robot_logger.db
+    # restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend

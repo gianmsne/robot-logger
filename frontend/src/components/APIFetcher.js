@@ -1,4 +1,4 @@
-export const API_BASE = "http://localhost:5000/api";
+export const API_BASE = "http://localhost:5001/backend";
 
 export async function fetchJson(path) {
   const res = await fetch(`${API_BASE}${path}`);

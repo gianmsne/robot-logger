@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { fetchJson } from "./APIFetcher";
 
 export default function DataTable({ 
@@ -28,7 +28,7 @@ export default function DataTable({
       .catch(err => { if (mounted) setError(err.message); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
-  }, [path]);
+  }, [path, onRowsLoaded]);
 
   const booleanToYesNo = v => (v ? "Yes" : "No");
 

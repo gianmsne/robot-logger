@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
 
 export const columnOrder = ["userID", "givenName", "familyName", "isInducted", "isAdmin"];
