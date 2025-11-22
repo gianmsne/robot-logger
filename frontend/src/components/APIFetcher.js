@@ -1,10 +1,10 @@
-
-export const API_BASE = process.env.NODE_ENV === "production" ? `${process.env.REACT_APP_LAN_IP}/backend` : "/backend"
+// Prefer runtime-injected value from window._env_, then fall back to build-time env.
+export const API_BASE = `http://${window._env_.REACT_APP_LAN_IP}:5001/backend`;
 
 export async function fetchJson(path) {
-  console.log(API_BASE)
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   const url = `${API_BASE}${normalizedPath}`;
+  console.log("Fetching from:", url); // check the URL
   const res = await fetch(url);
   if (!res.ok) {
     const txt = await res.text();

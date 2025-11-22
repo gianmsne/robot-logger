@@ -6,28 +6,10 @@ import os
 
 app = Flask(__name__)
 
-# Detect environment
-ENV = os.environ.get("FLASK_ENV", "production").lower()
-
-ALLOWED_ORIGINS = []
-
-if ENV == "development":
-    # Allow localhost, 127.0.0.1, and any LAN device
-    ALLOWED_ORIGINS = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://10.0.0.*"
-    ]
-else:
-    # Production: allow whatever is set in env
-    env_origins = os.environ.get("ALLOWED_ORIGINS", "")
-    if env_origins:
-        ALLOWED_ORIGINS = env_origins.split(",")
-
 CORS(
     app,
-    resources={r"/backend/*": {"origins": ALLOWED_ORIGINS}},
-    supports_credentials=True,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=False,
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
@@ -51,7 +33,7 @@ def get_users():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/robots")
 def get_robots():
     try:
@@ -63,7 +45,7 @@ def get_robots():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/logs")
 def get_logs():
     try:
@@ -75,7 +57,7 @@ def get_logs():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/notes")
 def get_notes():
     try:
