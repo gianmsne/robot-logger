@@ -64,12 +64,12 @@ git clone https://github.com/gianmsne/robot-logger.git
 cd robot-logger
 ```
 
-#### Dependencies: 
-- **SQLite3 development libraries** (`libsqlite3-dev`)  
+#### Dependencies:
+- **SQLite3 development libraries** (`libsqlite3-dev`)
   - Required for database storage and management of users, robots, logs, and notes.
-- **OpenCV** (`libopencv-dev`)  
-  - Provides computer vision support for camera input when scanning barcodes.  
-- **ZBar** (`libzbar-dev`)  
+- **OpenCV** (`libopencv-dev`)
+  - Provides computer vision support for camera input when scanning barcodes.
+- **ZBar** (`libzbar-dev`)
   - Barcode scanning library used for reading user ID card barcodes.
 
 *You can either manually install dependencies or run the provided setup scripts for your OS:*
@@ -104,13 +104,13 @@ make
 Using homebrew:
 ```
 brew update
-brew install opencv zbar sqlite3
+brew install opencv zbar sqlite3 gcc
 ```
 
 
 #### Option 2 - Run the setup scripts:
 ```
-chmod +x setups/setup_linux.sh setups/setup_database.sh
+chmod +x setups/setup_macos.sh setups/setup_database.sh
 ./setups/setup_macos.sh && ./setups/setup_database.sh
 ```
 
