@@ -9,7 +9,6 @@ services:
       - ./database:/data
     environment:
       - FLASK_DEBUG=1
-      - FLASK_ENV=production
       - DB_PATH=/data/robot_logger.db
     # restart: always
 
@@ -26,6 +25,5 @@ services:
     depends_on:
       - backend
     environment:
-      - NODE_ENV=production
       - REACT_APP_LAN_IP=10.0.51.101
     command: ["/bin/sh", "/docker_entrypoint.sh"]
