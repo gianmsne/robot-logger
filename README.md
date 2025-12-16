@@ -122,3 +122,18 @@ make
 ```
 
 ---
+
+# Running the react webapp for database access
+
+## Building the webapp for the first time
+
+Make sure you have Docker installed and running. In the root directory of the repository, run:
+```
+docker compose build
+```
+
+## Run the webapp
+Run the Docker Compose with:
+```
+docker compose up
+```
