@@ -12,7 +12,7 @@ if ! command -v brew &> /dev/null; then
 fi
 
 echo "Installing dependencies..."
-brew install opencv zbar sqlite3 g++ make cmake git
+brew install opencv zbar sqlite3 gcc make cmake git
 
 echo "All dependencies installed successfully!"
 

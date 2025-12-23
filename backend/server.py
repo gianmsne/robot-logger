@@ -5,12 +5,11 @@ import os
 
 
 app = Flask(__name__)
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:80").split(",")
 
 CORS(
     app,
-    resources={r"/backend/*": {"origins": "*"}},
-    supports_credentials=True,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=False,
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
@@ -34,7 +33,7 @@ def get_users():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/robots")
 def get_robots():
     try:
@@ -46,7 +45,7 @@ def get_robots():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/logs")
 def get_logs():
     try:
@@ -58,7 +57,7 @@ def get_logs():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route("/backend/notes")
 def get_notes():
     try:

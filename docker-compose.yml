@@ -21,5 +21,9 @@ services:
     tty: true
     volumes:
       - ./frontend:/app
+      - ./frontend/docker_entrypoint.sh:/docker_entrypoint.sh:ro
     depends_on:
       - backend
+    environment:
+      - REACT_APP_LAN_IP=10.0.51.101
+    command: ["/bin/sh", "/docker_entrypoint.sh"]

@@ -33,3 +33,5 @@ database/robot_logger.db
 *.log
 *.tmp
 node_modules
+
+robotLogger
