@@ -10,7 +10,6 @@ void addEquipment() {
     int input;
 
     std::string equipmentName;
-    std::string equipmentID;
     std::string location;
     std::string equipmentType;
     std::string equipmentCondition;
@@ -30,11 +29,6 @@ void addEquipment() {
         std::cout << " >> Equipment " + equipmentName + " already exists!" << std::endl;
         return;
     }
-    
-    // Get Equipment ID
-    std::cout << " >> Enter Equipment RMIT ID (Optional): ";
-    std::getline(std::cin, equipmentID);
-    if (equipmentID.empty()) { equipmentID = "None"; }
 
     // Get equipment location
     std::cout << " >> Enter Location ( [Enter] for \"RACE Hub\" ): ";
@@ -82,7 +76,7 @@ void addEquipment() {
     }
     std::cout << std::endl;
 
-    if(insertEquipment(equipmentName, equipmentType, equipmentCondition, equipmentID, location)) {
+    if(insertEquipment(equipmentName, equipmentType, equipmentCondition, location)) {
         std::cout << " Equipment added successfully!" << std::endl;
     } else {
         std::cout << " Error! Could not add equipment." << std::endl;
@@ -94,7 +88,6 @@ void modifyEquipment() {
     std::string equipmentName;
     std::string equipmentType;
     std::string equipmentCondition;
-    std::string equipmentID;
     std::string location;
     int isAvailable;
 
@@ -143,16 +136,11 @@ void modifyEquipment() {
                 updateCondition(equipmentName, equipmentCondition);
                 break;
             case 3:
-                std::cout << " Enter new ID: ";
-                std::cin >> equipmentID;
-                updateEquipmentID(equipmentName, equipmentID);
-                break;
-            case 4:
                 std::cout << " Enter new location: ";
                 std::getline (std::cin, location);
                 updateLocation(equipmentName, location);
                 break;
-            case 5:
+            case 4:
                 std::cout << " Availability Status - ";
                 input = getYesNo();
                 if (input == 'y' || input == 'Y') { 
@@ -162,7 +150,7 @@ void modifyEquipment() {
                 } 
                 updateAvailability(equipmentName, isAvailable);
                 break;
-            case 6:
+            case 5:
                 std::cout << " Are you sure you want to delete " + equipmentName + "?" << std::endl;
                 input = getYesNo();
                 if (input == 'y' || input == 'Y') { 
@@ -172,7 +160,7 @@ void modifyEquipment() {
                    return;
                 } 
                 break;
-            case 7:
+            case 6:
                 break;
         }   
     }

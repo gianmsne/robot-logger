@@ -5,7 +5,6 @@
 
 bool insertEquipment(
     const std::string& equipmentName,
-    const std::string& equipmentID,
     const std::string& location,
     const std::string& equipmentType,
     const std::string& equipmentCondition
@@ -38,7 +37,6 @@ void updateInductionStatus(const std::string& id, const int& inducted);
 // Update Equipments
 void updateType(const std::string& equipmentName, const std::string& equipmentType);
 void updateCondition(const std::string& equipmentName, const std::string& equipmentCondition);
-void updateEquipmentID(const std::string& equipmentName, const std::string& equipmentID);
 void updateLocation(const std::string& equipmentName, const std::string& location);
 void updateAvailability(const std::string& equipmentName, const int& isAvailable);
 
