@@ -41,7 +41,7 @@ void pressEnterToContinue() {
 
 int main(int argc, char* argv[]) {
 
-    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR); //suppress opencv warnings
+    // cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR); //suppress opencv warnings
     
     bool camera = false;
     bool headless = false;
