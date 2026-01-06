@@ -95,7 +95,7 @@ bool insertUser(
     sqlite3_bind_text(stmt, 2, userGivenName.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, userFamilyName.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, 4, isAdmin);
-    sqlite3_bind_int(stmt, 5, inducted);
+    // sqlite3_bind_int(stmt, 5, inducted);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -442,38 +442,38 @@ void updateAdminStatus(const std::string &id, const int& isAdmin)
     return;
 };
 
-void updateInductionStatus(const std::string &id, const int& inducted)
-{
+// void updateInductionStatus(const std::string &id, const int& inducted)
+// {
 
-    openDBConnection();
-    sqlite3 *db = globalDB;
+//     openDBConnection();
+//     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE users SET isInducted = ? WHERE userID = ? ";
+//     const char *query = "UPDATE users SET isInducted = ? WHERE userID = ? ";
 
-    sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        return;
-    }
+//     sqlite3_stmt *stmt;
+//     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+//     if (rc != SQLITE_OK)
+//     {
+//         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+//         return;
+//     }
 
-    // Bind values
-    sqlite3_bind_int(stmt, 1, inducted);
-    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+//     // Bind values
+//     sqlite3_bind_int(stmt, 1, inducted);
+//     sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
 
-    // Execute
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
-    {
-        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_finalize(stmt);
-        return;
-    }
+//     // Execute
+//     rc = sqlite3_step(stmt);
+//     if (rc != SQLITE_DONE)
+//     {
+//         std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+//         sqlite3_finalize(stmt);
+//         return;
+//     }
 
-    sqlite3_finalize(stmt);
-    return;
-};
+//     sqlite3_finalize(stmt);
+//     return;
+// };
 
 void updateType(const std::string& equipmentName, const std::string& equipmentType){
     
