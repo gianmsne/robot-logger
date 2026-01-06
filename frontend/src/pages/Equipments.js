@@ -1,30 +1,29 @@
 import DataTable from "../components/DataTable";
 
-export const columnOrder = ["robotName", "robotType", "robotCondition", "rmitID", "location", "isAvailable", "permanentStatus"];
+export const columnOrder = ["equipmentName", "equipmentType", "equipmentCondition", "location", "isAvailable", "permanentStatus"];
 export const columnLabels = {
-    robotName: "Robot Name",
-    robotType: "Robot Type",
-    robotCondition: "Robot Condition",
-    rmitID: "RMIT ID",
+    equipmentName: "Equipment Name",
+    equipmentType: "Equipment Type",
+    equipmentCondition: "Equipment Condition",
     location: "Location",
     isAvailable: "Is Available",
     permanentStatus: "Permanent Status"
 };
 export const booleanColumns = new Set(["isAvailable"]);
-export const filterColumns = new Set(["robotType", "robotCondition", "location"]);
+export const filterColumns = new Set(["equipmentType", "equipmentCondition", "location"]);
 
-export default function Robots({ sortBy, sortOrder, filters, onRowsLoaded }) {
+export default function Equipments({ sortBy, sortOrder, filters, onRowsLoaded }) {
   return (
     <div>
       <DataTable
-        path="/robots"
+        path="/equipments"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         booleanColumns={booleanColumns}
         filterColumns={filterColumns}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        initialSortBy={"robotName"}
+        initialSortBy={"equipmentName"}
         initialSortOrder={"asc"}
         filters={filters}
         onRowsLoaded={onRowsLoaded}

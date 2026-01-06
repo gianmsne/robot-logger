@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "5001:5000"
+      - "5001:5001"
     volumes:
       - ./backend:/app
       - ./database:/data

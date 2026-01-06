@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import Users, { booleanColumns as userBooleanColumns, columnOrder as userColumnOrder, columnLabels as userColumnLabels } from './pages/Users';
-import Robots, { booleanColumns as robotBooleanColumns, columnOrder as robotColumnOrder, columnLabels as robotColumnLabels, filterColumns as robotFilterColumns } from './pages/Robots';
+import Equipments, { booleanColumns as equipmentBooleanColumns, columnOrder as equipmentColumnOrder, columnLabels as equipmentColumnLabels, filterColumns as equipmentFilterColumns } from './pages/Equipments';
 import Logs, { columnOrder as logsColumnOrder, columnLabels as logsColumnLabels, filterColumns as logsFilterColumns } from './pages/Logs';
 import Notes, { columnOrder as notesColumnOrder, columnLabels as notesColumnLabels, filterColumns as notesFilterColumns} from './pages/Notes';
 import FiltersDropdown from './components/FilterDropdown';
@@ -63,7 +63,7 @@ function App() {
       <Container className="page-container">
         <div className='table-selection-box'>
           <Button className='table-button' onClick={() => handleActiveTable("Users")}>Users</Button>
-          <Button className='table-button' onClick={() => handleActiveTable("Robots")}>Robots</Button>
+          <Button className='table-button' onClick={() => handleActiveTable("Equipments")}>Equipments</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Logs")}>Logs</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Notes")}>Notes</Button>
         </div>
@@ -88,10 +88,10 @@ function App() {
                   <Dropdown.Item onClick={() => applySort("familyName", "asc")}><BsArrowUp /> Family Name</Dropdown.Item>
                   <Dropdown.Item onClick={() => applySort("familyName", "desc")}><BsArrowDown /> Family Name</Dropdown.Item>
                 </>
-              ) : activeTable === "Robots" ? (
+              ) : activeTable === "Equipments" ? (
                 <>
-                  <Dropdown.Item onClick={() => applySort("robotName", "asc")}><BsArrowUp /> Robot Name</Dropdown.Item>
-                  <Dropdown.Item onClick={() => applySort("robotName", "desc")}><BsArrowDown /> Robot Name</Dropdown.Item>
+                  <Dropdown.Item onClick={() => applySort("equipmentName", "asc")}><BsArrowUp /> Equipment Name</Dropdown.Item>
+                  <Dropdown.Item onClick={() => applySort("equipmentName", "desc")}><BsArrowDown /> Equipment Name</Dropdown.Item>
                 </>
                ) : activeTable === "Logs" ? (
                 <>
@@ -103,8 +103,8 @@ function App() {
                 </>
               ) : activeTable === "Notes" ? (
                 <>
-                  <Dropdown.Item onClick={() => applySort("robotName", "asc")}><BsArrowUp /> Robot Name</Dropdown.Item>
-                  <Dropdown.Item onClick={() => applySort("robotName", "desc")}><BsArrowDown /> Robot Name</Dropdown.Item>
+                  <Dropdown.Item onClick={() => applySort("equipmentName", "asc")}><BsArrowUp /> Equipment Name</Dropdown.Item>
+                  <Dropdown.Item onClick={() => applySort("equipmentName", "desc")}><BsArrowDown /> Equipment Name</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => applySort("timeOfNote", "asc")}><BsArrowUp /> Time Of Note</Dropdown.Item>
                   <Dropdown.Item onClick={() => applySort("timeOfNote", "desc")}><BsArrowDown /> Time Of Note</Dropdown.Item>
@@ -134,15 +134,15 @@ function App() {
                   />
                 </>
                 
-              ) : activeTable === "Robots" ? (
+              ) : activeTable === "Equipments" ? (
                 <>
                   <FiltersDropdown 
                     filters={ filters } 
                     setFilters={ setFilters } 
-                    columnOrder={ robotColumnOrder } 
-                    booleanColumns={ robotBooleanColumns }
-                    columnLabels={ robotColumnLabels }
-                    filterColumns={ robotFilterColumns }
+                    columnOrder={ equipmentColumnOrder } 
+                    booleanColumns={ equipmentBooleanColumns }
+                    columnLabels={ equipmentColumnLabels }
+                    filterColumns={ equipmentFilterColumns }
                     rows={ tableRows }
                   />
                 </>
@@ -175,7 +175,7 @@ function App() {
 
         <Container className="database-container">
           {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
-          {activeTable === "Robots" && <Robots sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
+          {activeTable === "Equipments" && <Equipments sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
           {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
           {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
         </Container>

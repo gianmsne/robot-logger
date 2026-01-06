@@ -32,10 +32,10 @@ void addUser() {
     if (input == 'y' || input == 'Y') isAdmin = 1;
     else isAdmin = 0;
 
-    std::cout << " >> Is Inducted (y/n): ";
-    std::cin >> input;
-    if (input == 'y' || input == 'Y') inducted = 1;
-    else inducted = 0;
+    // std::cout << " >> Is Inducted (y/n): ";
+    // std::cin >> input;
+    // if (input == 'y' || input == 'Y') inducted = 1;
+    // else inducted = 0;
 
     std::cout << std::endl;
 

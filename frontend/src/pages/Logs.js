@@ -1,14 +1,14 @@
 import DataTable from "../components/DataTable";
 
-export const columnOrder = ["robotName", "checkOutUserID", "checkOut", "checkInUserID", "checkIn"];
+export const columnOrder = ["equipmentName", "checkOutUserID", "checkOut", "checkInUserID", "checkIn"];
 export const columnLabels = {
-    robotName: "Robot Name",
+    equipmentName: "Equipment Name",
     checkOutUserID: "Check Out User",
     checkOut: "Check Out Time",
     checkInUserID: "Check In User",
     checkIn: "Check In Time"
 };
-export const filterColumns = new Set(["robotName"]);
+export const filterColumns = new Set(["equipmentName"]);
 
 export default function Logs({ sortBy, sortOrder, userMap, filters, onRowsLoaded }) {
   const timeColumns = new Set(["checkOut", "checkIn"]);

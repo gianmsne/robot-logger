@@ -37,13 +37,13 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 }
 
 
-void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
+void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& pickedRobot) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
     std::string status;
 
     // Widths for columns
-    int numWidth = std::to_string(robots.size()).length(); // number column
+    int numWidth = std::to_string(equipments.size()).length(); // number column
     int nameWidth = 12;  // robot name column width
     int statusWidth = 35; // status column width
     int noteWidth = 40;  // note column width
@@ -58,21 +58,21 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
 
         std::cout << std::endl;
 
-    if(robots.empty()) {
+    if(equipments.empty()) {
         std::cout << "  >> There are no available robots to check out." <<  std::endl;
         pickedRobot = "";
         return;
     } else {
-        for (unsigned int i = 0; i < robots.size(); i++) {
-            std::string status = getRobotStatus(robots[i]);
-            std::string recentNote = getMostRecentNote(robots[i]);
+        for (unsigned int i = 0; i < equipments.size(); i++) {
+            std::string status = getRobotStatus(equipments[i]);
+            std::string recentNote = getMostRecentNote(equipments[i]);
 
             if (status.empty()) status = " ";
             if (recentNote.empty()) recentNote = " ";
 
             std::cout 
                 << std::right << std::setw(numWidth) << i + 1 << ") "
-                << std::left  << std::setw(nameWidth) << robots[i] 
+                << std::left  << std::setw(nameWidth) << equipments[i] 
                 << " | " << std::setw(statusWidth) << status 
                 << " | " << std::setw(noteWidth) << recentNote
                 << std::endl;
@@ -97,14 +97,14 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)robots.size()) {
-                pickedRobot = robots[index - 1];
+            if (index >= 1 && index <= (int)equipments.size()) {
+                pickedRobot = equipments[index - 1];
                 return;
             }
 
-            std::cout << " Invalid number. Choose 0-" << robots.size() << "." << std::endl;
+            std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
-        } else if (vector_contains(robots, input)) {
+        } else if (vector_contains(equipments, input)) {
             pickedRobot = input;
             return;
         } else {
@@ -117,19 +117,19 @@ void printCheckOutMenu(const std::vector<std::string>& robots, std::string& pick
     
 }
 
-void printCheckInMenu(const std::vector<std::string>& robots, std::string& pickedRobot, std::string &notes, std::string &permStatus) {
+void printCheckInMenu(const std::vector<std::string>& equipments, std::string& pickedRobot, std::string &notes, std::string &permStatus) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-IN -------------" << std::endl;
     std::string user;
 
-    if(robots.empty()) {
+    if(equipments.empty()) {
         std::cout << "  >> There are no robots to be checked-in." <<  std::endl;
         pickedRobot = "";
         return;
     } else {
-        for (unsigned int i = 0; i < robots.size(); i++) {
-            user = getUserFromID(getCheckOutIdFromRobot(robots[i]), user);
-            std::cout << " " << i + 1 << ") " << robots[i]
+        for (unsigned int i = 0; i < equipments.size(); i++) {
+            user = getUserFromID(getCheckOutIdFromRobot(equipments[i]), user);
+            std::cout << " " << i + 1 << ") " << equipments[i]
                       <<  " | Checked out by: " << user << std::endl;
         }
     }
@@ -152,14 +152,14 @@ void printCheckInMenu(const std::vector<std::string>& robots, std::string& picke
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)robots.size()) {
-                pickedRobot = robots[index - 1];
+            if (index >= 1 && index <= (int)equipments.size()) {
+                pickedRobot = equipments[index - 1];
                 break;
             }
 
-            std::cout << "Invalid number. Choose 0-" << robots.size() << "." << std::endl;
+            std::cout << "Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
-        } else if (vector_contains(robots, input)) {
+        } else if (vector_contains(equipments, input)) {
             pickedRobot = input;
             break;
         } else {
@@ -312,17 +312,17 @@ void printLogin(){
 }
 
 
-void printNotesMenu(const std::vector<std::string>& robots, std::string& pickedRobot) {
+void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedRobot) {
     std::cout << std::endl;
     std::cout << " ------------- ADD/VIEW NOTES -------------" << std::endl;
     std::string status;
 
-    if(robots.empty()) {
+    if(equipments.empty()) {
         std::cout << "  >> There are no robots in the database." <<  std::endl;
         return;
     } else {
-        for (unsigned int i = 0; i < robots.size(); i++) {
-            std::cout << " " << i + 1 << ") " << robots[i] << std::endl;
+        for (unsigned int i = 0; i < equipments.size(); i++) {
+            std::cout << " " << i + 1 << ") " << equipments[i] << std::endl;
         }
     }
 
@@ -344,14 +344,14 @@ void printNotesMenu(const std::vector<std::string>& robots, std::string& pickedR
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)robots.size()) {
-                pickedRobot = robots[index - 1];
+            if (index >= 1 && index <= (int)equipments.size()) {
+                pickedRobot = equipments[index - 1];
                 return;
             }
 
-            std::cout << " Invalid number. Choose 0-" << robots.size() << "." << std::endl;
+            std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
-        } else if (vector_contains(robots, input)) {
+        } else if (vector_contains(equipments, input)) {
             pickedRobot = input;
             return;
         } else {

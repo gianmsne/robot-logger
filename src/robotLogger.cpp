@@ -1,7 +1,7 @@
 #include "menuUtils.h"
 #include "dbUtils.h"
 #include "User.h"
-#include "robotUtils.h"
+#include "equipmentUtils.h"
 #include "userUtils.h"
 #include "checkOut.h"
 #include "checkIn.h"
@@ -24,8 +24,8 @@ enum States{
     ST_CheckOut,
     ST_CheckIn,
     ST_Notes,
-    ST_AddRobot,
-    ST_ModifyRobot,
+    ST_AddEquipment,
+    ST_ModifyEquipment,
     ST_AddUser,
     ST_ModifyUser,
     ST_Exit
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    std::vector<std::string> robots = getRobots();
+    std::vector<std::string> equipments = getEquipments();
     std::optional<User> loggedInUser;
     std::string studentId; 
 
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
         printLogin();
         
         if(camera || headless){
-             studentId = scanRobotBarcode(camera, headless);
+             studentId = scanEquipmentBarcode(camera, headless);
         } else {
             printStartText();
             std::cin >> studentId;
@@ -114,8 +114,8 @@ int main(int argc, char* argv[]) {
                         case 1: currState = ST_CheckOut; break;
                         case 2: currState = ST_CheckIn;  break;
                         case 3: currState = ST_Notes; break;
-                        case 4: currState = ST_AddRobot; break;
-                        case 5: currState = ST_ModifyRobot;  break;
+                        case 4: currState = ST_AddEquipment; break;
+                        case 5: currState = ST_ModifyEquipment;  break;
                         case 6: currState = ST_AddUser;  break;
                         case 7: currState = ST_ModifyUser;  break;
                         case 0: currState = ST_Login;     break;
@@ -134,17 +134,17 @@ int main(int argc, char* argv[]) {
             }
 
             case ST_CheckOut: {
-                robots = getRobots(); // Refresh robot list
-                std::string pickedRobot;
-                printCheckOutMenu(robots, pickedRobot);
+                equipments = getEquipments(); // Refresh equipment list
+                std::string pickedEquipment;
+                printCheckOutMenu(equipments, pickedEquipment);
 
-                if(pickedRobot == "") {
+                if(pickedEquipment == "") {
                     pressEnterToContinue();
                     currState = ST_Main;
                     break;
                 }
 
-                addCheckOutRecord(loggedInUser->getID(), pickedRobot);
+                addCheckOutRecord(loggedInUser->getID(), pickedEquipment);
                 pressEnterToContinue();
                 
                 currState = ST_Main;
@@ -153,19 +153,19 @@ int main(int argc, char* argv[]) {
 
             
             case ST_CheckIn: {
-                std::string pickedRobot;
+                std::string pickedEquipment;
                 std::string notes;
                 std::string permStatus;
-                std::vector<std::string> checkedOutRobots = getRobotsCurrentlyCheckedOut();
-                printCheckInMenu(checkedOutRobots, pickedRobot, notes, permStatus);
+                std::vector<std::string> checkedOutEquipments = getEquipmentsCurrentlyCheckedOut();
+                printCheckInMenu(checkedOutEquipments, pickedEquipment, notes, permStatus);
                 
-                if(pickedRobot == "") {
+                if(pickedEquipment == "") {
                     pressEnterToContinue();
                     currState = ST_Main;
                     break;
                 }
 
-                addCheckInRecord(loggedInUser->getID(), pickedRobot, notes, permStatus);
+                addCheckInRecord(loggedInUser->getID(), pickedEquipment, notes, permStatus);
                 pressEnterToContinue();
                 
                 currState = ST_Main;
@@ -173,14 +173,14 @@ int main(int argc, char* argv[]) {
             }
 
             case ST_Notes: {
-                std::string pickedRobot;
-                printNotesMenu(robots, pickedRobot);
-                if(pickedRobot.empty()) {
+                std::string pickedEquipment;
+                printNotesMenu(equipments, pickedEquipment);
+                if(pickedEquipment.empty()) {
                     pressEnterToContinue();
                     currState = ST_Main;
                     break;
                 } else {
-                    printNotes(pickedRobot, loggedInUser->getID());
+                    printNotes(pickedEquipment, loggedInUser->getID());
                     pressEnterToContinue();
                 }
 
@@ -188,14 +188,14 @@ int main(int argc, char* argv[]) {
                 break;
             }
 
-            case ST_AddRobot: {
-                addRobot();
+            case ST_AddEquipment: {
+                addEquipment();
                 currState = ST_Main;
                 break;
             }
 
-            case ST_ModifyRobot: {
-                modifyRobot();
+            case ST_ModifyEquipment: {
+                modifyEquipment();
                 currState = ST_Main;
                 break;
             }
