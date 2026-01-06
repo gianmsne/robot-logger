@@ -6,6 +6,6 @@
 #include <ctime>
 #include "User.h"
 
-void addCheckOutRecord(std::string userID, std::string robotName);
+void addCheckOutRecord(std::string userID, std::string equipmentName);
 
 #endif // CHECKOUT_H

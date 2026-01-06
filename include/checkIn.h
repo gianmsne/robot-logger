@@ -10,7 +10,7 @@
 #include "User.h"
 
 
-void addCheckInRecord(std::string userID, std::string robotName, std::string notes, std::string permStatus);
-std::vector<std::string> getRobotsCurrentlyCheckedOut();
+void addCheckInRecord(std::string userID, std::string equipmentName, std::string notes, std::string permStatus);
+std::vector<std::string> getEquipmentsCurrentlyCheckedOut();
 
-#endif // CHECKOUT_H
+#endif // CHECKIN_H
