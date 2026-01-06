@@ -8,7 +8,7 @@
 // Max frames to scan in headless mode 
 const int MAX_HEADLESS_FRAMES = 300; // (~10 seconds at 30 FPS)
 
-std::string scanRobotBarcode(bool camera = false, bool headless = false) {
+std::string scanEquipmentBarcode(bool camera = false, bool headless = false) {
     printStartTextScan();
 
     cv::VideoCapture cap(0);
