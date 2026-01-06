@@ -11,7 +11,6 @@ void addUser() {
     std::string userGivenName;
     std::string userFamilyName;
     int isAdmin;
-    int inducted;
 
     char input;
 
