@@ -16,7 +16,7 @@ void addCheckOutRecord(std::string userID, std::string equipmentName) {
 
     try {
         sqlite3* db;
-        if(sqlite3_open("database/equipment_logger.db", &db)) {
+        if(sqlite3_open("database/robot_logger.db", &db)) {
             std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
             throw(0);
         }
