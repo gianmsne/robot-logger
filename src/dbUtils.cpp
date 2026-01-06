@@ -73,8 +73,7 @@ bool insertUser(
     const std::string &userID,
     const std::string &userGivenName,
     const std::string &userFamilyName,
-    int isAdmin,
-    int inducted)
+    int isAdmin)
 {
     openDBConnection();
     sqlite3 *db = globalDB;

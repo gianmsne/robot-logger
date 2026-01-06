@@ -31,11 +31,6 @@ void addUser() {
     if (input == 'y' || input == 'Y') isAdmin = 1;
     else isAdmin = 0;
 
-    // std::cout << " >> Is Inducted (y/n): ";
-    // std::cin >> input;
-    // if (input == 'y' || input == 'Y') inducted = 1;
-    // else inducted = 0;
-
     std::cout << std::endl;
 
     try {
@@ -45,7 +40,7 @@ void addUser() {
             throw(0);
         }
 
-        if(insertUser(userID, userGivenName, userFamilyName, isAdmin, inducted)) {
+        if(insertUser(userID, userGivenName, userFamilyName, isAdmin)) {
             std::cout << " User added successfully!" << std::endl;
         } else {
             throw(0);
@@ -65,7 +60,6 @@ void modifyUser(const std::string loggedInUserID) {
     std::string userGivenName;
     std::string userFamilyName;
     int isAdmin = 0;
-    int inducted = 0;
 
     char input;
 
@@ -105,12 +99,6 @@ void modifyUser(const std::string loggedInUserID) {
                 updateAdminStatus(userID, isAdmin);
                 break;
             case 4:
-                std::cout << " Induction Status - ";
-                input = getYesNo();
-                if (input == 'y' || input == 'Y') { inducted = 1; } 
-                updateInductionStatus(userID, inducted);
-                break;
-            case 5:
                 if(loggedInUserID == userID){
                     std::cout << " You cannot delete the user you are currently logged in as." << std::endl;
                     break;
@@ -124,7 +112,7 @@ void modifyUser(const std::string loggedInUserID) {
                    return;
                 } 
                 break;
-            case 6:
+            case 5:
                 break;
         }
     }
