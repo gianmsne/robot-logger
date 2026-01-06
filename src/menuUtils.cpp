@@ -21,9 +21,9 @@ void printMainMenu(const std::string& id, bool isAdmin) {
     std::cout << " 3) Add/view notes" << std::endl;
     std::cout << std::endl;
     if(isAdmin){
-        std::cout << " >> Robot Options: " << std::endl;
-        std::cout << " 4) Add Robot" << std::endl;
-        std::cout << " 5) Modify Robot" << std::endl;
+        std::cout << " >> Equipment Options: " << std::endl;
+        std::cout << " 4) Add Equipment" << std::endl;
+        std::cout << " 5) Modify Equipment" << std::endl;
         std::cout << "\n >> User Options: "<< std::endl;
         std::cout << " 6) Add User" << std::endl;
         std::cout << " 7) Modify User" << std::endl;
@@ -37,21 +37,21 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 }
 
 
-void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& pickedRobot) {
+void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
     std::string status;
 
     // Widths for columns
     int numWidth = std::to_string(equipments.size()).length(); // number column
-    int nameWidth = 12;  // robot name column width
+    int nameWidth = 12;  // equipment name column width
     int statusWidth = 35; // status column width
     int noteWidth = 40;  // note column width
 
     // Print header row
     std::cout 
         << std::right << std::setw(numWidth) << "#" << " "
-        << std::left  << std::setw(nameWidth) << "Robot"
+        << std::left  << std::setw(nameWidth) << "Equipment"
         << "  > " << std::setw(statusWidth) << "Status"
         << " * " << std::setw(noteWidth) << "Most Recent Note"
         << std::endl;
@@ -59,12 +59,12 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
         std::cout << std::endl;
 
     if(equipments.empty()) {
-        std::cout << "  >> There are no available robots to check out." <<  std::endl;
-        pickedRobot = "";
+        std::cout << "  >> There are no available equipments to check out." <<  std::endl;
+        pickedEquipment = "";
         return;
     } else {
         for (unsigned int i = 0; i < equipments.size(); i++) {
-            std::string status = getRobotStatus(equipments[i]);
+            std::string status = getEquipmentStatus(equipments[i]);
             std::string recentNote = getMostRecentNote(equipments[i]);
 
             if (status.empty()) status = " ";
@@ -80,7 +80,7 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
     }
 
     std::cout << std::endl;
-    std::cout << " Enter robot name or number ([0] to cancel): ";
+    std::cout << " Enter equipment name or number ([0] to cancel): ";
    
     std::string input;
     std::cin >> input;
@@ -90,7 +90,7 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
 
         if (input == "0") {
             std::cout << " >> Check-out cancelled.\n";
-            pickedRobot.clear();
+            pickedEquipment.clear();
             return;
         }
 
@@ -98,44 +98,44 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
             int index = std::stoi(input);
 
             if (index >= 1 && index <= (int)equipments.size()) {
-                pickedRobot = equipments[index - 1];
+                pickedEquipment = equipments[index - 1];
                 return;
             }
 
             std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
         } else if (vector_contains(equipments, input)) {
-            pickedRobot = input;
+            pickedEquipment = input;
             return;
         } else {
             std::cout << " Invalid input. Try again." << std::endl;
         }
 
-        std::cout << " Enter robot name or number ([0] to cancel): ";
+        std::cout << " Enter equipment name or number ([0] to cancel): ";
         std::cin >> input;
     }
     
 }
 
-void printCheckInMenu(const std::vector<std::string>& equipments, std::string& pickedRobot, std::string &notes, std::string &permStatus) {
+void printCheckInMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment, std::string &notes, std::string &permStatus) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-IN -------------" << std::endl;
     std::string user;
 
     if(equipments.empty()) {
-        std::cout << "  >> There are no robots to be checked-in." <<  std::endl;
-        pickedRobot = "";
+        std::cout << "  >> There are no equipments to be checked-in." <<  std::endl;
+        pickedEquipment = "";
         return;
     } else {
         for (unsigned int i = 0; i < equipments.size(); i++) {
-            user = getUserFromID(getCheckOutIdFromRobot(equipments[i]), user);
+            user = getUserFromID(getCheckOutIdFromEquipment(equipments[i]), user);
             std::cout << " " << i + 1 << ") " << equipments[i]
                       <<  " | Checked out by: " << user << std::endl;
         }
     }
 
     std::cout << std::endl;
-    std::cout << " Enter robot name or number ([0] to cancel): ";
+    std::cout << " Enter equipment name or number ([0] to cancel): ";
    
     std::string input;
     std::cin >> input;
@@ -145,7 +145,7 @@ void printCheckInMenu(const std::vector<std::string>& equipments, std::string& p
 
         if (input == "0") {
             std::cout << " >> Check-in cancelled.\n";
-            pickedRobot.clear();
+            pickedEquipment.clear();
             return;
         }
 
@@ -153,30 +153,30 @@ void printCheckInMenu(const std::vector<std::string>& equipments, std::string& p
             int index = std::stoi(input);
 
             if (index >= 1 && index <= (int)equipments.size()) {
-                pickedRobot = equipments[index - 1];
+                pickedEquipment = equipments[index - 1];
                 break;
             }
 
             std::cout << "Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
         } else if (vector_contains(equipments, input)) {
-            pickedRobot = input;
+            pickedEquipment = input;
             break;
         } else {
             std::cout << "Invalid input. Try again." << std::endl;
         }
 
-        std::cout << "Enter robot number or name: ";
+        std::cout << "Enter equipment number or name: ";
         std::cin >> input;
     }
 
     std::cout << std::endl;
-    std::cout << " Enter any session notes about the robot's condition (ENTER to skip): ";
+    std::cout << " Enter any session notes about the equipment's condition (ENTER to skip): ";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, notes);
 
     std::cout << std::endl;
-    std::string status = getRobotStatus(pickedRobot);
+    std::string status = getEquipmentStatus(pickedEquipment);
     if(status.empty()) { status = "None"; }
 
     std::cout << " >> Current Permanent Status: " << status << std::endl;
@@ -185,14 +185,14 @@ void printCheckInMenu(const std::vector<std::string>& equipments, std::string& p
     
 } 
 
-void printRobotType() {
-    std::cout << " >> Choose Robot Type: " << std::endl;
+void printEquipmentType() {
+    std::cout << " >> Choose Equipment Type: " << std::endl;
     std::cout << "     1) Booster" << std::endl;
     std::cout << "     2) Nao" << std::endl;
     std::cout << " >> Select: ";
 }
 
-std::string getRobotType(int typeChoice) {
+std::string getEquipmentType(int typeChoice) {
     switch(typeChoice){
         case 1:
             return "booster";
@@ -203,8 +203,8 @@ std::string getRobotType(int typeChoice) {
     }
 }
 
-void printRobotCondition() {
-    std::cout << " >> Choose Robot Condition: " << std::endl;
+void printEquipmentCondition() {
+    std::cout << " >> Choose Equipment Condition: " << std::endl;
     std::cout << "     1) Functional" << std::endl;
     std::cout << "     2) Minor Issue" << std::endl;
     std::cout << "     3) Needs Checking" << std::endl;
@@ -213,7 +213,7 @@ void printRobotCondition() {
     std::cout << " >> Select: ";
 }
 
-std::string getRobotCondition(int conditionChoice) {
+std::string getEquipmentCondition(int conditionChoice) {
     switch(conditionChoice){
         case 1:
             return "Functional";
@@ -241,14 +241,14 @@ void printModifyUserMenu() {
     std::cout << " >> Select: ";
 }
 
-void printModifyRobotMenu() {
-    std::cout << " >> Choose robot detail to modify: " << std::endl;
+void printModifyEquipmentMenu() {
+    std::cout << " >> Choose equipment detail to modify: " << std::endl;
     std::cout << "     1) Type" << std::endl;
     std::cout << "     2) Condition" << std::endl;
     std::cout << "     3) ID" << std::endl;
     std::cout << "     4) Location" << std::endl;
     std::cout << "     5) Availability" << std::endl;
-    std::cout << "     6) Delete Robot" << std::endl;
+    std::cout << "     6) Delete Equipment" << std::endl;
     std::cout << "     7) Done" << std::endl;
     std::cout << " >> Select: ";
 }
@@ -308,17 +308,17 @@ void printLogin(){
 )" << std::endl;
 
     // Print heading
-    std::cout << "                             ------------- Robot Logger -------------\n" << std::endl;
+    std::cout << "                             ------------- Equipment Logger -------------\n" << std::endl;
 }
 
 
-void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedRobot) {
+void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment) {
     std::cout << std::endl;
     std::cout << " ------------- ADD/VIEW NOTES -------------" << std::endl;
     std::string status;
 
     if(equipments.empty()) {
-        std::cout << "  >> There are no robots in the database." <<  std::endl;
+        std::cout << "  >> There are no equipments in the database." <<  std::endl;
         return;
     } else {
         for (unsigned int i = 0; i < equipments.size(); i++) {
@@ -327,7 +327,7 @@ void printNotesMenu(const std::vector<std::string>& equipments, std::string& pic
     }
 
     std::cout << std::endl;
-    std::cout << " Enter robot name or number ([0] to cancel): ";
+    std::cout << " Enter equipment name or number ([0] to cancel): ";
    
     std::string input;
     std::cin >> input;
@@ -337,7 +337,7 @@ void printNotesMenu(const std::vector<std::string>& equipments, std::string& pic
 
         if (input == "0") {
             std::cout << " >> Returning to menu.\n";
-            pickedRobot.clear();
+            pickedEquipment.clear();
             return;
         }
 
@@ -345,33 +345,33 @@ void printNotesMenu(const std::vector<std::string>& equipments, std::string& pic
             int index = std::stoi(input);
 
             if (index >= 1 && index <= (int)equipments.size()) {
-                pickedRobot = equipments[index - 1];
+                pickedEquipment = equipments[index - 1];
                 return;
             }
 
             std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
 
         } else if (vector_contains(equipments, input)) {
-            pickedRobot = input;
+            pickedEquipment = input;
             return;
         } else {
             std::cout << " Invalid input. Try again." << std::endl;
         }
 
-        std::cout << " Enter robot name or number ([0] to cancel): ";
+        std::cout << " Enter equipment name or number ([0] to cancel): ";
         std::cin >> input;
     }
     
 }
 
-void printNotes(const std::string &pickedRobot, const std::string &currUserID) {
+void printNotes(const std::string &pickedEquipment, const std::string &currUserID) {
     std::cout << std::endl;
-    std::cout << " ------------- " << pickedRobot << " NOTES -------------" << std::endl;
+    std::cout << " ------------- " << pickedEquipment << " NOTES -------------" << std::endl;
     std::string status;
-    std::vector<std::string> notes = getRobotNotes(pickedRobot);
+    std::vector<std::string> notes = getEquipmentNotes(pickedEquipment);
 
     if(notes.empty()) {
-        std::cout << "  >> There are no notes for this robot." <<  std::endl;
+        std::cout << "  >> There are no notes for this equipment." <<  std::endl;
     } else {
         for (unsigned int i = 0; i < notes.size(); i++) {
         std::cout << " " << i + 1 << ") " << notes[i] << std::endl;
@@ -401,7 +401,7 @@ void printNotes(const std::string &pickedRobot, const std::string &currUserID) {
             std::getline(std::cin, newNote);
 
             if (!newNote.empty()) {
-                addNote(pickedRobot, newNote, currUserID);
+                addNote(pickedEquipment, newNote, currUserID);
                 std::cout << " >> Note added successfully.\n";
             } else {
                 std::cout << " >> No note entered.\n";
