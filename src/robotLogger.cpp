@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    std::vector<std::string> equipments = getEquipments();
+    std::vector<std::string> equipment = getEquipment();
     std::optional<User> loggedInUser;
     std::string studentId; 
 
@@ -134,9 +134,9 @@ int main(int argc, char* argv[]) {
             }
 
             case ST_CheckOut: {
-                equipments = getEquipments(); // Refresh equipment list
+                equipment = getEquipment(); // Refresh equipment list
                 std::string pickedEquipment;
-                printCheckOutMenu(equipments, pickedEquipment);
+                printCheckOutMenu(equipment, pickedEquipment);
 
                 if(pickedEquipment == "") {
                     pressEnterToContinue();
@@ -156,8 +156,8 @@ int main(int argc, char* argv[]) {
                 std::string pickedEquipment;
                 std::string notes;
                 std::string permStatus;
-                std::vector<std::string> checkedOutEquipments = getEquipmentsCurrentlyCheckedOut();
-                printCheckInMenu(checkedOutEquipments, pickedEquipment, notes, permStatus);
+                std::vector<std::string> checkedOutEquipment = getEquipmentCurrentlyCheckedOut();
+                printCheckInMenu(checkedOutEquipment, pickedEquipment, notes, permStatus);
                 
                 if(pickedEquipment == "") {
                     pressEnterToContinue();
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
 
             case ST_Notes: {
                 std::string pickedEquipment;
-                printNotesMenu(equipments, pickedEquipment);
+                printNotesMenu(equipment, pickedEquipment);
                 if(pickedEquipment.empty()) {
                     pressEnterToContinue();
                     currState = ST_Main;

@@ -37,13 +37,13 @@ void printMainMenu(const std::string& id, bool isAdmin) {
 }
 
 
-void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment) {
+void printCheckOutMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-OUT -------------" << std::endl;
     std::string status;
 
     // Widths for columns
-    int numWidth = std::to_string(equipments.size()).length(); // number column
+    int numWidth = std::to_string(equipment.size()).length(); // number column
     int nameWidth = 12;  // equipment name column width
     int statusWidth = 35; // status column width
     int noteWidth = 40;  // note column width
@@ -58,21 +58,21 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
 
         std::cout << std::endl;
 
-    if(equipments.empty()) {
-        std::cout << "  >> There are no available equipments to check out." <<  std::endl;
+    if(equipment.empty()) {
+        std::cout << "  >> There are no available equipment to check out." <<  std::endl;
         pickedEquipment = "";
         return;
     } else {
-        for (unsigned int i = 0; i < equipments.size(); i++) {
-            std::string status = getEquipmentStatus(equipments[i]);
-            std::string recentNote = getMostRecentNote(equipments[i]);
+        for (unsigned int i = 0; i < equipment.size(); i++) {
+            std::string status = getEquipmentStatus(equipment[i]);
+            std::string recentNote = getMostRecentNote(equipment[i]);
 
             if (status.empty()) status = " ";
             if (recentNote.empty()) recentNote = " ";
 
             std::cout 
                 << std::right << std::setw(numWidth) << i + 1 << ") "
-                << std::left  << std::setw(nameWidth) << equipments[i] 
+                << std::left  << std::setw(nameWidth) << equipment[i] 
                 << " | " << std::setw(statusWidth) << status 
                 << " | " << std::setw(noteWidth) << recentNote
                 << std::endl;
@@ -97,14 +97,14 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)equipments.size()) {
-                pickedEquipment = equipments[index - 1];
+            if (index >= 1 && index <= (int)equipment.size()) {
+                pickedEquipment = equipment[index - 1];
                 return;
             }
 
-            std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
+            std::cout << " Invalid number. Choose 0-" << equipment.size() << "." << std::endl;
 
-        } else if (vector_contains(equipments, input)) {
+        } else if (vector_contains(equipment, input)) {
             pickedEquipment = input;
             return;
         } else {
@@ -117,19 +117,19 @@ void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& 
     
 }
 
-void printCheckInMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment, std::string &notes, std::string &permStatus) {
+void printCheckInMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment, std::string &notes, std::string &permStatus) {
     std::cout << std::endl;
     std::cout << " ------------- CHECK-IN -------------" << std::endl;
     std::string user;
 
-    if(equipments.empty()) {
-        std::cout << "  >> There are no equipments to be checked-in." <<  std::endl;
+    if(equipment.empty()) {
+        std::cout << "  >> There are no equipment to be checked-in." <<  std::endl;
         pickedEquipment = "";
         return;
     } else {
-        for (unsigned int i = 0; i < equipments.size(); i++) {
-            user = getUserFromID(getCheckOutIdFromEquipment(equipments[i]), user);
-            std::cout << " " << i + 1 << ") " << equipments[i]
+        for (unsigned int i = 0; i < equipment.size(); i++) {
+            user = getUserFromID(getCheckOutIdFromEquipment(equipment[i]), user);
+            std::cout << " " << i + 1 << ") " << equipment[i]
                       <<  " | Checked out by: " << user << std::endl;
         }
     }
@@ -152,14 +152,14 @@ void printCheckInMenu(const std::vector<std::string>& equipments, std::string& p
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)equipments.size()) {
-                pickedEquipment = equipments[index - 1];
+            if (index >= 1 && index <= (int)equipment.size()) {
+                pickedEquipment = equipment[index - 1];
                 break;
             }
 
-            std::cout << "Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
+            std::cout << "Invalid number. Choose 0-" << equipment.size() << "." << std::endl;
 
-        } else if (vector_contains(equipments, input)) {
+        } else if (vector_contains(equipment, input)) {
             pickedEquipment = input;
             break;
         } else {
@@ -235,14 +235,14 @@ void printModifyUserMenu() {
     std::cout << "     1) Given Name" << std::endl;
     std::cout << "     2) Family Name" << std::endl;
     std::cout << "     3) Admin Status" << std::endl;
-    std::cout << "     4) Induction Status" << std::endl;
+    std::cout << "     4) Inductions Status" << std::endl;
     std::cout << "     5) Delete User" << std::endl;
     std::cout << "     6) Done" << std::endl;
     std::cout << " >> Select: ";
 }
 
-void printModifyInductionMenu() {
-    std::cout << " >> Choose induction type to modify: " << std::endl;
+void printModifyInductionsMenu() {
+    std::cout << " >> Choose inductions type to modify: " << std::endl;
     std::cout << "     1) Nao" << std::endl;
     std::cout << "     2) Booster" << std::endl;
     std::cout << "     3) VR Headset" << std::endl;
@@ -321,17 +321,17 @@ void printLogin(){
 }
 
 
-void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment) {
+void printNotesMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment) {
     std::cout << std::endl;
     std::cout << " ------------- ADD/VIEW NOTES -------------" << std::endl;
     std::string status;
 
-    if(equipments.empty()) {
-        std::cout << "  >> There are no equipments in the database." <<  std::endl;
+    if(equipment.empty()) {
+        std::cout << "  >> There are no equipment in the database." <<  std::endl;
         return;
     } else {
-        for (unsigned int i = 0; i < equipments.size(); i++) {
-            std::cout << " " << i + 1 << ") " << equipments[i] << std::endl;
+        for (unsigned int i = 0; i < equipment.size(); i++) {
+            std::cout << " " << i + 1 << ") " << equipment[i] << std::endl;
         }
     }
 
@@ -353,14 +353,14 @@ void printNotesMenu(const std::vector<std::string>& equipments, std::string& pic
         if (is_number(input)) {
             int index = std::stoi(input);
 
-            if (index >= 1 && index <= (int)equipments.size()) {
-                pickedEquipment = equipments[index - 1];
+            if (index >= 1 && index <= (int)equipment.size()) {
+                pickedEquipment = equipment[index - 1];
                 return;
             }
 
-            std::cout << " Invalid number. Choose 0-" << equipments.size() << "." << std::endl;
+            std::cout << " Invalid number. Choose 0-" << equipment.size() << "." << std::endl;
 
-        } else if (vector_contains(equipments, input)) {
+        } else if (vector_contains(equipment, input)) {
             pickedEquipment = input;
             return;
         } else {

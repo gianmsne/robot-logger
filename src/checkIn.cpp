@@ -27,7 +27,7 @@ void addCheckInRecord(std::string userID, std::string equipmentName, std::string
         }
 
         // Check equipment availability
-        const char* availabilityQuery = "SELECT isAvailable FROM equipments WHERE equipmentName = ?;";
+        const char* availabilityQuery = "SELECT isAvailable FROM equipment WHERE equipmentName = ?;";
         sqlite3_stmt* availabilityStmt;
         int rc = sqlite3_prepare_v2(db, availabilityQuery, -1, &availabilityStmt, nullptr);
         if(rc != SQLITE_OK) throw(0);
@@ -87,7 +87,7 @@ void addCheckInRecord(std::string userID, std::string equipmentName, std::string
         // Update permanent status if any
         if(!permStatus.empty()) {
             const char* statusQuery =
-                "UPDATE equipments SET permanentStatus = ? WHERE equipmentName = ?;";
+                "UPDATE equipment SET permanentStatus = ? WHERE equipmentName = ?;";
             sqlite3_stmt* statusStmt;
             rc = sqlite3_prepare_v2(db, statusQuery, -1, &statusStmt, nullptr);
             if(rc != SQLITE_OK) throw(0);
@@ -104,7 +104,7 @@ void addCheckInRecord(std::string userID, std::string equipmentName, std::string
         }
 
         // Update equipment availability
-        const char* equipmentUpdateQuery = "UPDATE equipments SET isAvailable = 1 WHERE equipmentName = ?;";
+        const char* equipmentUpdateQuery = "UPDATE equipment SET isAvailable = 1 WHERE equipmentName = ?;";
         sqlite3_stmt* equipmentStmt;
         rc = sqlite3_prepare_v2(db, equipmentUpdateQuery, -1, &equipmentStmt, nullptr);
         if(rc != SQLITE_OK) throw(0);
@@ -132,8 +132,8 @@ void addCheckInRecord(std::string userID, std::string equipmentName, std::string
 }
 
 
-std::vector<std::string> getEquipmentsCurrentlyCheckedOut() {
-    std::vector<std::string> equipments;
+std::vector<std::string> getEquipmentCurrentlyCheckedOut() {
+    std::vector<std::string> equipment;
 
     try {
         sqlite3* db;
@@ -161,15 +161,15 @@ std::vector<std::string> getEquipmentsCurrentlyCheckedOut() {
         // --- EXECUTE ---
         while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
             const unsigned char* equipmentName = sqlite3_column_text(stmt, 0);
-            equipments.push_back(reinterpret_cast<const char*>(equipmentName));
+            equipment.push_back(reinterpret_cast<const char*>(equipmentName));
         }
 
         sqlite3_finalize(stmt);
         sqlite3_close(db);
 
     } catch (...) {
-        std::cerr << "Error while retrieving currently checked-out equipments." << std::endl;
+        std::cerr << "Error while retrieving currently checked-out equipment." << std::endl;
     }
 
-    return equipments;
+    return equipment;
 }

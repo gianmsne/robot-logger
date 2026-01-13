@@ -11,16 +11,16 @@ void printStartText();
 void printStartTextScan();
 void printLogin();
 void printMainMenu(const std::string& id, bool isAdmin);
-void printCheckOutMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment);
-void printCheckInMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment, std::string &notes, std::string &permStatus);
+void printCheckOutMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment);
+void printCheckInMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment, std::string &notes, std::string &permStatus);
 void printEquipmentType();
 void printEquipmentCondition();
 void printModifyEquipmentMenu();
 void printModifyUserMenu();
-void printModifyInductionMenu();
+void printModifyInductionsMenu();
 std::string getEquipmentType(int typeChoice);
 std::string getEquipmentCondition(int conditionChoice);
-void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment);
+void printNotesMenu(const std::vector<std::string>& equipment, std::string& pickedEquipment);
 void printNotes(const std::string& equipmentName, const std::string& userID);
 
 

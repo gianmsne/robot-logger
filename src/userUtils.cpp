@@ -118,24 +118,24 @@ void modifyUser(const std::string loggedInUserID) {
                 updateAdminStatus(userID, isAdmin);
                 break;
             case 4: {
-                printModifyInductionMenu();
+                printModifyInductionsMenu();
 
-                int choiceInduction = getIntInput(1,4);
-                switch(choiceInduction){
+                int choiceInductions = getIntInput(1,4);
+                switch(choiceInductions){
                     case 1:
                         input = getYesNo();
                         if (input == 'y' || input == 'Y') { inducted = 1; } 
-                        updateInductionStatus(userID, inducted, "isInductedNao");
+                        updateInductionsStatus(userID, inducted, "isInductedNao");
                         break;
                     case 2:
                         input = getYesNo();
                         if (input == 'y' || input == 'Y') { inducted = 1; } 
-                        updateInductionStatus(userID, inducted, "isInductedBooster");
+                        updateInductionsStatus(userID, inducted, "isInductedBooster");
                         break;
                     case 3:
                         input = getYesNo();
                         if (input == 'y' || input == 'Y') { inducted = 1; } 
-                        updateInductionStatus(userID, inducted, "isInductedVRHeadset");
+                        updateInductionsStatus(userID, inducted, "isInductedVRHeadset");
                         break;
                     case 4:
                         break;

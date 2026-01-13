@@ -9,11 +9,11 @@ export const columnLabels = {
 };
 export const booleanColumns = new Set(["isInductedNao", "isInductedBooster", "isInductedVRHeadset"]);
 
-export default function Induction({ sortBy, sortOrder, userMap, filters, onRowsLoaded }) {
+export default function Inductions({ sortBy, sortOrder, userMap, filters, onRowsLoaded }) {
   return (
     <div>
       <DataTable
-        path="/induction"
+        path="/inductions"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         booleanColumns={booleanColumns}

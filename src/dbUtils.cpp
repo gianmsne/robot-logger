@@ -38,7 +38,7 @@ bool insertEquipment(
     sqlite3 *db = globalDB;
 
     const char *query =
-        "INSERT INTO equipments (equipmentName, equipmentType, equipmentCondition, location, isAvailable) "
+        "INSERT INTO equipment (equipmentName, equipmentType, equipmentCondition, location, isAvailable) "
         "VALUES (?, ?, ?, ?, ?, ?);";
 
     sqlite3_stmt *stmt;
@@ -114,9 +114,9 @@ bool insertUser(
     }
 
     {
-        // -------- Insert into induction --------
+        // -------- Insert into inductions --------
         const char *query2 =
-            "INSERT INTO induction (userID, isInductedNao, isInductedBooster, isInductedVRHeadset) "
+            "INSERT INTO inductions (userID, isInductedNao, isInductedBooster, isInductedVRHeadset) "
             "VALUES (?, ?, ?, ?);";
 
         rc = sqlite3_prepare_v2(db, query2, -1, &stmt, nullptr);
@@ -266,14 +266,14 @@ std::string getCheckOutIdFromEquipment(const std::string &equipmentName)
     return checkOutId;
 }
 
-std::vector<std::string> getEquipments()
+std::vector<std::string> getEquipment()
 {
     std::vector<std::string> equipmentList;
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    std::string query = "SELECT equipmentName FROM equipments WHERE isAvailable = 1;";
+    std::string query = "SELECT equipmentName FROM equipment WHERE isAvailable = 1;";
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK)
@@ -293,7 +293,7 @@ std::vector<std::string> getEquipments()
 
     if (rc != SQLITE_DONE)
     {
-        std::cerr << "Error reading equipments: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Error reading equipment: " << sqlite3_errmsg(db) << std::endl;
     }
 
     sqlite3_finalize(stmt);
@@ -306,7 +306,7 @@ std::string getEquipmentStatus(const std::string &equipmentName)
     sqlite3 *db = globalDB;
 
     std::string query =
-        "SELECT permanentStatus FROM equipments WHERE equipmentName = ?";
+        "SELECT permanentStatus FROM equipment WHERE equipmentName = ?";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
@@ -476,13 +476,13 @@ void updateAdminStatus(const std::string &id, const int& isAdmin)
     return;
 };
 
-void updateInductionStatus(const std::string &id, const int& inducted, const std::string &inductionType)
+void updateInductionsStatus(const std::string &id, const int& inducted, const std::string &inductionsType)
 {
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    std::string query = "UPDATE induction SET " + inductionType + " = ? WHERE userID = ?;";
+    std::string query = "UPDATE inductions SET " + inductionsType + " = ? WHERE userID = ?;";
 
 
     sqlite3_stmt *stmt;
@@ -515,7 +515,7 @@ void updateType(const std::string& equipmentName, const std::string& equipmentTy
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE equipments SET equipmentType = ? WHERE equipmentName = ? ";
+    const char *query = "UPDATE equipment SET equipmentType = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -547,7 +547,7 @@ void updateCondition(const std::string& equipmentName, const std::string& equipm
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE equipments SET equipmentCondition = ? WHERE equipmentName = ? ";
+    const char *query = "UPDATE equipment SET equipmentCondition = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -579,7 +579,7 @@ void updateLocation(const std::string& equipmentName, const std::string& locatio
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE equipments SET location = ? WHERE equipmentName = ? ";
+    const char *query = "UPDATE equipment SET location = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -611,7 +611,7 @@ void updateAvailability(const std::string& equipmentName, const int& isAvailable
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE equipments SET isAvailable = ? WHERE equipmentName = ? ";
+    const char *query = "UPDATE equipment SET isAvailable = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -644,7 +644,7 @@ void removeEquipment(const std::string& equipmentName){
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "DELETE FROM equipments WHERE equipmentName = ? ";
+    const char *query = "DELETE FROM equipment WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);

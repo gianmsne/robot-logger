@@ -23,7 +23,7 @@ void addCheckOutRecord(std::string userID, std::string equipmentName) {
 
         // Check if equipment is available
         const char* availabilityQuery =
-            "SELECT isAvailable FROM equipments WHERE equipmentName = ?;";
+            "SELECT isAvailable FROM equipment WHERE equipmentName = ?;";
 
         sqlite3_stmt* availabilityStmt;
         int rc = sqlite3_prepare_v2(db, availabilityQuery, -1, &availabilityStmt, nullptr);
@@ -80,7 +80,7 @@ void addCheckOutRecord(std::string userID, std::string equipmentName) {
 
         // Change availability status of equipment to checked out
         const char* query2 =
-            "UPDATE equipments SET isAvailable = 0 WHERE equipmentName = ?;";
+            "UPDATE equipment SET isAvailable = 0 WHERE equipmentName = ?;";
 
         sqlite3_stmt* stmt2;
         rc = sqlite3_prepare_v2(db, query2, -1, &stmt2, nullptr);

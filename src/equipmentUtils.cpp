@@ -15,7 +15,7 @@ void addEquipment() {
     std::string equipmentCondition;
     std::string equipmentStatus;
     
-    std::string tableName = "equipments";
+    std::string tableName = "equipment";
     std::string columnName = "equipmentName";
     
     std::cout << "\n ------------- ADD EQUIPMENT -------------" << std::endl;
@@ -99,7 +99,7 @@ void modifyEquipment() {
     std::cout << " >> Enter equipment name to modify: ";
     std::cin >> equipmentName;
 
-    while(!existenceCheck("equipments", "equipmentName", equipmentName)){
+    while(!existenceCheck("equipment", "equipmentName", equipmentName)){
         std::cout << " Equipment " + equipmentName + " does not exist. Try Again: ";
         std::cin >> equipmentName;
     };

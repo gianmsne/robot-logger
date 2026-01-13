@@ -12,11 +12,11 @@ export const columnLabels = {
 export const booleanColumns = new Set(["isAvailable"]);
 export const filterColumns = new Set(["equipmentType", "equipmentCondition", "location"]);
 
-export default function Equipments({ sortBy, sortOrder, filters, onRowsLoaded }) {
+export default function Equipment({ sortBy, sortOrder, filters, onRowsLoaded }) {
   return (
     <div>
       <DataTable
-        path="/equipments"
+        path="/equipment"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
         booleanColumns={booleanColumns}

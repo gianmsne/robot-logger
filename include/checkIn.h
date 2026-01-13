@@ -11,6 +11,6 @@
 
 
 void addCheckInRecord(std::string userID, std::string equipmentName, std::string notes, std::string permStatus);
-std::vector<std::string> getEquipmentsCurrentlyCheckedOut();
+std::vector<std::string> getEquipmentCurrentlyCheckedOut();
 
 #endif // CHECKIN_H

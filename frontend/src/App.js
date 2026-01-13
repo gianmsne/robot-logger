@@ -9,10 +9,10 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import Users, { booleanColumns as userBooleanColumns, columnOrder as userColumnOrder, columnLabels as userColumnLabels } from './pages/Users';
-import Equipments, { booleanColumns as equipmentBooleanColumns, columnOrder as equipmentColumnOrder, columnLabels as equipmentColumnLabels, filterColumns as equipmentFilterColumns } from './pages/Equipments';
+import Equipment, { booleanColumns as equipmentBooleanColumns, columnOrder as equipmentColumnOrder, columnLabels as equipmentColumnLabels, filterColumns as equipmentFilterColumns } from './pages/Equipment';
 import Logs, { columnOrder as logsColumnOrder, columnLabels as logsColumnLabels, filterColumns as logsFilterColumns } from './pages/Logs';
 import Notes, { columnOrder as notesColumnOrder, columnLabels as notesColumnLabels, filterColumns as notesFilterColumns } from './pages/Notes';
-import Induction, { columnOrder as inductionColumnOrder, columnLabels as inductionColumnLabels, booleanColumns as inductionBooleanColumns } from './pages/Induction';
+import Inductions, { columnOrder as inductionsColumnOrder, columnLabels as inductionsColumnLabels, booleanColumns as inductionsBooleanColumns } from './pages/Inductions';
 import FiltersDropdown from './components/FilterDropdown';
 
 import { fetchJson } from "./components/APIFetcher";
@@ -64,10 +64,10 @@ function App() {
       <Container className="page-container">
         <div className='table-selection-box'>
           <Button className='table-button' onClick={() => handleActiveTable("Users")}>Users</Button>
-          <Button className='table-button' onClick={() => handleActiveTable("Equipments")}>Equipments</Button>
+          <Button className='table-button' onClick={() => handleActiveTable("Equipment")}>Equipment</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Logs")}>Logs</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Notes")}>Notes</Button>
-          <Button className='table-button' onClick={() => handleActiveTable("Induction")}>Induction</Button>
+          <Button className='table-button' onClick={() => handleActiveTable("Inductions")}>Inductions</Button>
         </div>
         <div className='sort-filter-box'>
           <Dropdown className='dropdown-button'>
@@ -90,7 +90,7 @@ function App() {
                   <Dropdown.Item onClick={() => applySort("familyName", "asc")}><BsArrowUp /> Family Name</Dropdown.Item>
                   <Dropdown.Item onClick={() => applySort("familyName", "desc")}><BsArrowDown /> Family Name</Dropdown.Item>
                 </>
-              ) : activeTable === "Equipments" ? (
+              ) : activeTable === "Equipment" ? (
                 <>
                   <Dropdown.Item onClick={() => applySort("equipmentName", "asc")}><BsArrowUp /> Equipment Name</Dropdown.Item>
                   <Dropdown.Item onClick={() => applySort("equipmentName", "desc")}><BsArrowDown /> Equipment Name</Dropdown.Item>
@@ -136,7 +136,7 @@ function App() {
                   />
                 </>
                 
-              ) : activeTable === "Equipments" ? (
+              ) : activeTable === "Equipment" ? (
                 <>
                   <FiltersDropdown 
                     filters={ filters } 
@@ -170,14 +170,14 @@ function App() {
                     rows={ tableRows }
                   />
                 </>
-              ) : activeTable === "Induction" ? (
+              ) : activeTable === "Inductions" ? (
                 <>
                     <FiltersDropdown
                     filters={ filters }
                     setFilters={ setFilters }
-                    columnOrder={ inductionColumnOrder }
-                    booleanColumns={ inductionBooleanColumns }
-                    columnLabels={ inductionColumnLabels }
+                    columnOrder={ inductionsColumnOrder }
+                    booleanColumns={ inductionsBooleanColumns }
+                    columnLabels={ inductionsColumnLabels }
                     rows={ tableRows }
                   />
                 </>
@@ -188,10 +188,10 @@ function App() {
 
         <Container className="database-container">
           {activeTable === "Users" && <Users sortBy={sortBy} sortOrder={sortOrder} filters={filters} /> }
-          {activeTable === "Equipments" && <Equipments sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
+          {activeTable === "Equipment" && <Equipment sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
           {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
           {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
-          {activeTable === "Induction" && <Induction sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
+          {activeTable === "Inductions" && <Inductions sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
         </Container>
         
       </Container>

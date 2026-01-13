@@ -25,7 +25,7 @@ void closeDBConnection();
 
 bool existenceCheck(std::string tableName, std::string columnName, std::string value);
 std::string getUserFromID(const std::string &id, std::string &givenName);
-std::vector<std::string> getEquipments();
+std::vector<std::string> getEquipment();
 std::string getCheckOutIdFromEquipment(const std::string &equipmentName);
 bool getAdminStatus(const std::string &id);
 std::string getEquipmentStatus(const std::string &equipmentName);
@@ -34,9 +34,9 @@ std::string getEquipmentStatus(const std::string &equipmentName);
 void updateGivenName(const std::string& id, const std::string& newGivenName);
 void updateFamilyName(const std::string& id, const std::string& newFamilyName);
 void updateAdminStatus(const std::string& id, const int& isAdmin);
-void updateInductionStatus(const std::string& id, const int& inducted, const std::string& inductionType);
+void updateInductionsStatus(const std::string& id, const int& inducted, const std::string& inductionsType);
 
-// Update Equipments
+// Update Equipment
 void updateType(const std::string& equipmentName, const std::string& equipmentType);
 void updateCondition(const std::string& equipmentName, const std::string& equipmentCondition);
 void updateLocation(const std::string& equipmentName, const std::string& location);

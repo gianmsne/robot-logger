@@ -34,12 +34,12 @@ def get_users():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/backend/equipments")
-def get_equipments():
+@app.route("/backend/equipment")
+def get_equipment():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM equipments")
+        cur.execute("SELECT * FROM equipment")
         rows = [dict(row) for row in cur.fetchall()]
         conn.close()
         return jsonify(rows)
@@ -70,12 +70,12 @@ def get_notes():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/backend/induction")
-def get_induction():
+@app.route("/backend/inductions")
+def get_inductions():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM induction")
+        cur.execute("SELECT * FROM inductions")
         rows = [dict(row) for row in cur.fetchall()]
         conn.close()
         return jsonify(rows)
