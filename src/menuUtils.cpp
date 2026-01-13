@@ -241,6 +241,15 @@ void printModifyUserMenu() {
     std::cout << " >> Select: ";
 }
 
+void printModifyInductionMenu() {
+    std::cout << " >> Choose induction type to modify: " << std::endl;
+    std::cout << "     1) Nao" << std::endl;
+    std::cout << "     2) Booster" << std::endl;
+    std::cout << "     3) VR Headset" << std::endl;
+    std::cout << "     4) Done" << std::endl;
+    std::cout << " >> Select: ";
+}
+
 void printModifyEquipmentMenu() {
     std::cout << " >> Choose equipment detail to modify: " << std::endl;
     std::cout << "     1) Type" << std::endl;

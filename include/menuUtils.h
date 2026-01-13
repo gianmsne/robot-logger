@@ -17,6 +17,7 @@ void printEquipmentType();
 void printEquipmentCondition();
 void printModifyEquipmentMenu();
 void printModifyUserMenu();
+void printModifyInductionMenu();
 std::string getEquipmentType(int typeChoice);
 std::string getEquipmentCondition(int conditionChoice);
 void printNotesMenu(const std::vector<std::string>& equipments, std::string& pickedEquipment);

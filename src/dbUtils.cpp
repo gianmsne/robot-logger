@@ -73,41 +73,75 @@ bool insertUser(
     const std::string &userID,
     const std::string &userGivenName,
     const std::string &userFamilyName,
-    int isAdmin)
+    int isAdmin,
+    int inductedNao,
+    int inductedBooster,
+    int inductedVRHeadset)
 {
     openDBConnection();
     sqlite3 *db = globalDB;
-
-    const char *query =
-        "INSERT INTO users (userID, givenName, familyName, isAdmin, isInducted) "
-        "VALUES (?, ?, ?, ?, ?);";
-
     sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    int rc;
+
+    // Start transaction
+    rc = sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
 
-    // Bind values
-    sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, userGivenName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, userFamilyName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 4, isAdmin);
-    // sqlite3_bind_int(stmt, 5, inducted);
-
-    // Execute
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
     {
-        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        // -------- Insert into users --------
+        const char *query =
+            "INSERT INTO users (userID, givenName, familyName, isAdmin) "
+            "VALUES (?, ?, ?, ?);";
+
+        rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) goto rollback;
+
+        // Bind values
+        sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, userGivenName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, userFamilyName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 4, isAdmin);
+
+
+        rc = sqlite3_step(stmt);
         sqlite3_finalize(stmt);
-        return false;
+
+        if (rc != SQLITE_DONE) goto rollback;
     }
 
-    sqlite3_finalize(stmt);
+    {
+        // -------- Insert into induction --------
+        const char *query2 =
+            "INSERT INTO induction (userID, isInductedNao, isInductedBooster, isInductedVRHeadset) "
+            "VALUES (?, ?, ?, ?);";
+
+        rc = sqlite3_prepare_v2(db, query2, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) goto rollback;
+
+        sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 2, inductedNao);
+        sqlite3_bind_int(stmt, 3, inductedBooster);
+        sqlite3_bind_int(stmt, 4, inductedVRHeadset);
+
+        rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+
+        if (rc != SQLITE_DONE) goto rollback;
+    }
+
+    // Commit transaction
+    sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
     return true;
+
+rollback:
+    sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+    if (stmt) sqlite3_finalize(stmt);
+    std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+    return false;
 };
 
 /*
@@ -442,38 +476,39 @@ void updateAdminStatus(const std::string &id, const int& isAdmin)
     return;
 };
 
-// void updateInductionStatus(const std::string &id, const int& inducted)
-// {
+void updateInductionStatus(const std::string &id, const int& inducted, const std::string &inductionType)
+{
 
-//     openDBConnection();
-//     sqlite3 *db = globalDB;
+    openDBConnection();
+    sqlite3 *db = globalDB;
 
-//     const char *query = "UPDATE users SET isInducted = ? WHERE userID = ? ";
+    std::string query = "UPDATE induction SET " + inductionType + " = ? WHERE userID = ?;";
 
-//     sqlite3_stmt *stmt;
-//     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
-//     if (rc != SQLITE_OK)
-//     {
-//         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-//         return;
-//     }
 
-//     // Bind values
-//     sqlite3_bind_int(stmt, 1, inducted);
-//     sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
 
-//     // Execute
-//     rc = sqlite3_step(stmt);
-//     if (rc != SQLITE_DONE)
-//     {
-//         std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
-//         sqlite3_finalize(stmt);
-//         return;
-//     }
+    // Bind values
+    sqlite3_bind_int(stmt, 1, inducted);
+    sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT);
 
-//     sqlite3_finalize(stmt);
-//     return;
-// };
+    // Execute
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+    {
+        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+    return;
+};
 
 void updateType(const std::string& equipmentName, const std::string& equipmentType){
     

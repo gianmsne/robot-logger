@@ -14,7 +14,10 @@ bool insertUser(
     const std::string& userID,
     const std::string& userGivenName,
     const std::string& userFamilyName,
-    int isAdmin
+    int isAdmin,
+    int inductedNao,
+    int inductedBooster,
+    int inductedVRHeadset
 );
 
 bool openDBConnection();
@@ -31,7 +34,7 @@ std::string getEquipmentStatus(const std::string &equipmentName);
 void updateGivenName(const std::string& id, const std::string& newGivenName);
 void updateFamilyName(const std::string& id, const std::string& newFamilyName);
 void updateAdminStatus(const std::string& id, const int& isAdmin);
-void updateInductionStatus(const std::string& id, const int& inducted);
+void updateInductionStatus(const std::string& id, const int& inducted, const std::string& inductionType);
 
 // Update Equipments
 void updateType(const std::string& equipmentName, const std::string& equipmentType);
