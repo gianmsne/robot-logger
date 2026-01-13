@@ -18,6 +18,7 @@ export default function Notes({ sortBy, sortOrder, userMap, filters, onRowsLoade
         path="/notes"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
+        filterColumns={filterColumns}
         timeColumns={timeColumns}
         sortBy={sortBy}
         sortOrder={sortOrder}

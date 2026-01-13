@@ -19,6 +19,7 @@ export default function Logs({ sortBy, sortOrder, userMap, filters, onRowsLoaded
         path="/logs"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
+        filterColumns={filterColumns}
         timeColumns={timeColumns}
         sortBy={sortBy}
         sortOrder={sortOrder}
