@@ -69,6 +69,19 @@ def get_notes():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/backend/induction")
+def get_induction():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM induction")
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":

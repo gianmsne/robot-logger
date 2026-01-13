@@ -11,7 +11,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Users, { booleanColumns as userBooleanColumns, columnOrder as userColumnOrder, columnLabels as userColumnLabels } from './pages/Users';
 import Equipments, { booleanColumns as equipmentBooleanColumns, columnOrder as equipmentColumnOrder, columnLabels as equipmentColumnLabels, filterColumns as equipmentFilterColumns } from './pages/Equipments';
 import Logs, { columnOrder as logsColumnOrder, columnLabels as logsColumnLabels, filterColumns as logsFilterColumns } from './pages/Logs';
-import Notes, { columnOrder as notesColumnOrder, columnLabels as notesColumnLabels, filterColumns as notesFilterColumns} from './pages/Notes';
+import Notes, { columnOrder as notesColumnOrder, columnLabels as notesColumnLabels, filterColumns as notesFilterColumns } from './pages/Notes';
+import Induction, { columnOrder as inductionColumnOrder, columnLabels as inductionColumnLabels, booleanColumns as inductionBooleanColumns } from './pages/Induction';
 import FiltersDropdown from './components/FilterDropdown';
 
 import { fetchJson } from "./components/APIFetcher";
@@ -66,6 +67,7 @@ function App() {
           <Button className='table-button' onClick={() => handleActiveTable("Equipments")}>Equipments</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Logs")}>Logs</Button>
           <Button className='table-button' onClick={() => handleActiveTable("Notes")}>Notes</Button>
+          <Button className='table-button' onClick={() => handleActiveTable("Induction")}>Induction</Button>
         </div>
         <div className='sort-filter-box'>
           <Dropdown className='dropdown-button'>
@@ -168,6 +170,17 @@ function App() {
                     rows={ tableRows }
                   />
                 </>
+              ) : activeTable === "Induction" ? (
+                <>
+                    <FiltersDropdown
+                    filters={ filters }
+                    setFilters={ setFilters }
+                    columnOrder={ inductionColumnOrder }
+                    booleanColumns={ inductionBooleanColumns }
+                    columnLabels={ inductionColumnLabels }
+                    rows={ tableRows }
+                  />
+                </>
               ) : null}
             </Dropdown.Menu>
           </Dropdown>
@@ -178,6 +191,7 @@ function App() {
           {activeTable === "Equipments" && <Equipments sortBy={sortBy} sortOrder={sortOrder} filters={filters} onRowsLoaded={setTableRows} /> }
           {activeTable === "Logs" && <Logs sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
           {activeTable === "Notes" && <Notes sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
+          {activeTable === "Induction" && <Induction sortBy={sortBy} sortOrder={sortOrder} userMap={userMap} filters={filters} onRowsLoaded={setTableRows} />}
         </Container>
         
       </Container>
