@@ -39,7 +39,7 @@ bool insertEquipment(
 
     const char *query =
         "INSERT INTO equipment (equipmentName, equipmentType, equipmentCondition, location, isAvailable) "
-        "VALUES (?, ?, ?, ?, ?, ?);";
+        "VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);

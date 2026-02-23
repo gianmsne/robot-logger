@@ -32,6 +32,7 @@ void addEquipment() {
 
     // Get equipment location
     std::cout << " >> Enter Location ( [Enter] for \"RACE Hub\" ): ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, location);
     if (location.empty()) { location = "RACE Hub"; }
     

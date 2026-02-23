@@ -254,11 +254,10 @@ void printModifyEquipmentMenu() {
     std::cout << " >> Choose equipment detail to modify: " << std::endl;
     std::cout << "     1) Type" << std::endl;
     std::cout << "     2) Condition" << std::endl;
-    std::cout << "     3) ID" << std::endl;
-    std::cout << "     4) Location" << std::endl;
-    std::cout << "     5) Availability" << std::endl;
-    std::cout << "     6) Delete Equipment" << std::endl;
-    std::cout << "     7) Done" << std::endl;
+    std::cout << "     3) Location" << std::endl;
+    std::cout << "     4) Availability" << std::endl;
+    std::cout << "     5) Delete Equipment" << std::endl;
+    std::cout << "     6) Done" << std::endl;
     std::cout << " >> Select: ";
 }
 
