@@ -106,11 +106,11 @@ void modifyEquipment() {
     };
 
     int choice = -1;
-    while(choice != 7){
+    while(choice != 6){
         std::cout << "\n Equipment details for: " + equipmentName << std::endl;
         printModifyEquipmentMenu();
 
-        choice = getIntInput(1,7);
+        choice = getIntInput(1,6);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
         switch(choice){
             case 1:
