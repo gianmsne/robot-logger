@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "5001:5000"
+      - "5001:5001"
     volumes:
       - ./backend:/app
       - ./database:/data
@@ -15,6 +15,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     stdin_open: true
@@ -27,3 +28,19 @@ services:
     environment:
       - REACT_APP_LAN_IP=10.0.51.101
     command: ["/bin/sh", "/docker_entrypoint.sh"]
+
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ./frontend/docker_entrypoint_dev.sh:/docker_entrypoint_dev.sh:ro
+    depends_on:
+      - backend
+    command: ["/bin/sh", "/docker_entrypoint_dev.sh"]

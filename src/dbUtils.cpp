@@ -27,11 +27,10 @@ void closeDBConnection()
     }
 }
 
-bool insertRobot(
-    const std::string &robotName,
-    const std::string &robotType,
-    const std::string &robotCondition,
-    const std::string &robotID,
+bool insertEquipment(
+    const std::string &equipmentName,
+    const std::string &equipmentType,
+    const std::string &equipmentCondition,
     const std::string &location)
 {
 
@@ -39,8 +38,8 @@ bool insertRobot(
     sqlite3 *db = globalDB;
 
     const char *query =
-        "INSERT INTO robots (robotName, robotType, robotCondition, rmitID, location, isAvailable) "
-        "VALUES (?, ?, ?, ?, ?, ?);";
+        "INSERT INTO equipment (equipmentName, equipmentType, equipmentCondition, location, isAvailable) "
+        "VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -51,12 +50,11 @@ bool insertRobot(
     }
 
     // Bind values
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, robotType.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, robotCondition.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 4, robotID.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 5, location.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 6, 1); // is_Available is set to 1 (True) by default
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, equipmentType.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, equipmentCondition.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, location.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 5, 1); // is_Available is set to 1 (True) by default
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -76,41 +74,74 @@ bool insertUser(
     const std::string &userGivenName,
     const std::string &userFamilyName,
     int isAdmin,
-    int inducted)
+    int inductedNao,
+    int inductedBooster,
+    int inductedVRHeadset)
 {
     openDBConnection();
     sqlite3 *db = globalDB;
-
-    const char *query =
-        "INSERT INTO users (userID, givenName, familyName, isAdmin, isInducted) "
-        "VALUES (?, ?, ?, ?, ?);";
-
     sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    int rc;
+
+    // Start transaction
+    rc = sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
         return false;
     }
 
-    // Bind values
-    sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, userGivenName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, userFamilyName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 4, isAdmin);
-    sqlite3_bind_int(stmt, 5, inducted);
-
-    // Execute
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
     {
-        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+        // -------- Insert into users --------
+        const char *query =
+            "INSERT INTO users (userID, givenName, familyName, isAdmin) "
+            "VALUES (?, ?, ?, ?);";
+
+        rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) goto rollback;
+
+        // Bind values
+        sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, userGivenName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, userFamilyName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 4, isAdmin);
+
+
+        rc = sqlite3_step(stmt);
         sqlite3_finalize(stmt);
-        return false;
+
+        if (rc != SQLITE_DONE) goto rollback;
     }
 
-    sqlite3_finalize(stmt);
+    {
+        // -------- Insert into inductions --------
+        const char *query2 =
+            "INSERT INTO inductions (userID, isInductedNao, isInductedBooster, isInductedVRHeadset) "
+            "VALUES (?, ?, ?, ?);";
+
+        rc = sqlite3_prepare_v2(db, query2, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) goto rollback;
+
+        sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 2, inductedNao);
+        sqlite3_bind_int(stmt, 3, inductedBooster);
+        sqlite3_bind_int(stmt, 4, inductedVRHeadset);
+
+        rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+
+        if (rc != SQLITE_DONE) goto rollback;
+    }
+
+    // Commit transaction
+    sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
     return true;
+
+rollback:
+    sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+    if (stmt) sqlite3_finalize(stmt);
+    std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
+    return false;
 };
 
 /*
@@ -194,13 +225,13 @@ std::string getUserFromID(const std::string &id, std::string &givenName)
     return givenName + " " + familyName;
 }
 
-std::string getCheckOutIdFromRobot(const std::string &robotName)
+std::string getCheckOutIdFromEquipment(const std::string &equipmentName)
 {
     openDBConnection();
     sqlite3 *db = globalDB;
 
     std::string query =
-        "SELECT checkOutUserID FROM logs WHERE robotName = ? ORDER BY checkOut DESC LIMIT 1;";
+        "SELECT checkOutUserID FROM logs WHERE equipmentName = ? ORDER BY checkOut DESC LIMIT 1;";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
@@ -211,8 +242,8 @@ std::string getCheckOutIdFromRobot(const std::string &robotName)
         return "";
     }
 
-    // Use parameter binding to safely insert robotName
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_STATIC);
+    // Use parameter binding to safely insert equipmentName
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_STATIC);
 
     std::string checkOutId;
 
@@ -235,20 +266,20 @@ std::string getCheckOutIdFromRobot(const std::string &robotName)
     return checkOutId;
 }
 
-std::vector<std::string> getRobots()
+std::vector<std::string> getEquipment()
 {
-    std::vector<std::string> robotList;
+    std::vector<std::string> equipmentList;
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    std::string query = "SELECT robotName FROM robots WHERE isAvailable = 1;";
+    std::string query = "SELECT equipmentName FROM equipment WHERE isAvailable = 1;";
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        return robotList; // return empty vector on error
+        return equipmentList; // return empty vector on error
     }
 
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
@@ -256,26 +287,26 @@ std::vector<std::string> getRobots()
         const unsigned char *text = sqlite3_column_text(stmt, 0);
         if (text)
         {
-            robotList.push_back(reinterpret_cast<const char *>(text));
+            equipmentList.push_back(reinterpret_cast<const char *>(text));
         }
     }
 
     if (rc != SQLITE_DONE)
     {
-        std::cerr << "Error reading robots: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Error reading equipment: " << sqlite3_errmsg(db) << std::endl;
     }
 
     sqlite3_finalize(stmt);
-    return robotList;
+    return equipmentList;
 }
 
-std::string getRobotStatus(const std::string &robotName)
+std::string getEquipmentStatus(const std::string &equipmentName)
 {
     openDBConnection();
     sqlite3 *db = globalDB;
 
     std::string query =
-        "SELECT permanentStatus FROM robots WHERE robotName = ?";
+        "SELECT permanentStatus FROM equipment WHERE equipmentName = ?";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
@@ -286,8 +317,8 @@ std::string getRobotStatus(const std::string &robotName)
         return "";
     }
 
-    // Use parameter binding to safely insert robotName
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_STATIC);
+    // Use parameter binding to safely insert equipmentName
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_STATIC);
 
     std::string status;
 
@@ -445,16 +476,17 @@ void updateAdminStatus(const std::string &id, const int& isAdmin)
     return;
 };
 
-void updateInductionStatus(const std::string &id, const int& inducted)
+void updateInductionsStatus(const std::string &id, const int& inducted, const std::string &inductionsType)
 {
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE users SET isInducted = ? WHERE userID = ? ";
+    std::string query = "UPDATE inductions SET " + inductionsType + " = ? WHERE userID = ?;";
+
 
     sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK)
     {
         std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
@@ -478,12 +510,12 @@ void updateInductionStatus(const std::string &id, const int& inducted)
     return;
 };
 
-void updateType(const std::string& robotName, const std::string& robotType){
+void updateType(const std::string& equipmentName, const std::string& equipmentType){
     
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE robots SET robotType = ? WHERE robotName = ? ";
+    const char *query = "UPDATE equipment SET equipmentType = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -494,8 +526,8 @@ void updateType(const std::string& robotName, const std::string& robotType){
     }
 
     // Bind values
-    sqlite3_bind_text(stmt, 1, robotType.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentType.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -510,12 +542,12 @@ void updateType(const std::string& robotName, const std::string& robotType){
     return;
 };
 
-void updateCondition(const std::string& robotName, const std::string& robotCondition){
+void updateCondition(const std::string& equipmentName, const std::string& equipmentCondition){
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE robots SET robotCondition = ? WHERE robotName = ? ";
+    const char *query = "UPDATE equipment SET equipmentCondition = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -526,8 +558,8 @@ void updateCondition(const std::string& robotName, const std::string& robotCondi
     }
 
     // Bind values
-    sqlite3_bind_text(stmt, 1, robotCondition.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentCondition.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -542,44 +574,12 @@ void updateCondition(const std::string& robotName, const std::string& robotCondi
     return;
 };
 
-void updateRobotID(const std::string& robotName, const std::string& robotID){
+void updateLocation(const std::string& equipmentName, const std::string& location){
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE robots SET rmitID = ? WHERE robotName = ? ";
-
-    sqlite3_stmt *stmt;
-    int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
-    if (rc != SQLITE_OK)
-    {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
-        return;
-    }
-
-    // Bind values
-    sqlite3_bind_text(stmt, 1, robotID.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
-
-    // Execute
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE)
-    {
-        std::cerr << "Insert failed: " << sqlite3_errmsg(db) << std::endl;
-        sqlite3_finalize(stmt);
-        return;
-    }
-
-    sqlite3_finalize(stmt);
-    return;
-};
-
-void updateLocation(const std::string& robotName, const std::string& location){
-
-    openDBConnection();
-    sqlite3 *db = globalDB;
-
-    const char *query = "UPDATE robots SET location = ? WHERE robotName = ? ";
+    const char *query = "UPDATE equipment SET location = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -591,7 +591,7 @@ void updateLocation(const std::string& robotName, const std::string& location){
 
     // Bind values
     sqlite3_bind_text(stmt, 1, location.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -606,12 +606,12 @@ void updateLocation(const std::string& robotName, const std::string& location){
     return;
 };
 
-void updateAvailability(const std::string& robotName, const int& isAvailable){
+void updateAvailability(const std::string& equipmentName, const int& isAvailable){
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "UPDATE robots SET isAvailable = ? WHERE robotName = ? ";
+    const char *query = "UPDATE equipment SET isAvailable = ? WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -623,7 +623,7 @@ void updateAvailability(const std::string& robotName, const int& isAvailable){
 
     // Bind values
     sqlite3_bind_int(stmt, 1, isAvailable);
-    sqlite3_bind_text(stmt, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -639,12 +639,12 @@ void updateAvailability(const std::string& robotName, const int& isAvailable){
 };
 
 
-void removeRobot(const std::string& robotName){
+void removeEquipment(const std::string& equipmentName){
 
     openDBConnection();
     sqlite3 *db = globalDB;
 
-    const char *query = "DELETE FROM robots WHERE robotName = ? ";
+    const char *query = "DELETE FROM equipment WHERE equipmentName = ? ";
 
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -655,7 +655,7 @@ void removeRobot(const std::string& robotName){
     }
 
     // Bind values
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     // Execute
     rc = sqlite3_step(stmt);
@@ -667,7 +667,7 @@ void removeRobot(const std::string& robotName){
     }
 
     sqlite3_finalize(stmt);
-    std::cout << "Robot " + robotName + " has been removed from the database." << std::endl;
+    std::cout << "Equipment " + equipmentName + " has been removed from the database." << std::endl;
     return;
 };
 
@@ -704,7 +704,7 @@ void removeUser(const std::string& id){
 };
 
 
-void addNote(const std::string &robotName,
+void addNote(const std::string &equipmentName,
              const std::string &noteText,
              const std::string &noteLeftBy)
 {
@@ -718,7 +718,7 @@ void addNote(const std::string &robotName,
     sqlite3 *db = globalDB;
 
     const char *notesQuery =
-        "INSERT INTO notes (robotName, note, noteLeftBy, timeOfNote) "
+        "INSERT INTO notes (equipmentName, note, noteLeftBy, timeOfNote) "
         "VALUES (?, ?, ?, ?);";
 
     sqlite3_stmt *stmt;
@@ -728,7 +728,7 @@ void addNote(const std::string &robotName,
         return;
     }
 
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, noteText.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, noteLeftBy.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int64(stmt, 4, static_cast<sqlite3_int64>(now));
@@ -743,7 +743,7 @@ void addNote(const std::string &robotName,
     sqlite3_finalize(stmt);
 }
 
-std::vector<std::string> getRobotNotes(const std::string &robotName) {
+std::vector<std::string> getEquipmentNotes(const std::string &equipmentName) {
     std::vector<std::string> notesList;
 
     if (!openDBConnection()) {
@@ -755,7 +755,7 @@ std::vector<std::string> getRobotNotes(const std::string &robotName) {
 
     const char* query =
         "SELECT note, noteLeftBy, timeOfNote FROM notes "
-        "WHERE robotName = ? ORDER BY timeOfNote DESC;";
+        "WHERE equipmentName = ? ORDER BY timeOfNote DESC;";
 
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, query, -1, &stmt, nullptr);
@@ -764,7 +764,7 @@ std::vector<std::string> getRobotNotes(const std::string &robotName) {
         return notesList;
     }
 
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         const unsigned char* noteText = sqlite3_column_text(stmt, 0);
@@ -799,7 +799,7 @@ std::vector<std::string> getRobotNotes(const std::string &robotName) {
     return notesList;
 }
 
-std::string getMostRecentNote(const std::string &robotName) {
+std::string getMostRecentNote(const std::string &equipmentName) {
     if (!openDBConnection()) {
         std::cerr << "DB connection failed\n";
         return "";
@@ -809,7 +809,7 @@ std::string getMostRecentNote(const std::string &robotName) {
 
     const char* query =
         "SELECT note, noteLeftBy FROM notes "
-        "WHERE robotName = ? "
+        "WHERE equipmentName = ? "
         "ORDER BY timeOfNote DESC LIMIT 1;";
 
     sqlite3_stmt* stmt;
@@ -819,7 +819,7 @@ std::string getMostRecentNote(const std::string &robotName) {
         return "";
     }
 
-    sqlite3_bind_text(stmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
 
     std::string result;
 

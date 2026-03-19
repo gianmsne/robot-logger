@@ -30,7 +30,7 @@ export default function DataTable({
     return () => { mounted = false; };
   }, [path, onRowsLoaded]);
 
-  const booleanToYesNo = v => (v ? "Yes" : "No");
+  const booleanToYesNo = v => (v ? "Yes ✅" : "No ❌");
 
   const effectiveSortBy = (sortBy !== null && typeof sortBy !== 'undefined')
     ? sortBy

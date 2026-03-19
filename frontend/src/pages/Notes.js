@@ -1,13 +1,13 @@
 import DataTable from "../components/DataTable";
 
-export const columnOrder = ["robotName", "noteLeftBy", "timeOfNote", "note"];
+export const columnOrder = ["equipmentName", "noteLeftBy", "timeOfNote", "note"];
 export const columnLabels = {
-    robotName: "Robot Name",
+    equipmentName: "Equipment Name",
     note: "Note",
     noteLeftBy: "Note Left By",
     timeOfNote: "Time Of Note",
 };
-export const filterColumns = new Set(["robotName"])
+export const filterColumns = new Set(["equipmentName"])
 
 export default function Notes({ sortBy, sortOrder, userMap, filters, onRowsLoaded }) {
   const timeColumns = new Set(["timeOfNote"]);
@@ -18,6 +18,7 @@ export default function Notes({ sortBy, sortOrder, userMap, filters, onRowsLoade
         path="/notes"
         columnOrder={columnOrder}
         columnLabels={columnLabels}
+        filterColumns={filterColumns}
         timeColumns={timeColumns}
         sortBy={sortBy}
         sortOrder={sortOrder}

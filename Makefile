@@ -26,7 +26,7 @@ LIBS = $(OPENCV_LIB) $(ZBAR_LIB) -lsqlite3
 SRCS = src/robotLogger.cpp \
        src/menuUtils.cpp \
        src/User.cpp \
-       src/robotUtils.cpp \
+       src/equipmentUtils.cpp \
        src/userUtils.cpp \
        src/dbUtils.cpp \
        src/checkOut.cpp \
@@ -38,7 +38,7 @@ SRCS = src/robotLogger.cpp \
 # Headers (for dependency tracking)
 HEADERS = include/User.h \
           include/menuUtils.h \
-          include/robotUtils.h \
+          include/equipmentUtils.h \
           include/userUtils.h \
           include/dbUtils.h \
           include/checkOut.h \

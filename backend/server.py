@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory, request, make_response
+from flask import Flask, jsonify
 from flask_cors import CORS
 import sqlite3
 import os
@@ -34,12 +34,12 @@ def get_users():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/backend/robots")
-def get_robots():
+@app.route("/backend/equipment")
+def get_equipment():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM robots")
+        cur.execute("SELECT * FROM equipment")
         rows = [dict(row) for row in cur.fetchall()]
         conn.close()
         return jsonify(rows)
@@ -69,7 +69,20 @@ def get_notes():
         return jsonify(rows)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/backend/inductions")
+def get_inductions():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM inductions")
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return jsonify(rows)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)

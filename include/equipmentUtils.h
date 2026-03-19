@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 
-void addRobot();
-void modifyRobot();
+void addEquipment();
+void modifyEquipment();
 
 
 #endif // ADDROBOT_H

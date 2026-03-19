@@ -11,7 +11,9 @@ void addUser() {
     std::string userGivenName;
     std::string userFamilyName;
     int isAdmin;
-    int inducted;
+    int inductedNao;
+    int inductedBooster;
+    int inductedVRHeadset;
 
     char input;
 
@@ -32,10 +34,20 @@ void addUser() {
     if (input == 'y' || input == 'Y') isAdmin = 1;
     else isAdmin = 0;
 
-    std::cout << " >> Is Inducted (y/n): ";
+    std::cout << " >> Is Inducted to Nao (y/n): ";
     std::cin >> input;
-    if (input == 'y' || input == 'Y') inducted = 1;
-    else inducted = 0;
+    if (input == 'y' || input == 'Y') inductedNao = 1;
+    else inductedNao = 0;
+
+    std::cout << " >> Is Inducted to Booster (y/n): ";
+    std::cin >> input;
+    if (input == 'y' || input == 'Y') inductedBooster = 1;
+    else inductedBooster = 0;
+
+    std::cout << " >> Is Inducted to VR Headset (y/n): ";
+    std::cin >> input;
+    if (input == 'y' || input == 'Y') inductedVRHeadset = 1;
+    else inductedVRHeadset = 0;
 
     std::cout << std::endl;
 
@@ -46,7 +58,7 @@ void addUser() {
             throw(0);
         }
 
-        if(insertUser(userID, userGivenName, userFamilyName, isAdmin, inducted)) {
+        if(insertUser(userID, userGivenName, userFamilyName, isAdmin, inductedNao, inductedBooster, inductedVRHeadset)) {
             std::cout << " User added successfully!" << std::endl;
         } else {
             throw(0);
@@ -105,12 +117,31 @@ void modifyUser(const std::string loggedInUserID) {
                 if (input == 'y' || input == 'Y') { isAdmin = 1; } 
                 updateAdminStatus(userID, isAdmin);
                 break;
-            case 4:
-                std::cout << " Induction Status - ";
-                input = getYesNo();
-                if (input == 'y' || input == 'Y') { inducted = 1; } 
-                updateInductionStatus(userID, inducted);
+            case 4: {
+                printModifyInductionsMenu();
+
+                int choiceInductions = getIntInput(1,4);
+                switch(choiceInductions){
+                    case 1:
+                        input = getYesNo();
+                        if (input == 'y' || input == 'Y') { inducted = 1; } 
+                        updateInductionsStatus(userID, inducted, "isInductedNao");
+                        break;
+                    case 2:
+                        input = getYesNo();
+                        if (input == 'y' || input == 'Y') { inducted = 1; } 
+                        updateInductionsStatus(userID, inducted, "isInductedBooster");
+                        break;
+                    case 3:
+                        input = getYesNo();
+                        if (input == 'y' || input == 'Y') { inducted = 1; } 
+                        updateInductionsStatus(userID, inducted, "isInductedVRHeadset");
+                        break;
+                    case 4:
+                        break;
+                }
                 break;
+            }
             case 5:
                 if(loggedInUserID == userID){
                     std::cout << " You cannot delete the user you are currently logged in as." << std::endl;

@@ -4,14 +4,14 @@
 #include <sqlite3.h>
 
 
-void addCheckOutRecord(std::string userID, std::string robotName) {
+void addCheckOutRecord(std::string userID, std::string equipmentName) {
 
     time_t now = time(0);
     std::string name;
 
     std::cout << "\n------------- CHECK OUT CONFIRMED -------------" << std::endl;
     std::cout << " >> User: " << userID << ", " << getUserFromID(userID, name) <<  std::endl;
-    std::cout << " >> Robot Name: " << robotName << std::endl;
+    std::cout << " >> Equipment Name: " << equipmentName << std::endl;
     std::cout << " >> Check Out Time: " << ctime(&now);
 
     try {
@@ -21,9 +21,9 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
             throw(0);
         }
 
-        // Check if robot is available
+        // Check if equipment is available
         const char* availabilityQuery =
-            "SELECT isAvailable FROM robots WHERE robotName = ?;";
+            "SELECT isAvailable FROM equipment WHERE equipmentName = ?;";
 
         sqlite3_stmt* availabilityStmt;
         int rc = sqlite3_prepare_v2(db, availabilityQuery, -1, &availabilityStmt, nullptr);
@@ -31,12 +31,12 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
             std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
             throw(0);
         }
-        // Bind robot name
-        sqlite3_bind_text(availabilityStmt, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+        // Bind equipment name
+        sqlite3_bind_text(availabilityStmt, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
         // Execute
         rc = sqlite3_step(availabilityStmt);
         if(rc != SQLITE_ROW) {
-            std::cerr << "Robot not found: " << sqlite3_errmsg(db) << std::endl;
+            std::cerr << "Equipment not found: " << sqlite3_errmsg(db) << std::endl;
             sqlite3_finalize(availabilityStmt);
             throw(0);
         }
@@ -44,7 +44,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
         sqlite3_finalize(availabilityStmt);
 
         if(isAvailable == 0) {
-            std::cout << " >> Robot " << robotName << " is currently not available for check out." << std::endl;
+            std::cout << " >> Equipment " << equipmentName << " is currently not available for check out." << std::endl;
             sqlite3_close(db);
             return;
         }
@@ -52,7 +52,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
 
         // Insert check out record into database
         const char* query1 = 
-            "INSERT INTO logs (checkOutUserID, robotName, checkOut) "
+            "INSERT INTO logs (checkOutUserID, equipmentName, checkOut) "
             "VALUES (?, ?, ?);";
 
         sqlite3_stmt* stmt1;
@@ -64,7 +64,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
 
         // Bind values
         sqlite3_bind_text(stmt1, 1, userID.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt1, 2, robotName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt1, 2, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_int64(stmt1, 3, static_cast<sqlite3_int64>(now));
 
         // Execute
@@ -78,9 +78,9 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
         sqlite3_finalize(stmt1);
 
 
-        // Change availability status of robot to checked out
+        // Change availability status of equipment to checked out
         const char* query2 =
-            "UPDATE robots SET isAvailable = 0 WHERE robotName = ?;";
+            "UPDATE equipment SET isAvailable = 0 WHERE equipmentName = ?;";
 
         sqlite3_stmt* stmt2;
         rc = sqlite3_prepare_v2(db, query2, -1, &stmt2, nullptr);
@@ -90,7 +90,7 @@ void addCheckOutRecord(std::string userID, std::string robotName) {
         }
 
         // Bind values
-        sqlite3_bind_text(stmt2, 1, robotName.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt2, 1, equipmentName.c_str(), -1, SQLITE_TRANSIENT);
         // Execute
         rc = sqlite3_step(stmt2);
         if(rc != SQLITE_DONE) {
