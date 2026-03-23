@@ -29,8 +29,6 @@ SRCS = src/robotLogger.cpp \
        src/equipmentUtils.cpp \
        src/userUtils.cpp \
        src/dbUtils.cpp \
-       src/checkOut.cpp \
-       src/checkIn.cpp \
        src/inputValidation.cpp \
        src/barcodeUtils/barcodeScanner.cpp
        
@@ -41,8 +39,6 @@ HEADERS = include/User.h \
           include/equipmentUtils.h \
           include/userUtils.h \
           include/dbUtils.h \
-          include/checkOut.h \
-          include/checkIn.h \
           include/inputValidation.h \
           src/barcodeUtils/barcodeScanner.h
 

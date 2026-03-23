@@ -23,12 +23,18 @@ bool insertUser(
 bool openDBConnection();
 void closeDBConnection();
 
-bool existenceCheck(std::string tableName, std::string columnName, std::string value);
+// Checkout and Checkin Utils
+void addCheckInRecord(std::string userID, std::string equipmentName, std::string notes, std::string permStatus);
+void addCheckOutRecord(std::string userID, std::string equipmentName);
+std::vector<std::string> getEquipmentCurrentlyCheckedOut();
+
+
 std::string getUserFromID(const std::string &id, std::string &givenName);
-std::vector<std::string> getEquipment();
 std::string getCheckOutIdFromEquipment(const std::string &equipmentName);
-bool getAdminStatus(const std::string &id);
 std::string getEquipmentStatus(const std::string &equipmentName);
+std::vector<std::string> getEquipment();
+bool existenceCheck(std::string tableName, std::string columnName, std::string value);
+bool getAdminStatus(const std::string &id);
 
 // Update Users
 void updateGivenName(const std::string& id, const std::string& newGivenName);

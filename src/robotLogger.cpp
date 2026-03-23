@@ -3,8 +3,6 @@
 #include "User.h"
 #include "equipmentUtils.h"
 #include "userUtils.h"
-#include "checkOut.h"
-#include "checkIn.h"
 #include "dbUtils.h"
 #include "barcodeUtils/barcodeScanner.h"
 #include "inputValidation.h"
