@@ -23,6 +23,7 @@ void addEquipment() {
     // Get Equipment Name
     std::cout << " >> Enter Equipment Name: ";
     std::cin >> equipmentName;
+    equipmentName = stringToLower(equipmentName);
     //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if(existenceCheck(tableName, columnName, equipmentName)) {
@@ -99,10 +100,12 @@ void modifyEquipment() {
 
     std::cout << " >> Enter equipment name to modify: ";
     std::cin >> equipmentName;
+    equipmentName = stringToLower(equipmentName);
 
     while(!existenceCheck("equipment", "equipmentName", equipmentName)){
         std::cout << " Equipment " + equipmentName + " does not exist. Try Again: ";
         std::cin >> equipmentName;
+        equipmentName = stringToLower(equipmentName);
     };
 
     int choice = -1;

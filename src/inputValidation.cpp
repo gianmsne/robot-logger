@@ -58,7 +58,7 @@ char getYesNo() {
 
 std::string stringToLower(std::string str) {
     for (char &c : str) {
-        c = std::tolower(c);
+        c = std::tolower(static_cast<unsigned char>(c));
     }
     return str;
 }
